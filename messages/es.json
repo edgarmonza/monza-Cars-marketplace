@@ -1,0 +1,159 @@
+{
+  "nav": {
+    "liveAuctions": "Subastas en Vivo",
+    "marketSearch": "Búsqueda de Mercado",
+    "priceHistory": "Historial de Precios",
+    "about": "Acerca de",
+    "menu": "Menú"
+  },
+  "mobile": {
+    "aiOracle": "AI Oracle",
+    "explore": "Explorar",
+    "account": "Cuenta",
+    "askAnything": "Pregunta sobre cualquier carro...",
+    "exploreBrands": "Explorar Marcas",
+    "search": "Buscar",
+    "brands": "Marcas",
+    "vehicles": "{count} vehículos",
+    "vehicle": "{count} vehículo",
+    "results": "{count} resultados",
+    "result": "{count} resultado",
+    "noResults": "No encontramos \"{query}\"",
+    "tryAnother": "Intenta con otra marca o modelo",
+    "searchPlaceholder": "Buscar por marca, modelo, año...",
+    "cancel": "Cancelar"
+  },
+  "auth": {
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar Sesión",
+    "createAccount": "Crear Cuenta Gratis",
+    "credits": "Créditos",
+    "buy": "Comprar",
+    "buyCredits": "Comprar Créditos",
+    "freeCredits": "Inicia sesión para obtener 3 créditos gratis",
+    "creditsReset": "Los créditos gratis se reinician el 1 de cada mes",
+    "noCredits": "Sin Créditos Disponibles",
+    "noCreditsDesc": "Has usado todos tus créditos de análisis. Compra más para continuar analizando vehículos.",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "name": "Nombre",
+    "continueWithGoogle": "Continuar con Google",
+    "orContinueWith": "o continuar con",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "dontHaveAccount": "¿No tienes una cuenta?",
+    "welcomeBack": "Bienvenido de Nuevo",
+    "signInDesc": "Inicia sesión para acceder a tus créditos",
+    "createAccountTitle": "Crear Cuenta",
+    "createAccountDesc": "Obtén 3 créditos gratis cada mes"
+  },
+  "hero": {
+    "badge": "Inteligencia de Subastas en Vivo",
+    "headline1": "La Terminal Inteligente para",
+    "headline2": "Adquisición de Vehículos",
+    "headline3": "de Colección",
+    "subheadline": "Análisis de subastas impulsado por IA para vehículos de colección. Toma decisiones más inteligentes con insights basados en datos.",
+    "searchPlaceholder": "Buscar por marca, modelo o año...",
+    "search": "Buscar",
+    "popular": "Popular:"
+  },
+  "status": {
+    "active": "Activo",
+    "endingSoon": "Por Terminar",
+    "sold": "Vendido",
+    "ended": "Terminado",
+    "noSale": "Sin Venta",
+    "live": "En Vivo"
+  },
+  "carDetail": {
+    "askAnything": "Pregunta Cualquier Cosa Sobre Este Carro",
+    "isGoodInvestment": "¿Es buena inversión?",
+    "fairPrice": "Precio justo",
+    "compareAlternatives": "Comparar alternativas",
+    "askAbout": "Preguntar sobre {make}...",
+    "overview": "Resumen",
+    "investment": "Inversión",
+    "dueDiligence": "Due Diligence",
+    "market": "Mercado",
+    "backTo": "Volver a {make}",
+    "contact": "Contactar",
+    "contactAdvisor": "Contactar Asesor"
+  },
+  "oracle": {
+    "aiAnalysis": "Análisis IA",
+    "aiAdvisor": "Asesor IA",
+    "youAsked": "Preguntaste:",
+    "analyzing": "Analizando...",
+    "analyzingMarket": "Analizando datos del mercado...",
+    "analyzingMake": "Analizando {make}...",
+    "viewDetails": "Ver Detalles",
+    "viewSimilar": "Ver Similares",
+    "viewAll": "Ver Todos",
+    "viewCollection": "Ver Colección",
+    "relatedActions": "Acciones Relacionadas"
+  },
+  "language": {
+    "select": "Idioma",
+    "en": "English",
+    "es": "Español",
+    "de": "Deutsch",
+    "ja": "日本語"
+  },
+  "placeholders": {
+    "askAnything": "Pregunta cualquier cosa sobre el mercado automotriz...",
+    "fairValue": "¿Cuál es el valor justo de un Porsche 911 RS de 1973?",
+    "appreciating": "Muéstrame activos en apreciación bajo $200K",
+    "jdmTrending": "¿Qué carros JDM están en tendencia?"
+  },
+  "filters": {
+    "porsche": "Porsche",
+    "ferrari": "Ferrari",
+    "mercedes": "Mercedes",
+    "lamborghini": "Lamborghini",
+    "jdm": "JDM",
+    "preWar": "Pre-Guerra",
+    "americanMuscle": "Muscle Americano"
+  },
+  "grades": {
+    "aaa": "AAA",
+    "aa": "AA",
+    "a": "A",
+    "bPlus": "B+",
+    "b": "B",
+    "c": "C"
+  },
+  "sections": {
+    "featuredAuctions": "Subastas Destacadas",
+    "howItWorks": "Cómo Funciona",
+    "platformPartners": "Plataformas Asociadas",
+    "investmentThesis": "Tesis de Inversión",
+    "fairValueByRegion": "Valor Justo por Región",
+    "performance": "Rendimiento de 5 Años",
+    "investmentProjection": "Proyección de Inversión",
+    "ownershipCost": "Desglose de Costos Anuales",
+    "keyInspectionPoints": "Puntos Clave de Inspección",
+    "questionsToAsk": "Preguntas para el Vendedor",
+    "recentComparables": "Ventas Comparables Recientes",
+    "eventsAndCommunity": "Eventos, Shows y Comunidad",
+    "transportationShipping": "Transporte y Envío"
+  },
+  "common": {
+    "currentBid": "oferta actual",
+    "bids": "ofertas",
+    "bid": "oferta",
+    "years": "años",
+    "year": "año",
+    "viewAll": "Ver Todo",
+    "learnMore": "Más Información",
+    "getStarted": "Comenzar",
+    "free": "Gratis",
+    "best": "Mejor",
+    "verified": "Verificado",
+    "critical": "Crítico",
+    "recommended": "Recomendado"
+  },
+  "metadata": {
+    "title": "Monza Lab | Activos Automotrices de Inversión",
+    "description": "La terminal inteligente para la adquisición y análisis de vehículos de colección. Insights impulsados por IA para adquisiciones más inteligentes."
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "nav": {
+    "liveAuctions": "Live-Auktionen",
+    "marketSearch": "Marktsuche",
+    "priceHistory": "Preisverlauf",
+    "about": "Über uns",
+    "menu": "Menü"
+  },
+  "mobile": {
+    "aiOracle": "KI-Orakel",
+    "explore": "Entdecken",
+    "account": "Konto",
+    "askAnything": "Fragen Sie alles über Autos...",
+    "exploreBrands": "Marken Entdecken",
+    "search": "Suchen",
+    "brands": "Marken",
+    "vehicles": "{count} Fahrzeuge",
+    "vehicle": "{count} Fahrzeug",
+    "results": "{count} Ergebnisse",
+    "result": "{count} Ergebnis",
+    "noResults": "Keine Ergebnisse für \"{query}\"",
+    "tryAnother": "Versuchen Sie eine andere Marke oder ein anderes Modell",
+    "searchPlaceholder": "Nach Marke, Modell, Jahr suchen...",
+    "cancel": "Abbrechen"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "signOut": "Abmelden",
+    "createAccount": "Kostenloses Konto erstellen",
+    "credits": "Guthaben",
+    "buy": "Kaufen",
+    "buyCredits": "Guthaben Kaufen",
+    "freeCredits": "Melden Sie sich an für 3 kostenlose Analyse-Credits",
+    "creditsReset": "Kostenlose Credits werden am 1. jedes Monats zurückgesetzt",
+    "noCredits": "Keine Credits Mehr",
+    "noCreditsDesc": "Sie haben alle Ihre Analyse-Credits verbraucht. Kaufen Sie mehr, um weiter Fahrzeuge zu analysieren.",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "name": "Name",
+    "continueWithGoogle": "Mit Google fortfahren",
+    "orContinueWith": "oder fortfahren mit",
+    "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
+    "dontHaveAccount": "Noch kein Konto?",
+    "welcomeBack": "Willkommen Zurück",
+    "signInDesc": "Melden Sie sich an, um auf Ihre Credits zuzugreifen",
+    "createAccountTitle": "Konto Erstellen",
+    "createAccountDesc": "Erhalten Sie jeden Monat 3 kostenlose Credits"
+  },
+  "hero": {
+    "badge": "Live-Auktions-Intelligenz",
+    "headline1": "Das Intelligente Terminal für",
+    "headline2": "Sammlerfahrzeug",
+    "headline3": "Akquisition",
+    "subheadline": "KI-gestützte Auktionsanalyse für Sammlerfahrzeuge. Treffen Sie klügere Entscheidungen mit datengesteuerten Erkenntnissen.",
+    "searchPlaceholder": "Nach Marke, Modell oder Jahr suchen...",
+    "search": "Suchen",
+    "popular": "Beliebt:"
+  },
+  "status": {
+    "active": "Aktiv",
+    "endingSoon": "Endet Bald",
+    "sold": "Verkauft",
+    "ended": "Beendet",
+    "noSale": "Nicht Verkauft",
+    "live": "Live"
+  },
+  "carDetail": {
+    "askAnything": "Fragen Sie Alles Über Dieses Auto",
+    "isGoodInvestment": "Ist das eine gute Investition?",
+    "fairPrice": "Fairer Preis",
+    "compareAlternatives": "Alternativen vergleichen",
+    "askAbout": "Fragen zu {make}...",
+    "overview": "Übersicht",
+    "investment": "Investition",
+    "dueDiligence": "Due Diligence",
+    "market": "Markt",
+    "backTo": "Zurück zu {make}",
+    "contact": "Kontakt",
+    "contactAdvisor": "Berater Kontaktieren"
+  },
+  "oracle": {
+    "aiAnalysis": "KI-Analyse",
+    "aiAdvisor": "KI-Berater",
+    "youAsked": "Sie fragten:",
+    "analyzing": "Analysiere...",
+    "analyzingMarket": "Marktdaten werden analysiert...",
+    "analyzingMake": "{make} wird analysiert...",
+    "viewDetails": "Details Anzeigen",
+    "viewSimilar": "Ähnliche Anzeigen",
+    "viewAll": "Alle Anzeigen",
+    "viewCollection": "Sammlung Anzeigen",
+    "relatedActions": "Verwandte Aktionen"
+  },
+  "language": {
+    "select": "Sprache",
+    "en": "English",
+    "es": "Español",
+    "de": "Deutsch",
+    "ja": "日本語"
+  },
+  "placeholders": {
+    "askAnything": "Fragen Sie alles über den Automobilmarkt...",
+    "fairValue": "Was ist der faire Wert eines 1973 Porsche 911 RS?",
+    "appreciating": "Zeigen Sie mir aufwertende Vermögenswerte unter $200K",
+    "jdmTrending": "Welche JDM-Autos liegen im Trend?"
+  },
+  "filters": {
+    "porsche": "Porsche",
+    "ferrari": "Ferrari",
+    "mercedes": "Mercedes",
+    "lamborghini": "Lamborghini",
+    "jdm": "JDM",
+    "preWar": "Vorkrieg",
+    "americanMuscle": "American Muscle"
+  },
+  "grades": {
+    "aaa": "AAA",
+    "aa": "AA",
+    "a": "A",
+    "bPlus": "B+",
+    "b": "B",
+    "c": "C"
+  },
+  "sections": {
+    "featuredAuctions": "Ausgewählte Auktionen",
+    "howItWorks": "So Funktioniert's",
+    "platformPartners": "Plattform-Partner",
+    "investmentThesis": "Investitionsthese",
+    "fairValueByRegion": "Fairer Wert nach Region",
+    "performance": "5-Jahres-Performance",
+    "investmentProjection": "Investitionsprognose",
+    "ownershipCost": "Jährliche Besitzkosten",
+    "keyInspectionPoints": "Wichtige Inspektionspunkte",
+    "questionsToAsk": "Fragen an den Verkäufer",
+    "recentComparables": "Aktuelle Vergleichsverkäufe",
+    "eventsAndCommunity": "Events, Shows & Community",
+    "transportationShipping": "Transport & Versand"
+  },
+  "common": {
+    "currentBid": "aktuelles Gebot",
+    "bids": "Gebote",
+    "bid": "Gebot",
+    "years": "Jahre",
+    "year": "Jahr",
+    "viewAll": "Alle Anzeigen",
+    "learnMore": "Mehr Erfahren",
+    "getStarted": "Loslegen",
+    "free": "Kostenlos",
+    "best": "Best",
+    "verified": "Verifiziert",
+    "critical": "Kritisch",
+    "recommended": "Empfohlen"
+  },
+  "metadata": {
+    "title": "Monza Lab | Investitionsfähige Automobilwerte",
+    "description": "Das intelligente Terminal für die Akquisition und Analyse von Sammlerfahrzeugen. KI-gestützte Erkenntnisse für klügere Akquisitionen."
+  }
+}

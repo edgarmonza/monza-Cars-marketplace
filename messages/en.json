@@ -1,0 +1,159 @@
+{
+  "nav": {
+    "liveAuctions": "Live Auctions",
+    "marketSearch": "Market Search",
+    "priceHistory": "Price History",
+    "about": "About",
+    "menu": "Menu"
+  },
+  "mobile": {
+    "aiOracle": "AI Oracle",
+    "explore": "Explore",
+    "account": "Account",
+    "askAnything": "Ask anything about any car...",
+    "exploreBrands": "Explore Brands",
+    "search": "Search",
+    "brands": "Brands",
+    "vehicles": "{count} vehicles",
+    "vehicle": "{count} vehicle",
+    "results": "{count} results",
+    "result": "{count} result",
+    "noResults": "No results for \"{query}\"",
+    "tryAnother": "Try another make or model",
+    "searchPlaceholder": "Search by make, model, year...",
+    "cancel": "Cancel"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "createAccount": "Create Free Account",
+    "credits": "Credits",
+    "buy": "Buy",
+    "buyCredits": "Buy Credits",
+    "freeCredits": "Sign in to get 3 free analysis credits",
+    "creditsReset": "Free credits reset on the 1st of each month",
+    "noCredits": "No Credits Remaining",
+    "noCreditsDesc": "You've used all your analysis credits. Purchase more to continue analyzing vehicles.",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "continueWithGoogle": "Continue with Google",
+    "orContinueWith": "or continue with",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "welcomeBack": "Welcome Back",
+    "signInDesc": "Sign in to access your analysis credits",
+    "createAccountTitle": "Create Account",
+    "createAccountDesc": "Get 3 free analysis credits every month"
+  },
+  "hero": {
+    "badge": "Live Auction Intelligence",
+    "headline1": "The Intelligent Terminal for",
+    "headline2": "Collector Vehicle",
+    "headline3": "Acquisition",
+    "subheadline": "AI-powered auction analysis for collector vehicles. Make smarter bids with data-driven insights from top platforms.",
+    "searchPlaceholder": "Search by make, model, or year...",
+    "search": "Search",
+    "popular": "Popular:"
+  },
+  "status": {
+    "active": "Active",
+    "endingSoon": "Ending Soon",
+    "sold": "Sold",
+    "ended": "Ended",
+    "noSale": "No Sale",
+    "live": "Live"
+  },
+  "carDetail": {
+    "askAnything": "Ask Anything About This Car",
+    "isGoodInvestment": "Is this a good investment?",
+    "fairPrice": "Fair price",
+    "compareAlternatives": "Compare alternatives",
+    "askAbout": "Ask about {make}...",
+    "overview": "Overview",
+    "investment": "Investment",
+    "dueDiligence": "Due Diligence",
+    "market": "Market",
+    "backTo": "Back to {make}",
+    "contact": "Contact",
+    "contactAdvisor": "Contact Advisor"
+  },
+  "oracle": {
+    "aiAnalysis": "AI Analysis",
+    "aiAdvisor": "AI Advisor",
+    "youAsked": "You asked:",
+    "analyzing": "Analyzing...",
+    "analyzingMarket": "Analyzing market data...",
+    "analyzingMake": "Analyzing {make}...",
+    "viewDetails": "View Details",
+    "viewSimilar": "View Similar",
+    "viewAll": "View All",
+    "viewCollection": "View Collection",
+    "relatedActions": "Related Actions"
+  },
+  "language": {
+    "select": "Language",
+    "en": "English",
+    "es": "Español",
+    "de": "Deutsch",
+    "ja": "日本語"
+  },
+  "placeholders": {
+    "askAnything": "Ask anything about the automotive market...",
+    "fairValue": "What's the fair value of a 1973 Porsche 911 RS?",
+    "appreciating": "Show me appreciating assets under $200K",
+    "jdmTrending": "Which JDM cars are trending up?"
+  },
+  "filters": {
+    "porsche": "Porsche",
+    "ferrari": "Ferrari",
+    "mercedes": "Mercedes",
+    "lamborghini": "Lamborghini",
+    "jdm": "JDM",
+    "preWar": "Pre-War",
+    "americanMuscle": "American Muscle"
+  },
+  "grades": {
+    "aaa": "AAA",
+    "aa": "AA",
+    "a": "A",
+    "bPlus": "B+",
+    "b": "B",
+    "c": "C"
+  },
+  "sections": {
+    "featuredAuctions": "Featured Auctions",
+    "howItWorks": "How It Works",
+    "platformPartners": "Platform Partners",
+    "investmentThesis": "Investment Thesis",
+    "fairValueByRegion": "Fair Value by Region",
+    "performance": "5-Year Performance",
+    "investmentProjection": "Investment Projection",
+    "ownershipCost": "Annual Ownership Cost Breakdown",
+    "keyInspectionPoints": "Key Inspection Points",
+    "questionsToAsk": "Questions to Ask the Seller",
+    "recentComparables": "Recent Comparable Sales",
+    "eventsAndCommunity": "Events, Shows & Community",
+    "transportationShipping": "Transportation & Shipping"
+  },
+  "common": {
+    "currentBid": "current bid",
+    "bids": "bids",
+    "bid": "bid",
+    "years": "years",
+    "year": "year",
+    "viewAll": "View All",
+    "learnMore": "Learn More",
+    "getStarted": "Get Started",
+    "free": "Free",
+    "best": "Best",
+    "verified": "Verified",
+    "critical": "Critical",
+    "recommended": "Recommended"
+  },
+  "metadata": {
+    "title": "Monza Lab | Investment-Grade Automotive Assets",
+    "description": "The intelligent terminal for collector vehicle acquisition and analysis. AI-powered insights for smarter acquisitions."
+  }
+}

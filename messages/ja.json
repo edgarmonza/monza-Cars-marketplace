@@ -1,0 +1,159 @@
+{
+  "nav": {
+    "liveAuctions": "ライブオークション",
+    "marketSearch": "マーケット検索",
+    "priceHistory": "価格履歴",
+    "about": "概要",
+    "menu": "メニュー"
+  },
+  "mobile": {
+    "aiOracle": "AIオラクル",
+    "explore": "探索",
+    "account": "アカウント",
+    "askAnything": "車について何でも聞いてください...",
+    "exploreBrands": "ブランドを探索",
+    "search": "検索",
+    "brands": "ブランド",
+    "vehicles": "{count}台",
+    "vehicle": "{count}台",
+    "results": "{count}件の結果",
+    "result": "{count}件の結果",
+    "noResults": "「{query}」の結果がありません",
+    "tryAnother": "別のメーカーやモデルをお試しください",
+    "searchPlaceholder": "メーカー、モデル、年式で検索...",
+    "cancel": "キャンセル"
+  },
+  "auth": {
+    "signIn": "ログイン",
+    "signUp": "登録",
+    "signOut": "ログアウト",
+    "createAccount": "無料アカウント作成",
+    "credits": "クレジット",
+    "buy": "購入",
+    "buyCredits": "クレジット購入",
+    "freeCredits": "ログインして3つの無料分析クレジットを取得",
+    "creditsReset": "無料クレジットは毎月1日にリセットされます",
+    "noCredits": "クレジット残高なし",
+    "noCreditsDesc": "分析クレジットをすべて使用しました。車両の分析を続けるには、クレジットを購入してください。",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "name": "名前",
+    "continueWithGoogle": "Googleで続行",
+    "orContinueWith": "または次で続行",
+    "alreadyHaveAccount": "すでにアカウントをお持ちですか？",
+    "dontHaveAccount": "アカウントをお持ちでないですか？",
+    "welcomeBack": "おかえりなさい",
+    "signInDesc": "クレジットにアクセスするにはログインしてください",
+    "createAccountTitle": "アカウント作成",
+    "createAccountDesc": "毎月3つの無料クレジットを取得"
+  },
+  "hero": {
+    "badge": "ライブオークションインテリジェンス",
+    "headline1": "コレクター車両の",
+    "headline2": "取得のための",
+    "headline3": "インテリジェントターミナル",
+    "subheadline": "コレクター車両のためのAI駆動オークション分析。データに基づくインサイトでよりスマートな入札を。",
+    "searchPlaceholder": "メーカー、モデル、年式で検索...",
+    "search": "検索",
+    "popular": "人気:"
+  },
+  "status": {
+    "active": "進行中",
+    "endingSoon": "まもなく終了",
+    "sold": "売却済み",
+    "ended": "終了",
+    "noSale": "不成立",
+    "live": "ライブ"
+  },
+  "carDetail": {
+    "askAnything": "この車について何でも聞いてください",
+    "isGoodInvestment": "良い投資ですか？",
+    "fairPrice": "適正価格",
+    "compareAlternatives": "代替品を比較",
+    "askAbout": "{make}について質問...",
+    "overview": "概要",
+    "investment": "投資",
+    "dueDiligence": "デューデリジェンス",
+    "market": "市場",
+    "backTo": "{make}に戻る",
+    "contact": "連絡",
+    "contactAdvisor": "アドバイザーに連絡"
+  },
+  "oracle": {
+    "aiAnalysis": "AI分析",
+    "aiAdvisor": "AIアドバイザー",
+    "youAsked": "質問:",
+    "analyzing": "分析中...",
+    "analyzingMarket": "市場データを分析中...",
+    "analyzingMake": "{make}を分析中...",
+    "viewDetails": "詳細を見る",
+    "viewSimilar": "類似を見る",
+    "viewAll": "すべて見る",
+    "viewCollection": "コレクションを見る",
+    "relatedActions": "関連アクション"
+  },
+  "language": {
+    "select": "言語",
+    "en": "English",
+    "es": "Español",
+    "de": "Deutsch",
+    "ja": "日本語"
+  },
+  "placeholders": {
+    "askAnything": "自動車市場について何でも聞いてください...",
+    "fairValue": "1973年ポルシェ911 RSの適正価格は？",
+    "appreciating": "20万ドル以下の値上がり資産を表示",
+    "jdmTrending": "どのJDM車がトレンドですか？"
+  },
+  "filters": {
+    "porsche": "ポルシェ",
+    "ferrari": "フェラーリ",
+    "mercedes": "メルセデス",
+    "lamborghini": "ランボルギーニ",
+    "jdm": "JDM",
+    "preWar": "戦前",
+    "americanMuscle": "アメリカンマッスル"
+  },
+  "grades": {
+    "aaa": "AAA",
+    "aa": "AA",
+    "a": "A",
+    "bPlus": "B+",
+    "b": "B",
+    "c": "C"
+  },
+  "sections": {
+    "featuredAuctions": "注目のオークション",
+    "howItWorks": "使い方",
+    "platformPartners": "プラットフォームパートナー",
+    "investmentThesis": "投資テーゼ",
+    "fairValueByRegion": "地域別適正価格",
+    "performance": "5年間のパフォーマンス",
+    "investmentProjection": "投資予測",
+    "ownershipCost": "年間所有コスト",
+    "keyInspectionPoints": "重要な検査ポイント",
+    "questionsToAsk": "売り手への質問",
+    "recentComparables": "最近の比較販売",
+    "eventsAndCommunity": "イベント、ショー、コミュニティ",
+    "transportationShipping": "輸送・配送"
+  },
+  "common": {
+    "currentBid": "現在の入札",
+    "bids": "入札",
+    "bid": "入札",
+    "years": "年",
+    "year": "年",
+    "viewAll": "すべて見る",
+    "learnMore": "詳細を見る",
+    "getStarted": "始める",
+    "free": "無料",
+    "best": "ベスト",
+    "verified": "認証済み",
+    "critical": "重要",
+    "recommended": "推奨"
+  },
+  "metadata": {
+    "title": "Monza Lab | 投資級自動車資産",
+    "description": "コレクター車両の取得と分析のためのインテリジェントターミナル。よりスマートな取得のためのAI駆動インサイト。"
+  }
+}

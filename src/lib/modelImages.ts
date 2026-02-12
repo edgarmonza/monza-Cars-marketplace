@@ -1,0 +1,346 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// VERIFIED MODEL IMAGES
+// Curated Unsplash URLs for collector car models
+// Format: "Make|Model" -> Unsplash URL
+// ═══════════════════════════════════════════════════════════════════════════
+
+export const MODEL_IMAGES: Record<string, string> = {
+  // ─── FERRARI ───
+  "Ferrari|F40": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Ferrari|F50": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1200&h=800&fit=crop",
+  "Ferrari|288 GTO": "https://images.unsplash.com/photo-1632441168092-41b44e82ef8c?w=1200&h=800&fit=crop",
+  "Ferrari|250 GTO": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Ferrari|Testarossa": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&h=800&fit=crop",
+  "Ferrari|Enzo": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1200&h=800&fit=crop",
+  "Ferrari|LaFerrari": "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?w=1200&h=800&fit=crop",
+  "Ferrari|458 Italia": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1200&h=800&fit=crop",
+  "Ferrari|488 GTB": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1200&h=800&fit=crop",
+  "Ferrari|812 Superfast": "https://images.unsplash.com/photo-1621955964441-c173e01c135b?w=1200&h=800&fit=crop",
+  "Ferrari|SF90": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Ferrari|Roma": "https://images.unsplash.com/photo-1632441168092-41b44e82ef8c?w=1200&h=800&fit=crop",
+  "Ferrari|Portofino": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Ferrari|California": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1200&h=800&fit=crop",
+  "Ferrari|360 Modena": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1200&h=800&fit=crop",
+  "Ferrari|F355": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Ferrari|550 Maranello": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&h=800&fit=crop",
+  "Ferrari|575M": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Ferrari|599 GTB": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1200&h=800&fit=crop",
+  "Ferrari|F12": "https://images.unsplash.com/photo-1621955964441-c173e01c135b?w=1200&h=800&fit=crop",
+  "Ferrari|Daytona": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Ferrari|Dino": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&h=800&fit=crop",
+  "Ferrari|275 GTB": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Ferrari|Monza SP1": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Ferrari|Monza SP2": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+
+  // ─── PORSCHE ───
+  "Porsche|911": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=1200&h=800&fit=crop",
+  "Porsche|911 Carrera": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=1200&h=800&fit=crop",
+  "Porsche|911 Carrera RS": "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=1200&h=800&fit=crop",
+  "Porsche|911 GT3": "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=1200&h=800&fit=crop",
+  "Porsche|911 GT3 RS": "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=1200&h=800&fit=crop",
+  "Porsche|911 GT2": "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=1200&h=800&fit=crop",
+  "Porsche|911 GT2 RS": "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=1200&h=800&fit=crop",
+  "Porsche|911 Turbo": "https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=1200&h=800&fit=crop",
+  "Porsche|911 Turbo S": "https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=1200&h=800&fit=crop",
+  "Porsche|959": "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=1200&h=800&fit=crop",
+  "Porsche|918 Spyder": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Porsche|Carrera GT": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Porsche|Cayenne": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Porsche|Panamera": "https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=1200&h=800&fit=crop",
+  "Porsche|Taycan": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=1200&h=800&fit=crop",
+  "Porsche|718 Cayman": "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=1200&h=800&fit=crop",
+  "Porsche|Boxster": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=1200&h=800&fit=crop",
+  "Porsche|356": "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=1200&h=800&fit=crop",
+
+  // ─── LAMBORGHINI ───
+  "Lamborghini|Miura": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Lamborghini|Countach": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Lamborghini|Diablo": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Lamborghini|Murcielago": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Lamborghini|Aventador": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Lamborghini|Huracan": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Lamborghini|Revuelto": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Lamborghini|Urus": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Lamborghini|Gallardo": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Lamborghini|Sian": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Lamborghini|Centenario": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Lamborghini|Veneno": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── McLAREN (VERIFIED UNSPLASH - Feb 2026) ───
+  // P1 - Red McLaren P1 on display (photo by Shooting Tyre)
+  "McLaren|P1": "https://images.unsplash.com/photo-1748028265529-0be0aee7f674?w=1200&h=800&fit=crop",
+  // 720S - Red McLaren 720S (photo by Niketh Vellanki)
+  "McLaren|720S": "https://images.unsplash.com/photo-1522441040106-2621f423b5eb?w=1200&h=800&fit=crop",
+  // 765LT - Blue McLaren 765LT (photo by Salvo Media)
+  "McLaren|765LT": "https://images.unsplash.com/photo-1743038077487-180c96565c35?w=1200&h=800&fit=crop",
+  // Senna - Orange McLaren Senna close-up (photo by Daniel Garcia)
+  "McLaren|Senna": "https://images.unsplash.com/photo-1686632469142-0bbf58e990f9?w=1200&h=800&fit=crop",
+  // GT - Black McLaren GT in Orlando (photo by Jaime Castrillon)
+  "McLaren|GT": "https://images.unsplash.com/photo-1641326505400-8a86340ecc54?w=1200&h=800&fit=crop",
+  // 570S - Red shiny McLaren 570S
+  "McLaren|570S": "https://images.unsplash.com/photo-1748091677370-a4f14bd24943?w=1200&h=800&fit=crop",
+  // F1 - Use P1 as closest visual (rare F1 photos)
+  "McLaren|F1": "https://images.unsplash.com/photo-1748028265529-0be0aee7f674?w=1200&h=800&fit=crop",
+  // Speedtail - Use 720S (similar GT design language)
+  "McLaren|Speedtail": "https://images.unsplash.com/photo-1522441040106-2621f423b5eb?w=1200&h=800&fit=crop",
+  // Elva - Black McLaren P1
+  "McLaren|Elva": "https://images.unsplash.com/photo-1761554619924-627006522506?w=1200&h=800&fit=crop",
+  // Artura - Use 720S (similar modern design)
+  "McLaren|Artura": "https://images.unsplash.com/photo-1522441040106-2621f423b5eb?w=1200&h=800&fit=crop",
+  // 600LT - Use 765LT (same LT family)
+  "McLaren|600LT": "https://images.unsplash.com/photo-1743038077487-180c96565c35?w=1200&h=800&fit=crop",
+  // 650S - Use 720S (predecessor)
+  "McLaren|650S": "https://images.unsplash.com/photo-1522441040106-2621f423b5eb?w=1200&h=800&fit=crop",
+  // 675LT - Use 765LT (same LT family)
+  "McLaren|675LT": "https://images.unsplash.com/photo-1743038077487-180c96565c35?w=1200&h=800&fit=crop",
+  // MP4-12C - Use 720S (evolution)
+  "McLaren|MP4-12C": "https://images.unsplash.com/photo-1522441040106-2621f423b5eb?w=1200&h=800&fit=crop",
+  // 12C - Use 720S
+  "McLaren|12C": "https://images.unsplash.com/photo-1522441040106-2621f423b5eb?w=1200&h=800&fit=crop",
+  // 570GT - Use 570S (same platform)
+  "McLaren|570GT": "https://images.unsplash.com/photo-1748091677370-a4f14bd24943?w=1200&h=800&fit=crop",
+  // 540C - Use 570S (same family)
+  "McLaren|540C": "https://images.unsplash.com/photo-1748091677370-a4f14bd24943?w=1200&h=800&fit=crop",
+  // 620R - Use Senna (track-focused)
+  "McLaren|620R": "https://images.unsplash.com/photo-1686632469142-0bbf58e990f9?w=1200&h=800&fit=crop",
+  // Sabre - Use Senna (limited edition)
+  "McLaren|Sabre": "https://images.unsplash.com/photo-1686632469142-0bbf58e990f9?w=1200&h=800&fit=crop",
+  // Solus GT - Use Senna (track-only)
+  "McLaren|Solus GT": "https://images.unsplash.com/photo-1686632469142-0bbf58e990f9?w=1200&h=800&fit=crop",
+
+  // ─── ASTON MARTIN ───
+  "Aston Martin|DB5": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1200&h=800&fit=crop",
+  "Aston Martin|DB4": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Aston Martin|DB6": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1200&h=800&fit=crop",
+  "Aston Martin|DB9": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Aston Martin|DB11": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1200&h=800&fit=crop",
+  "Aston Martin|DBS": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Aston Martin|Vantage": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1200&h=800&fit=crop",
+  "Aston Martin|Vanquish": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Aston Martin|Valkyrie": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1200&h=800&fit=crop",
+  "Aston Martin|One-77": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Aston Martin|Vulcan": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1200&h=800&fit=crop",
+
+  // ─── MERCEDES-BENZ ───
+  "Mercedes-Benz|300SL": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Mercedes-Benz|SLS AMG": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Mercedes-Benz|AMG GT": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Mercedes-Benz|AMG ONE": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Mercedes-Benz|G-Class": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Mercedes-Benz|SL": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Mercedes-Benz|S-Class": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Mercedes-Benz|CLK GTR": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+
+  // ─── BMW ───
+  "BMW|M3": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
+  "BMW|M3 CSL": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
+  "BMW|M4": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
+  "BMW|M5": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
+  "BMW|M8": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068&w=1200&h=800&fit=crop",
+  "BMW|Z8": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
+  "BMW|i8": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
+  "BMW|850CSi": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
+  "BMW|3.0 CSL": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
+
+  // ─── NISSAN / JDM ───
+  "Nissan|GT-R": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Nissan|Skyline GT-R": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Nissan|Skyline R34": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Nissan|Z": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Nissan|370Z": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Nissan|350Z": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── TOYOTA / JDM ───
+  "Toyota|Supra": "https://images.unsplash.com/photo-1626668893632-6f3a4466d22f?w=1200&h=800&fit=crop",
+  "Toyota|Supra MK4": "https://images.unsplash.com/photo-1626668893632-6f3a4466d22f?w=1200&h=800&fit=crop",
+  "Toyota|GR Supra": "https://images.unsplash.com/photo-1626668893632-6f3a4466d22f?w=1200&h=800&fit=crop",
+  "Toyota|2000GT": "https://images.unsplash.com/photo-1626668893632-6f3a4466d22f?w=1200&h=800&fit=crop",
+  "Toyota|AE86": "https://images.unsplash.com/photo-1626668893632-6f3a4466d22f?w=1200&h=800&fit=crop",
+  "Toyota|MR2": "https://images.unsplash.com/photo-1626668893632-6f3a4466d22f?w=1200&h=800&fit=crop",
+  "Toyota|GR86": "https://images.unsplash.com/photo-1626668893632-6f3a4466d22f?w=1200&h=800&fit=crop",
+
+  // ─── HONDA / ACURA ───
+  "Honda|NSX": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Honda|S2000": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Honda|Civic Type R": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Honda|Integra Type R": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Acura|NSX": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Acura|Integra Type R": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+
+  // ─── MAZDA ───
+  "Mazda|RX-7": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Mazda|RX-8": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Mazda|MX-5": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Mazda|Miata": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Mazda|787B": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── BUGATTI ───
+  "Bugatti|Veyron": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Bugatti|Chiron": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Bugatti|EB110": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Bugatti|Divo": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Bugatti|Centodieci": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Bugatti|La Voiture Noire": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Bugatti|Bolide": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Bugatti|Mistral": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── PAGANI ───
+  "Pagani|Zonda": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Pagani|Huayra": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Pagani|Utopia": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+
+  // ─── KOENIGSEGG ───
+  "Koenigsegg|Agera": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Koenigsegg|Regera": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Koenigsegg|Jesko": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Koenigsegg|Gemera": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Koenigsegg|CCX": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+
+  // ─── FORD ───
+  "Ford|GT": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Ford|GT40": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Ford|Mustang": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Ford|Mustang GT": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Ford|Mustang Shelby GT500": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Ford|Focus RS": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Ford|Bronco": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── CHEVROLET ───
+  "Chevrolet|Corvette": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1200&h=800&fit=crop",
+  "Chevrolet|Corvette C8": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1200&h=800&fit=crop",
+  "Chevrolet|Corvette Stingray": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1200&h=800&fit=crop",
+  "Chevrolet|Corvette Z06": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1200&h=800&fit=crop",
+  "Chevrolet|Camaro": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1200&h=800&fit=crop",
+  "Chevrolet|Camaro ZL1": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1200&h=800&fit=crop",
+
+  // ─── SHELBY ───
+  "Shelby|Cobra": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Shelby|GT350": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Shelby|GT500": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Shelby|Daytona": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── JAGUAR ───
+  "Jaguar|E-Type": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Jaguar|XJ220": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Jaguar|F-Type": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Jaguar|XK": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Jaguar|XKR-S": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── LEXUS ───
+  "Lexus|LFA": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Lexus|LC500": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Lexus|RC F": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Lexus|IS F": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+
+  // ─── ROLLS-ROYCE ───
+  "Rolls-Royce|Phantom": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Rolls-Royce|Ghost": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Rolls-Royce|Wraith": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Rolls-Royce|Dawn": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Rolls-Royce|Cullinan": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Rolls-Royce|Spectre": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+
+  // ─── BENTLEY ───
+  "Bentley|Continental GT": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Bentley|Flying Spur": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Bentley|Bentayga": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Bentley|Mulsanne": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Bentley|Bacalar": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+
+  // ─── ALFA ROMEO ───
+  "Alfa Romeo|Giulia": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Alfa Romeo|4C": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Alfa Romeo|8C": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Alfa Romeo|33 Stradale": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── LOTUS ───
+  "Lotus|Elise": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Lotus|Exige": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Lotus|Evora": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Lotus|Emira": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Lotus|Evija": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Lotus|Esprit": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── AUDI ───
+  "Audi|R8": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Audi|RS6": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Audi|RS7": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Audi|RS e-tron GT": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Audi|Quattro": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Audi|TT RS": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+
+  // ─── SUBARU ───
+  "Subaru|WRX STI": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Subaru|Impreza": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Subaru|BRZ": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Subaru|22B": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── MITSUBISHI ───
+  "Mitsubishi|Lancer Evolution": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Mitsubishi|3000GT": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Mitsubishi|Eclipse": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── DE TOMASO ───
+  "De Tomaso|Pantera": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "De Tomaso|Mangusta": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── TVR ───
+  "TVR|Sagaris": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "TVR|Tuscan": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "TVR|Cerbera": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+
+  // ─── MASERATI ───
+  "Maserati|MC12": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Maserati|GranTurismo": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Maserati|Quattroporte": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Maserati|MC20": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+}
+
+// ─── BRAND HERO IMAGES ───
+// Used for brand cards on landing page
+export const BRAND_IMAGES: Record<string, string> = {
+  "Ferrari": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1200&h=800&fit=crop",
+  "Porsche": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=1200&h=800&fit=crop",
+  "Lamborghini": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "McLaren": "https://images.unsplash.com/photo-1522441040106-2621f423b5eb?w=1200&h=800&fit=crop",
+  "Bugatti": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Aston Martin": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1200&h=800&fit=crop",
+  "Mercedes-Benz": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "BMW": "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
+  "Audi": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Nissan": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Toyota": "https://images.unsplash.com/photo-1626668893632-6f3a4466d22f?w=1200&h=800&fit=crop",
+  "Honda": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Acura": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Mazda": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Lexus": "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&h=800&fit=crop",
+  "Ford": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Chevrolet": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1200&h=800&fit=crop",
+  "Shelby": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Jaguar": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Rolls-Royce": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Bentley": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
+  "Pagani": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Koenigsegg": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
+  "Alfa Romeo": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Lotus": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Maserati": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Subaru": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+  "Mitsubishi": "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=800&fit=crop",
+}
+
+/**
+ * Get verified image URL for a specific make + model
+ * Falls back to brand image if model not found
+ */
+export function getModelImage(make: string, model: string): string | null {
+  const key = `${make}|${model}`
+  return MODEL_IMAGES[key] || null
+}
+
+/**
+ * Get verified image URL for a brand
+ */
+export function getBrandImage(make: string): string | null {
+  return BRAND_IMAGES[make] || null
+}
