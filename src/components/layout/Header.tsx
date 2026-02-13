@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Menu, User, Sparkles, X, TrendingUp, BarChart3, Car, LogOut, Zap } from "lucide-react";
 import {
@@ -16,7 +15,7 @@ import { CURATED_CARS, searchCars, type CollectorCar } from "@/lib/curatedCars";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { LanguageSwitcher, MobileLanguageSwitcher } from "./LanguageSwitcher";
 
 // Menu links - labels will be translated in the component
@@ -28,13 +27,12 @@ const menuLinkKeys = [
 ] as const;
 
 
-// Typing effect placeholder texts
-const placeholderTexts = [
-  "Ask anything about the automotive market...",
-  "What's the fair value of a 1973 Porsche 911 RS?",
-  "Show me appreciating assets under $200K",
-  "Which JDM cars are trending up?",
-];
+const placeholderKeys = [
+  "placeholders.askAnything",
+  "placeholders.fairValue",
+  "placeholders.appreciating",
+  "placeholders.jdmTrending",
+] as const;
 
 // Format USD price
 function formatPrice(value: number): string {
@@ -47,13 +45,35 @@ function formatPrice(value: number): string {
 // Response type with optional car context for navigation
 type OracleResponse = {
   answer: string;
-  chips: string[];
+  chips: OracleChip[];
   carContext?: { id: string; make: string } | null;
   brandContext?: string | null;
 };
 
+type OracleChipId =
+  | "viewCarDetails"
+  | "viewFullDetails"
+  | "similarCars"
+  | "browseBrand"
+  | "viewLiveAuctions"
+  | "browseAll"
+  | "browseByBrand"
+  | "viewAllUnderBudget"
+  | "bestRoiCars"
+  | "setPriceAlert"
+  | "viewAllBrand"
+  | "compareModels"
+  | "setAlerts";
+
+type OracleChip = {
+  id: OracleChipId;
+};
+
 // Generate intelligent response based on query and car data
-function getResponseForQuery(query: string): OracleResponse {
+function getResponseForQuery(
+  query: string,
+  t: (key: string, values?: any) => string
+): OracleResponse {
   const lowerQuery = query.toLowerCase();
 
   // Search for matching cars
@@ -98,7 +118,7 @@ ${car.status === "ACTIVE" || car.status === "ENDING_SOON"
 ${car.thesis}
 
 _Note: Price data from real auction results. No value estimates._`,
-      chips: ["View Car Details", "Similar Cars", "Browse Brand"],
+      chips: [{ id: "viewCarDetails" }, { id: "similarCars" }, { id: "browseBrand" }],
       carContext: { id: car.id, make: car.make },
     };
   }
@@ -127,7 +147,7 @@ ${carList}
 • Prioritize documented history and matching numbers
 • JDM vehicles continue to surge with 25-year import eligibility
 • Manual transmissions command 15-20% premiums over automatics`,
-        chips: ["View All Under Budget", "Best ROI Cars", "Set Price Alert"],
+        chips: [{ id: "viewAllUnderBudget" }, { id: "bestRoiCars" }, { id: "setPriceAlert" }],
         carContext: null,
       };
     }
@@ -156,7 +176,7 @@ ${carList}
 JDM vehicles and analog supercars continue to attract strong bidding activity. Manual transmission examples consistently generate more competition.
 
 _Note: Data from real auction results. Past performance not indicative of future results._`,
-      chips: ["View Live Auctions", "Set Alerts", "Browse All"],
+      chips: [{ id: "viewLiveAuctions" }, { id: "setAlerts" }, { id: "browseAll" }],
       carContext: null,
     };
   }
@@ -187,7 +207,7 @@ ${carList}
 ${sortedCars[0].thesis}
 
 _Data from real auction results._`,
-      chips: [`View All ${brandOrCategory}`, "Compare Models", "Set Alerts"],
+      chips: [{ id: "viewAllBrand" }, { id: "compareModels" }, { id: "setAlerts" }],
       brandContext: brandOrCategory,
     };
   }
@@ -215,7 +235,7 @@ ${car.status === "ACTIVE" || car.status === "ENDING_SOON"
 
 **About this Model** _(Editorial)_
 ${car.thesis}`,
-      chips: ["View Full Details", "Similar Cars", "Browse Brand"],
+      chips: [{ id: "viewFullDetails" }, { id: "similarCars" }, { id: "browseBrand" }],
       carContext: { id: car.id, make: car.make },
     };
   }
@@ -247,7 +267,7 @@ ${topBidActivity ? `**Most Active:** ${topBidActivity.title} — ${formatPrice(t
 • "Browse Ferrari collection"
 
 _All prices from real auction results._`,
-    chips: ["View Live Auctions", "Browse by Brand", "Set Alerts"],
+    chips: [{ id: "viewLiveAuctions" }, { id: "browseByBrand" }, { id: "setAlerts" }],
     carContext: null,
   };
 }
@@ -255,20 +275,20 @@ _All prices from real auction results._`,
 // ─── CHIP ROUTE MAPPING ───
 // Check if chip starts with "View All" for brand-specific navigation
 function getChipRoute(
-  chip: string,
+  chip: OracleChip,
   carContext?: { id: string; make: string } | null,
   brandContext?: string | null
 ): string {
   // Car-specific routes
   if (carContext) {
     const makePath = carContext.make.toLowerCase().replace(/\s+/g, "-");
-    if (chip === "View Car Details" || chip === "View Full Details") {
+    if (chip.id === "viewCarDetails" || chip.id === "viewFullDetails") {
       return `/cars/${makePath}/${carContext.id}`;
     }
-    if (chip === "Similar Cars") {
+    if (chip.id === "similarCars") {
       return `/cars/${makePath}`;
     }
-    if (chip === "Browse Brand") {
+    if (chip.id === "browseBrand") {
       return `/cars/${makePath}`;
     }
   }
@@ -276,32 +296,35 @@ function getChipRoute(
   // Brand-specific routes
   if (brandContext) {
     const makePath = brandContext.toLowerCase().replace(/\s+/g, "-");
-    if (chip.startsWith("View All ")) {
+    if (chip.id === "viewAllBrand") {
       return `/cars/${makePath}`;
     }
   }
 
   // General routes
-  const staticRoutes: Record<string, string> = {
-    "View Top Picks": "/?filter=top-picks",
-    "Browse by Category": "/",
-    "Set Alerts": "/alerts",
-    "View All Trends": "/?sortBy=trendValue&sortOrder=desc",
-    "Market Report": "/market-trends",
-    "Set Price Alert": "/alerts",
-    "View All Under Budget": "/",
-    "Best ROI Cars": "/?sortBy=trendValue&sortOrder=desc",
-    "Compare Models": "/",
-    "Price Alerts": "/alerts",
+  const staticRoutes: Record<OracleChipId, string> = {
+    viewCarDetails: "/",
+    viewFullDetails: "/",
+    similarCars: "/",
+    browseBrand: "/",
+    viewLiveAuctions: "/auctions",
+    browseAll: "/auctions",
+    browseByBrand: "/cars",
+    viewAllUnderBudget: "/",
+    bestRoiCars: "/?sortBy=trendValue&sortOrder=desc",
+    setPriceAlert: "/alerts",
+    viewAllBrand: "/",
+    compareModels: "/",
+    setAlerts: "/alerts",
   };
 
-  return staticRoutes[chip] || "/";
+  return staticRoutes[chip.id] || "/";
 }
 
 // Routes that are coming soon (show toast instead of navigating)
 const comingSoonRoutes: Record<string, string> = {
-  "/market-trends": "Market Report coming soon...",
-  "/alerts": "Price Alerts coming soon...",
+  "/market-trends": "oracle.comingSoon.marketReport",
+  "/alerts": "oracle.comingSoon.priceAlerts",
 };
 
 // ─── INLINE TOAST COMPONENT ───
@@ -349,6 +372,7 @@ function OracleOverlay({
   onClose: () => void;
   query: string;
 }) {
+  const t = useTranslations();
   const router = useRouter();
   const [phase, setPhase] = useState<"loading" | "ready">("loading");
   const [response, setResponse] = useState<OracleResponse | null>(null);
@@ -357,11 +381,11 @@ function OracleOverlay({
   const overlayRef = useRef<HTMLDivElement>(null);
 
   // Handle chip click navigation
-  const handleChipClick = (chip: string) => {
+  const handleChipClick = (chip: OracleChip) => {
     if (!response) return;
     const route = getChipRoute(chip, response.carContext, response.brandContext);
     if (comingSoonRoutes[route]) {
-      setToastMessage(comingSoonRoutes[route]);
+      setToastMessage(t(comingSoonRoutes[route]));
       setShowToast(true);
     } else {
       onClose();
@@ -380,14 +404,14 @@ function OracleOverlay({
     }
 
     // Calculate response and show after brief delay
-    const result = getResponseForQuery(query);
+    const result = getResponseForQuery(query, t);
     const timer = setTimeout(() => {
       setResponse(result);
       setPhase("ready");
     }, 600);
 
     return () => clearTimeout(timer);
-  }, [isOpen, query]);
+  }, [isOpen, query, t]);
 
   // Close on ESC
   useEffect(() => {
@@ -435,7 +459,7 @@ function OracleOverlay({
                 <div className="flex items-center gap-2">
                   <Sparkles className="size-4 text-[#F8B4D9]" />
                   <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-[#F8B4D9]">
-                    AI Analysis
+                    {t("oracle.aiAnalysis")}
                   </span>
                 </div>
                 <button
@@ -449,7 +473,7 @@ function OracleOverlay({
               {/* Query Echo */}
               <div className="px-6 pt-4">
                 <p className="text-[13px] text-[rgba(255,252,247,0.5)]">
-                  <span className="text-[rgba(255,252,247,0.3)]">You asked:</span>{" "}
+                  <span className="text-[rgba(255,252,247,0.3)]">{t("oracle.youAsked")}</span>{" "}
                   <span className="text-[#FFFCF7]">"{query}"</span>
                 </p>
               </div>
@@ -462,7 +486,7 @@ function OracleOverlay({
                     <div className="flex items-center gap-3">
                       <div className="size-2 rounded-full bg-[#F8B4D9] animate-pulse" />
                       <span className="text-[14px] text-[rgba(255,252,247,0.6)]">
-                        Analyzing market data...
+                        {t("oracle.analyzingMarket")}
                       </span>
                     </div>
                     <div className="space-y-3">
@@ -501,7 +525,7 @@ function OracleOverlay({
               {response && response.chips.length > 0 && (
                 <div className="px-6 pb-5 pt-2 border-t border-[rgba(248,180,217,0.08)]">
                   <p className="text-[10px] font-medium tracking-[0.15em] uppercase text-[rgba(255,252,247,0.4)] mb-3">
-                    Related Actions
+                    {t("oracle.relatedActions")}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {response.chips.map((chip, i) => (
@@ -513,7 +537,9 @@ function OracleOverlay({
                         {i === 0 && <Car className="size-3" />}
                         {i === 1 && <BarChart3 className="size-3" />}
                         {i === 2 && <TrendingUp className="size-3" />}
-                        {chip}
+                        {chip.id === "viewAllBrand" && response.brandContext
+                          ? t("oracle.chips.viewAllBrand", { brand: response.brandContext })
+                          : t(`oracle.chips.${chip.id}`)}
                       </button>
                     ))}
                   </div>
@@ -537,6 +563,10 @@ function OracleOverlay({
 // ─── MAIN HEADER COMPONENT ───
 export function Header() {
   const t = useTranslations();
+  const placeholderTexts = useMemo(
+    () => placeholderKeys.map((key) => t(key)),
+    [t]
+  );
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -584,7 +614,7 @@ export function Header() {
       clearInterval(typeInterval);
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [placeholderIndex, isFocused, isOracleOpen]);
+  }, [placeholderIndex, isFocused, isOracleOpen, placeholderTexts]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -645,13 +675,13 @@ export function Header() {
               )}
 
               {/* Focused placeholder */}
-              {!query && isFocused && (
-                <div className="absolute inset-0 flex items-center pointer-events-none">
-                  <span className="text-lg font-light text-[#4B5563] tracking-tight">
-                    Ask anything...
-                  </span>
-                </div>
-              )}
+                {!query && isFocused && (
+                  <div className="absolute inset-0 flex items-center pointer-events-none">
+                    <span className="text-lg font-light text-[#4B5563] tracking-tight">
+                      {t("placeholders.askAnything")}
+                    </span>
+                  </div>
+                )}
 
               {/* Submit button */}
               {query.trim() && (
@@ -682,14 +712,16 @@ export function Header() {
                 <div className="size-4 border-2 border-[#4B5563] border-t-transparent rounded-full animate-spin" />
               </div>
             ) : isAuthenticated ? (
-              <button
-                onClick={() => signOut()}
-                className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-[#9CA3AF] hover:text-[#F2F0E9] hover:bg-white/5 transition-colors"
-                title="Sign out"
-              >
-                <User className="size-4" />
-                <span className="text-[11px] font-medium">{profile?.name?.split(' ')[0] || 'Account'}</span>
-              </button>
+                <button
+                  onClick={() => signOut()}
+                  className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-[#9CA3AF] hover:text-[#F2F0E9] hover:bg-white/5 transition-colors"
+                  title={t("auth.signOut")}
+                >
+                  <User className="size-4" />
+                  <span className="text-[11px] font-medium">
+                    {profile?.name?.split(" ")[0] || t("mobile.account")}
+                  </span>
+                </button>
             ) : (
               <button
                 onClick={() => setShowAuthModal(true)}

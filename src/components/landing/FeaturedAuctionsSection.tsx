@@ -1,20 +1,20 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
 import { motion } from "framer-motion"
 import { BadgeCheck, Clock, Gavel, ExternalLink, TrendingUp } from "lucide-react"
 import { featuredAuctions, getPlatformDisplayName, type FeaturedAuction } from "@/lib/featuredAuctions"
+import { useLocale, useTranslations } from "next-intl"
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatCurrency(amount: number): string {
+function formatCurrency(amount: number, locale: string): string {
   if (amount >= 1_000_000) {
     return `$${(amount / 1_000_000).toFixed(2)}M`
   }
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 0,
@@ -39,7 +39,25 @@ function getGradeBadgeStyle(grade: FeaturedAuction["investmentGrade"]): string {
 // Featured Card Component
 // ---------------------------------------------------------------------------
 
-function FeaturedCard({ auction, index }: { auction: FeaturedAuction; index: number }) {
+function FeaturedCard({
+  auction,
+  index,
+  locale,
+  labels,
+}: {
+  auction: FeaturedAuction
+  index: number
+  locale: string
+  labels: {
+    verified: string
+    sold: string
+    live: string
+    endingSoon: string
+    hammerPrice: string
+    currentBid: string
+    viewListing: string
+  }
+}) {
   const isHero = index === 0
 
   return (
@@ -77,7 +95,7 @@ function FeaturedCard({ auction, index }: { auction: FeaturedAuction; index: num
             <span className="flex items-center gap-1 rounded-full bg-emerald-500/20 backdrop-blur-md px-2.5 py-1.5 border border-emerald-500/30">
               <BadgeCheck className="size-3 text-emerald-400" />
               <span className="text-[9px] font-semibold tracking-wider uppercase text-emerald-400">
-                Verified
+                {labels.verified}
               </span>
             </span>
           )}
@@ -94,7 +112,11 @@ function FeaturedCard({ auction, index }: { auction: FeaturedAuction; index: num
                 : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
             }`}
           >
-            {auction.status === "SOLD" ? "Sold" : auction.status === "ACTIVE" ? "Live" : "Ending Soon"}
+            {auction.status === "SOLD"
+              ? labels.sold
+              : auction.status === "ACTIVE"
+              ? labels.live
+              : labels.endingSoon}
           </span>
         </div>
 
@@ -133,10 +155,10 @@ function FeaturedCard({ auction, index }: { auction: FeaturedAuction; index: num
           <div className="flex items-end justify-between mt-3">
             <div>
               <p className="text-[9px] font-medium tracking-[0.15em] uppercase text-[rgba(255,252,247,0.4)]">
-                {auction.status === "SOLD" ? "Hammer Price" : "Current Bid"}
+                {auction.status === "SOLD" ? labels.hammerPrice : labels.currentBid}
               </p>
               <p className={`font-bold font-mono text-[#F8B4D9] ${isHero ? "text-3xl" : "text-xl"}`}>
-                {formatCurrency(auction.currentBid)}
+                {formatCurrency(auction.currentBid, locale)}
               </p>
             </div>
 
@@ -148,7 +170,7 @@ function FeaturedCard({ auction, index }: { auction: FeaturedAuction; index: num
               className="flex items-center gap-1.5 rounded-full bg-[rgba(248,180,217,0.1)] border border-[rgba(248,180,217,0.2)] px-3 py-2 text-[11px] font-medium text-[#F8B4D9] hover:bg-[rgba(248,180,217,0.2)] hover:border-[rgba(248,180,217,0.4)] transition-all"
             >
               <ExternalLink className="size-3" />
-              View Listing
+              {labels.viewListing}
             </a>
           </div>
         </div>
@@ -171,6 +193,22 @@ function FeaturedCard({ auction, index }: { auction: FeaturedAuction; index: num
 // ---------------------------------------------------------------------------
 
 export function FeaturedAuctionsSection() {
+  const locale = useLocale()
+  const tFeatured = useTranslations("featuredAuctions")
+  const tCommon = useTranslations("common")
+  const tStatus = useTranslations("status")
+  const tSections = useTranslations("sections")
+
+  const labels = {
+    verified: tCommon("verified"),
+    sold: tStatus("sold"),
+    live: tStatus("live"),
+    endingSoon: tStatus("endingSoon"),
+    hammerPrice: tFeatured("hammerPrice"),
+    currentBid: tCommon("currentBid"),
+    viewListing: tFeatured("viewListing"),
+  }
+
   return (
     <section className="relative py-16 sm:py-20">
       {/* Section header */}
@@ -185,21 +223,27 @@ export function FeaturedAuctionsSection() {
           <div className="flex items-center gap-2 mb-3">
             <Gavel className="size-4 text-[#F8B4D9]" />
             <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-[#F8B4D9]">
-              Verified Sales
+              {tFeatured("kicker")}
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-[#FFFCF7] tracking-tight">
-            Featured Auctions
+            {tSections("featuredAuctions")}
           </h2>
           <p className="mt-2 text-[14px] text-[rgba(255,252,247,0.5)] max-w-xl">
-            Curated selection of recent high-value transactions. Real chassis, verified provenance, actual hammer prices.
+            {tFeatured("subtitle")}
           </p>
         </motion.div>
 
         {/* Bento Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5">
           {featuredAuctions.map((auction, i) => (
-            <FeaturedCard key={auction.id} auction={auction} index={i} />
+            <FeaturedCard
+              key={auction.id}
+              auction={auction}
+              index={i}
+              locale={locale}
+              labels={labels}
+            />
           ))}
         </div>
 
@@ -211,7 +255,7 @@ export function FeaturedAuctionsSection() {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="mt-6 text-center text-[10px] text-[rgba(255,252,247,0.25)]"
         >
-          Data sourced directly from Bring a Trailer and RM Sotheby's. Prices verified at time of sale.
+          {tFeatured("dataNote")}
         </motion.p>
       </div>
     </section>

@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useTranslations } from 'next-intl'
 
 interface AuthModalProps {
   open: boolean
@@ -19,6 +20,7 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ open, onOpenChange, defaultMode = 'signin' }: AuthModalProps) {
+  const t = useTranslations('auth')
   const [mode, setMode] = useState<'signin' | 'signup'>(defaultMode)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -45,14 +47,14 @@ export function AuthModal({ open, onOpenChange, defaultMode = 'signin' }: AuthMo
         }
       } else {
         const { error } = await signUp(email, password, name)
-        if (error) {
-          setError(error.message)
-        } else {
-          setSuccess('Check your email to confirm your account')
+          if (error) {
+            setError(error.message)
+          } else {
+          setSuccess(t('confirmEmail'))
         }
       }
     } catch {
-      setError('An unexpected error occurred')
+      setError(t('unexpectedError'))
     } finally {
       setLoading(false)
     }
@@ -68,7 +70,7 @@ export function AuthModal({ open, onOpenChange, defaultMode = 'signin' }: AuthMo
         setError(error.message)
       }
     } catch {
-      setError('An unexpected error occurred')
+      setError(t('unexpectedError'))
     } finally {
       setLoading(false)
     }
@@ -79,12 +81,12 @@ export function AuthModal({ open, onOpenChange, defaultMode = 'signin' }: AuthMo
       <DialogContent className="bg-[#0F1012] border-white/10 sm:max-w-[420px]">
         <DialogHeader>
           <DialogTitle className="text-[#F2F0E9] text-xl font-semibold">
-            {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
+            {mode === 'signin' ? t('welcomeBack') : t('createAccountTitle')}
           </DialogTitle>
           <DialogDescription className="text-[#9CA3AF]">
             {mode === 'signin'
-              ? 'Sign in to access your analysis credits'
-              : 'Get 3 free analysis credits when you sign up'}
+              ? t('signInDesc')
+              : t('createAccountDesc')}
           </DialogDescription>
         </DialogHeader>
 
@@ -92,11 +94,11 @@ export function AuthModal({ open, onOpenChange, defaultMode = 'signin' }: AuthMo
           {mode === 'signup' && (
             <div className="space-y-2">
               <label className="text-xs uppercase tracking-[0.2em] text-[#4B5563]">
-                Name
+                {t('name')}
               </label>
               <Input
                 type="text"
-                placeholder="Your name"
+                placeholder={t('namePlaceholder')}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="bg-[#050505] border-white/10 text-[#F2F0E9] placeholder:text-[#4B5563]"
@@ -106,11 +108,11 @@ export function AuthModal({ open, onOpenChange, defaultMode = 'signin' }: AuthMo
 
           <div className="space-y-2">
             <label className="text-xs uppercase tracking-[0.2em] text-[#4B5563]">
-              Email
+              {t('email')}
             </label>
             <Input
               type="email"
-              placeholder="you@example.com"
+              placeholder={t('emailPlaceholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -120,11 +122,11 @@ export function AuthModal({ open, onOpenChange, defaultMode = 'signin' }: AuthMo
 
           <div className="space-y-2">
             <label className="text-xs uppercase tracking-[0.2em] text-[#4B5563]">
-              Password
+              {t('password')}
             </label>
             <Input
               type="password"
-              placeholder="Enter your password"
+              placeholder={t('passwordPlaceholder')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -146,7 +148,11 @@ export function AuthModal({ open, onOpenChange, defaultMode = 'signin' }: AuthMo
             disabled={loading}
             className="w-full bg-[#F8B4D9] text-[#050505] hover:bg-[#F8B4D9]/90 font-semibold"
           >
-            {loading ? 'Loading...' : mode === 'signin' ? 'Sign In' : 'Create Account'}
+            {loading
+              ? t('loading')
+              : mode === 'signin'
+              ? t('signIn')
+              : t('createAccountTitle')}
           </Button>
         </form>
 
@@ -156,7 +162,7 @@ export function AuthModal({ open, onOpenChange, defaultMode = 'signin' }: AuthMo
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-[#0F1012] px-2 text-[#4B5563] tracking-[0.2em]">
-              or
+              {t('or')}
             </span>
           </div>
         </div>
@@ -186,7 +192,7 @@ export function AuthModal({ open, onOpenChange, defaultMode = 'signin' }: AuthMo
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
             />
           </svg>
-          Continue with Google
+          {t('continueWithGoogle')}
         </Button>
 
         <div className="text-center mt-4">
@@ -196,8 +202,8 @@ export function AuthModal({ open, onOpenChange, defaultMode = 'signin' }: AuthMo
             className="text-sm text-[#9CA3AF] hover:text-[#F8B4D9] transition-colors"
           >
             {mode === 'signin'
-              ? "Don't have an account? Sign up"
-              : 'Already have an account? Sign in'}
+              ? t('switchToSignUp')
+              : t('switchToSignIn')}
           </button>
         </div>
       </DialogContent>

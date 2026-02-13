@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import Image from "next/image"
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   ArrowLeft,
@@ -24,7 +24,7 @@ import {
 } from "lucide-react"
 import type { CollectorCar } from "@/lib/curatedCars"
 import { AdvisorChat } from "@/components/advisor/AdvisorChat"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { getModelImage } from "@/lib/modelImages"
 
 // ─── MODEL TYPE (aggregated from cars) ───
@@ -101,11 +101,11 @@ const priceRanges = [
 
 // ─── SORT OPTIONS ───
 const sortOptions = [
-  { label: "Price: High to Low", value: "price-desc" },
-  { label: "Price: Low to High", value: "price-asc" },
-  { label: "Year: Newest First", value: "year-desc" },
-  { label: "Year: Oldest First", value: "year-asc" },
-  { label: "Most Listed", value: "count-desc" },
+  { key: "priceHighToLow" as const, value: "price-desc" },
+  { key: "priceLowToHigh" as const, value: "price-asc" },
+  { key: "yearNewestFirst" as const, value: "year-desc" },
+  { key: "yearOldestFirst" as const, value: "year-asc" },
+  { key: "mostListed" as const, value: "count-desc" },
 ]
 
 // ─── HELPERS ───
@@ -115,14 +115,17 @@ function formatPrice(n: number): string {
   return `$${n.toLocaleString()}`
 }
 
-function timeLeft(endTime: Date): string {
+function timeLeft(
+  endTime: Date,
+  labels: { ended: string; day: string; hour: string; minute: string }
+): string {
   const diff = endTime.getTime() - Date.now()
-  if (diff <= 0) return "Ended"
+  if (diff <= 0) return labels.ended
   const days = Math.floor(diff / 86400000)
   const hrs = Math.floor((diff % 86400000) / 3600000)
-  if (days > 0) return `${days}d ${hrs}h`
+  if (days > 0) return `${days}${labels.day} ${hrs}${labels.hour}`
   const mins = Math.floor((diff % 3600000) / 60000)
-  return `${hrs}h ${mins}m`
+  return `${hrs}${labels.hour} ${mins}${labels.minute}`
 }
 
 // ─── AGGREGATE CARS INTO MODELS ───
@@ -280,6 +283,7 @@ function DropdownSelect({
 // ─── MODEL CARD (BIG CARD FOR MODELS) ───
 function ModelCard({ model, make, index }: { model: Model; make: string; index: number }) {
   const makeSlug = make.toLowerCase().replace(/\s+/g, "-")
+  const t = useTranslations("makePage")
 
   return (
     <motion.div
@@ -342,7 +346,7 @@ function ModelCard({ model, make, index }: { model: Model; make: string; index: 
             <div className="flex items-end justify-between">
               <div>
                 <p className="text-[10px] font-medium tracking-[0.15em] uppercase text-[#6B7280]">
-                  Price Range
+                  {t("model.priceRange")}
                 </p>
                 <p className="text-2xl font-bold font-mono text-[#F8B4D9] mt-1">
                   {formatPrice(model.priceMin)} <span className="text-[#6B7280] text-lg">—</span> {formatPrice(model.priceMax)}
@@ -350,7 +354,7 @@ function ModelCard({ model, make, index }: { model: Model; make: string; index: 
               </div>
 
               <div className="flex items-center gap-2 text-[#9CA3AF] group-hover:text-[#F8B4D9] transition-colors">
-                <span className="text-[12px] font-medium">View Collection</span>
+                <span className="text-[12px] font-medium">{t("model.viewCollection")}</span>
                 <ChevronRight className="size-5" />
               </div>
             </div>
@@ -363,6 +367,11 @@ function ModelCard({ model, make, index }: { model: Model; make: string; index: 
 
 // ─── CAR CARD IN GRID ───
 function CarCard({ car, index }: { car: CollectorCar; index: number }) {
+  const locale = useLocale()
+  const t = useTranslations("makePage")
+  const tAuction = useTranslations("auctionDetail")
+  const tStatus = useTranslations("status")
+
   const isLive = car.status === "ACTIVE" || car.status === "ENDING_SOON"
 
   return (
@@ -392,7 +401,7 @@ function CarCard({ car, index }: { car: CollectorCar; index: number }) {
           {isLive && (
             <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-[#0b0b10]/80 backdrop-blur-md px-2.5 py-1">
               <div className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[10px] font-medium text-emerald-400">LIVE</span>
+              <span className="text-[10px] font-medium text-emerald-400">{tStatus("live")}</span>
             </div>
           )}
 
@@ -414,7 +423,7 @@ function CarCard({ car, index }: { car: CollectorCar; index: number }) {
           <div className="mt-3 flex items-center justify-between">
             <div>
               <p className="text-[9px] font-medium tracking-[0.15em] uppercase text-[#4B5563]">
-                {isLive ? "Current Bid" : "Sold For"}
+                {isLive ? t("card.currentBid") : t("card.soldFor")}
               </p>
               <p className="text-[18px] font-bold font-mono text-[#F8B4D9]">
                 {formatPrice(car.currentBid)}
@@ -422,10 +431,10 @@ function CarCard({ car, index }: { car: CollectorCar; index: number }) {
             </div>
             <div className="text-right">
               <p className="text-[9px] font-medium tracking-[0.15em] uppercase text-[#4B5563]">
-                Mileage
+                {tAuction("specs.mileage")}
               </p>
               <p className="text-[13px] font-medium text-[#9CA3AF]">
-                {car.mileage.toLocaleString()} {car.mileageUnit}
+                {car.mileage.toLocaleString(locale)} {car.mileageUnit}
               </p>
             </div>
           </div>
@@ -436,12 +445,17 @@ function CarCard({ car, index }: { car: CollectorCar; index: number }) {
               {isLive && (
                 <span className="flex items-center gap-1">
                   <Clock className="size-3" />
-                  {timeLeft(car.endTime)}
+                  {timeLeft(new Date(car.endTime), {
+                    ended: tAuction("time.ended"),
+                    day: tAuction("time.units.day"),
+                    hour: tAuction("time.units.hour"),
+                    minute: tAuction("time.units.minute"),
+                  })}
                 </span>
               )}
               <span className="flex items-center gap-1">
                 <Gavel className="size-3" />
-                {car.bidCount} bids
+                {tAuction("bids.count", { count: car.bidCount })}
               </span>
             </div>
             <ChevronRight className="size-4 text-[#4B5563] group-hover:text-[#F8B4D9] transition-colors" />
@@ -482,7 +496,14 @@ function MobileFilterSheet({
   cars: CollectorCar[]
   filteredCount: number
 }) {
-  const statuses = ["All", "Live", "Ended"]
+  const t = useTranslations("makePage")
+  const tStatus = useTranslations("status")
+
+  const statuses = [
+    { value: "All", label: t("filters.statusAll") },
+    { value: "Live", label: tStatus("live") },
+    { value: "Ended", label: tStatus("ended") },
+  ]
 
   return (
     <AnimatePresence>
@@ -507,7 +528,7 @@ function MobileFilterSheet({
               <div className="flex items-center gap-2">
                 <Filter className="size-4 text-[#F8B4D9]" />
                 <span className="text-[12px] font-semibold tracking-[0.1em] uppercase text-[#F2F0E9]">
-                  Filters
+                  {t("mobileFilters.title")}
                 </span>
               </div>
               <button
@@ -523,11 +544,11 @@ function MobileFilterSheet({
               {/* Model Filter */}
               <div>
                 <label className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#4B5563] mb-3 block">
-                  Model
+                  {t("filters.model")}
                 </label>
                 <div className="flex flex-wrap gap-2">
                   <FilterChip
-                    label="All Models"
+                    label={t("filters.allModels")}
                     active={selectedModel === "All"}
                     onClick={() => setSelectedModel("All")}
                   />
@@ -546,7 +567,7 @@ function MobileFilterSheet({
               {/* Price Range */}
               <div>
                 <label className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#4B5563] mb-3 block">
-                  Price Range
+                  {t("filters.priceRange")}
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {priceRanges.map((range, i) => (
@@ -563,15 +584,15 @@ function MobileFilterSheet({
               {/* Status */}
               <div>
                 <label className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#4B5563] mb-3 block">
-                  Status
+                  {t("filters.status")}
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {statuses.map(status => (
+                  {statuses.map((status) => (
                     <FilterChip
-                      key={status}
-                      label={status}
-                      active={selectedStatus === status}
-                      onClick={() => setSelectedStatus(status)}
+                      key={status.value}
+                      label={status.label}
+                      active={selectedStatus === status.value}
+                      onClick={() => setSelectedStatus(status.value)}
                     />
                   ))}
                 </div>
@@ -580,13 +601,13 @@ function MobileFilterSheet({
               {/* Sort */}
               <div>
                 <label className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#4B5563] mb-3 block">
-                  Sort By
+                  {t("filters.sortBy")}
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {sortOptions.map(option => (
+                  {sortOptions.map((option) => (
                     <FilterChip
                       key={option.value}
-                      label={option.label}
+                      label={t(`sort.${option.key}`)}
                       active={sortBy === option.value}
                       onClick={() => setSortBy(option.value)}
                     />
@@ -601,7 +622,7 @@ function MobileFilterSheet({
                 onClick={onClose}
                 className="w-full py-4 rounded-xl bg-[#F8B4D9] text-[#050505] font-semibold text-[13px]"
               >
-                Show {filteredCount} Results
+                {t("mobileFilters.showResults", { count: filteredCount })}
               </button>
             </div>
           </motion.div>
@@ -613,7 +634,9 @@ function MobileFilterSheet({
 
 // ─── MAIN COMPONENT ───
 export function MakePageClient({ make, cars }: { make: string; cars: CollectorCar[] }) {
-  const t = useTranslations()
+  const locale = useLocale()
+  const t = useTranslations("makePage")
+  const tStatus = useTranslations("status")
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState("")
@@ -725,18 +748,18 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
             className="absolute top-24 left-6 md:left-12 flex items-center gap-2 text-[12px] text-[rgba(255,252,247,0.5)] hover:text-[#F8B4D9] transition-colors"
           >
             <ArrowLeft className="size-4" />
-            Back to Collection
+            {t("hero.backToCollection")}
           </Link>
 
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-4">
               <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-[#F8B4D9]">
-                Brand Collection
+                {t("hero.brandCollection")}
               </span>
               {liveCount > 0 && (
                 <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-1">
                   <div className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-[10px] font-medium text-emerald-400">{liveCount} LIVE</span>
+                  <span className="text-[10px] font-medium text-emerald-400">{t("hero.liveCount", { count: liveCount })}</span>
                 </span>
               )}
             </div>
@@ -750,7 +773,7 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
             <div className="mt-6 flex flex-wrap gap-4 md:gap-6">
               <div>
                 <p className="text-[9px] font-medium tracking-[0.2em] uppercase text-[#4B5563]">
-                  Price Range
+                  {t("hero.priceRange")}
                 </p>
                 <p className="text-2xl md:text-3xl font-bold font-mono text-[#F8B4D9]">
                   {formatPrice(minPrice)} – {formatPrice(maxPrice)}
@@ -758,18 +781,18 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
               </div>
               <div>
                 <p className="text-[9px] font-medium tracking-[0.2em] uppercase text-[#4B5563]">
-                  Listings
+                  {t("hero.listings")}
                 </p>
                 <p className="text-2xl md:text-3xl font-bold font-mono text-[#F2F0E9]">
-                  {cars.length}
+                  {cars.length.toLocaleString(locale)}
                 </p>
               </div>
               <div className="hidden md:block">
                 <p className="text-[9px] font-medium tracking-[0.2em] uppercase text-[#4B5563]">
-                  Sold
+                  {t("hero.sold")}
                 </p>
                 <p className="text-2xl md:text-3xl font-bold font-mono text-[#9CA3AF]">
-                  {soldCount}
+                  {soldCount.toLocaleString(locale)}
                 </p>
               </div>
             </div>
@@ -789,14 +812,14 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={`Search ${make} models...`}
+                placeholder={t("filters.searchModelsPlaceholder", { make })}
                 className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-[13px] text-[#F2F0E9] placeholder:text-[#4B5563] focus:outline-none focus:border-[#F8B4D9]/50"
               />
             </div>
 
             {/* Price Range Dropdown */}
             <DropdownSelect
-              label="Price"
+              label={t("filters.price")}
               value={selectedPriceRange.toString()}
               options={priceRanges.map((r, i) => ({ label: r.label, value: i.toString() }))}
               onChange={(v) => setSelectedPriceRange(parseInt(v))}
@@ -805,9 +828,9 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
 
             {/* Sort Dropdown */}
             <DropdownSelect
-              label="Sort"
+              label={t("filters.sort")}
               value={sortBy}
-              options={sortOptions.map(o => ({ label: o.label, value: o.value }))}
+              options={sortOptions.map((o) => ({ label: t(`sort.${o.key}`), value: o.value }))}
               onChange={setSortBy}
               icon={ArrowUpDown}
             />
@@ -819,7 +842,7 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
                 className="flex items-center gap-2 px-4 py-2.5 text-[12px] font-medium text-[#F8B4D9] hover:text-[#fce4ec] transition-colors"
               >
                 <X className="size-4" />
-                Clear ({activeFilterCount})
+                {t("filters.clearWithCount", { count: activeFilterCount })}
               </button>
             )}
           </div>
@@ -833,7 +856,7 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={`Search ${make}...`}
+                placeholder={t("filters.searchMakePlaceholder", { make })}
                 className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-[13px] text-[#F2F0E9] placeholder:text-[#4B5563] focus:outline-none focus:border-[#F8B4D9]/50"
               />
             </div>
@@ -844,7 +867,7 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
               className="relative flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-[12px] font-medium text-[#9CA3AF]"
             >
               <SlidersHorizontal className="size-4" />
-              Filters
+              {t("filters.filters")}
               {activeFilterCount > 0 && (
                 <span className="absolute -top-1 -right-1 size-5 flex items-center justify-center rounded-full bg-[#F8B4D9] text-[10px] font-bold text-[#050505]">
                   {activeFilterCount}
@@ -864,7 +887,7 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
             <div className="flex items-start gap-2 rounded-xl border border-white/5 bg-white/[0.02] p-4">
               <Info className="size-4 text-[#4B5563] mt-0.5 shrink-0" />
               <p className="text-[11px] text-[#9CA3AF]">
-                Prices from real auction results. {cars.length} listings tracked.
+                {t("sidebar.dataSource", { count: cars.length })}
               </p>
             </div>
 
@@ -872,10 +895,10 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
             <div className="rounded-2xl bg-[rgba(15,14,22,0.6)] border border-[rgba(248,180,217,0.08)] p-5">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-                  About {make}
+                  {t("sidebar.about", { make })}
                 </h2>
                 <span className="rounded-full bg-white/5 border border-white/10 px-2 py-0.5 text-[9px] font-medium text-[#4B5563]">
-                  Editorial
+                  {t("sidebar.editorial")}
                 </span>
               </div>
               <p className="text-[12px] leading-relaxed text-[rgba(255,252,247,0.7)]">
@@ -887,35 +910,35 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
             <div className="rounded-2xl bg-[rgba(15,14,22,0.6)] border border-[rgba(248,180,217,0.08)] p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <Wrench className="size-4 text-[#F8B4D9]" />
-                  <h2 className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-                    Est. Annual Costs
-                  </h2>
+                    <Wrench className="size-4 text-[#F8B4D9]" />
+                    <h2 className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
+                      {t("sidebar.estimatedAnnualCosts")}
+                    </h2>
+                  </div>
+                  <span className="rounded-full bg-white/5 border border-white/10 px-2 py-0.5 text-[9px] font-medium text-[#4B5563]">
+                    {t("sidebar.estimates")}
+                  </span>
                 </div>
-                <span className="rounded-full bg-white/5 border border-white/10 px-2 py-0.5 text-[9px] font-medium text-[#4B5563]">
-                  Estimates
-                </span>
-              </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] text-[#9CA3AF]">Insurance</span>
+                  <span className="text-[11px] text-[#9CA3AF]">{t("sidebar.insurance")}</span>
                   <span className="text-[11px] font-mono text-[#F2F0E9]">{formatPrice(costs.insurance)}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] text-[#9CA3AF]">Storage</span>
+                  <span className="text-[11px] text-[#9CA3AF]">{t("sidebar.storage")}</span>
                   <span className="text-[11px] font-mono text-[#F2F0E9]">{formatPrice(costs.storage)}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] text-[#9CA3AF]">Service</span>
+                  <span className="text-[11px] text-[#9CA3AF]">{t("sidebar.service")}</span>
                   <span className="text-[11px] font-mono text-[#F2F0E9]">{formatPrice(costs.maintenance)}</span>
                 </div>
                 <div className="pt-2 border-t border-white/5 flex items-center justify-between">
-                  <span className="text-[11px] font-medium text-[#9CA3AF]">Total</span>
-                  <span className="text-[14px] font-mono font-bold text-[#F8B4D9]">{formatPrice(totalAnnualCost)}/yr</span>
+                  <span className="text-[11px] font-medium text-[#9CA3AF]">{t("sidebar.total")}</span>
+                  <span className="text-[14px] font-mono font-bold text-[#F8B4D9]">{formatPrice(totalAnnualCost)}{t("sidebar.perYear")}</span>
                 </div>
               </div>
               <p className="mt-3 text-[10px] text-[#4B5563]">
-                Based on industry averages. Actual costs vary.
+                {t("sidebar.costsNote")}
               </p>
             </div>
 
@@ -925,7 +948,7 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
               className="flex items-center justify-center gap-2 rounded-xl bg-[#F8B4D9] py-3.5 text-[11px] font-semibold tracking-[0.1em] uppercase text-[#050505] hover:bg-[#fce4ec] transition-colors w-full"
             >
               <MessageCircle className="size-4" />
-              Speak with Advisor
+              {t("sidebar.speakWithAdvisor")}
             </button>
           </div>
 
@@ -935,10 +958,14 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-[13px] font-semibold tracking-[0.1em] uppercase text-[#9CA3AF]">
-                  {make} Models
+                  {t("results.modelsTitle", { make })}
                 </h2>
                 <p className="text-[11px] text-[#4B5563] mt-1">
-                  {filteredModels.length} of {allModels.length} models • {cars.length} total vehicles
+                  {t("results.summary", {
+                    filtered: filteredModels.length,
+                    totalModels: allModels.length,
+                    totalVehicles: cars.length,
+                  })}
                 </p>
               </div>
             </div>
@@ -948,16 +975,16 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
               <div className="text-center py-16">
                 <Car className="size-12 text-[#4B5563] mx-auto mb-4" />
                 <h3 className="text-[15px] font-semibold text-[#F2F0E9] mb-2">
-                  No models found
+                  {t("empty.title")}
                 </h3>
                 <p className="text-[13px] text-[#4B5563] mb-6">
-                  Try adjusting your filters to see more results.
+                  {t("empty.subtitle")}
                 </p>
                 <button
                   onClick={clearFilters}
                   className="px-6 py-3 rounded-xl bg-[#F8B4D9] text-[#050505] text-[12px] font-semibold"
                 >
-                  Clear All Filters
+                  {t("empty.clearAll")}
                 </button>
               </div>
             ) : (

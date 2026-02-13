@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { Globe } from "lucide-react";
@@ -11,13 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const localeNames: Record<string, string> = {
-  en: "English",
-  es: "Español",
-  de: "Deutsch",
-  ja: "日本語",
-};
-
 const localeFlags: Record<string, string> = {
   en: "🇺🇸",
   es: "🇪🇸",
@@ -26,12 +20,15 @@ const localeFlags: Record<string, string> = {
 };
 
 export function LanguageSwitcher() {
+  const t = useTranslations("language");
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
 
   const handleLocaleChange = (newLocale: string) => {
-    router.replace(pathname, { locale: newLocale });
+    const query = typeof window !== "undefined" ? window.location.search : "";
+    const href = query ? `${pathname}${query}` : pathname;
+    router.replace(href, { locale: newLocale });
   };
 
   return (
@@ -57,7 +54,7 @@ export function LanguageSwitcher() {
             }`}
           >
             <span>{localeFlags[loc]}</span>
-            <span>{localeNames[loc]}</span>
+            <span>{t(loc)}</span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
@@ -71,12 +68,15 @@ export function MobileLanguageSwitcher({
 }: {
   onSelect?: () => void;
 }) {
+  const t = useTranslations("language");
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
 
   const handleLocaleChange = (newLocale: string) => {
-    router.replace(pathname, { locale: newLocale });
+    const query = typeof window !== "undefined" ? window.location.search : "";
+    const href = query ? `${pathname}${query}` : pathname;
+    router.replace(href, { locale: newLocale });
     onSelect?.();
   };
 
@@ -93,7 +93,7 @@ export function MobileLanguageSwitcher({
           }`}
         >
           <span className="text-lg">{localeFlags[loc]}</span>
-          <span>{localeNames[loc]}</span>
+          <span>{t(loc)}</span>
         </button>
       ))}
     </div>

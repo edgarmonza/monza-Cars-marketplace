@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation"
+import { Suspense } from "react"
 import { CURATED_CARS } from "@/lib/curatedCars"
 import { CarDetailClient } from "./CarDetailClient"
 
@@ -47,5 +48,21 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
     c => c.id !== car.id && (c.category === car.category || c.make === car.make)
   ).slice(0, 4)
 
-  return <CarDetailClient car={car} similarCars={similarCars} />
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-black flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative">
+              <div className="h-10 w-10 rounded-full border-2 border-zinc-800" />
+              <div className="absolute inset-0 h-10 w-10 rounded-full border-2 border-amber-500 border-t-transparent animate-spin" />
+            </div>
+            <p className="text-sm text-zinc-500">Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      <CarDetailClient car={car} similarCars={similarCars} />
+    </Suspense>
+  )
 }

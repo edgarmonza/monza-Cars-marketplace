@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import {
   Search, SlidersHorizontal, X, Car, DollarSign,
   Loader2, Clock, ChevronDown,
@@ -15,15 +15,38 @@ import {
 } from "@/components/ui/select";
 import { useSearch } from "@/hooks/useSearch";
 
-const MAKES = [
-  "All Makes", "Porsche", "Ferrari", "Lamborghini", "McLaren", "BMW",
-  "Mercedes-Benz", "Aston Martin", "Bugatti", "Pagani", "Koenigsegg",
-  "Toyota", "Nissan", "Honda", "Lexus", "Mazda", "Mitsubishi", "Subaru",
-  "Ford", "Jaguar", "Maserati", "Lancia", "Audi", "Alpine", "De Tomaso",
+import { useLocale, useTranslations } from "next-intl";
+
+const ALL = "__all__";
+
+const MAKE_VALUES = [
+  "Porsche",
+  "Ferrari",
+  "Lamborghini",
+  "McLaren",
+  "BMW",
+  "Mercedes-Benz",
+  "Aston Martin",
+  "Bugatti",
+  "Pagani",
+  "Koenigsegg",
+  "Toyota",
+  "Nissan",
+  "Honda",
+  "Lexus",
+  "Mazda",
+  "Mitsubishi",
+  "Subaru",
+  "Ford",
+  "Jaguar",
+  "Maserati",
+  "Lancia",
+  "Audi",
+  "Alpine",
+  "De Tomaso",
 ];
 
 const PLATFORMS = [
-  { value: "All Platforms", label: "All Platforms" },
   { value: "BRING_A_TRAILER", label: "Bring a Trailer" },
   { value: "RM_SOTHEBYS", label: "RM Sotheby's" },
   { value: "GOODING", label: "Gooding & Co" },
@@ -32,18 +55,17 @@ const PLATFORMS = [
   { value: "COLLECTING_CARS", label: "Collecting Cars" },
 ];
 
-const STATUSES = [
-  { value: "All Statuses", label: "All Statuses" },
-  { value: "ACTIVE", label: "Live" },
-  { value: "ENDED", label: "Completed" },
+const STATUS_VALUES = [
+  { value: "ACTIVE", key: "live" as const },
+  { value: "ENDED", key: "completed" as const },
 ];
 
 const SORT_OPTIONS = [
-  { value: "createdAt_desc", label: "Newest First" },
-  { value: "createdAt_asc", label: "Oldest First" },
-  { value: "currentBid_desc", label: "Price: High to Low" },
-  { value: "currentBid_asc", label: "Price: Low to High" },
-  { value: "endTime_asc", label: "Ending Soon" },
+  { value: "createdAt_desc", key: "newestFirst" as const },
+  { value: "createdAt_asc", key: "oldestFirst" as const },
+  { value: "currentBid_desc", key: "priceHighToLow" as const },
+  { value: "currentBid_asc", key: "priceLowToHigh" as const },
+  { value: "endTime_asc", key: "endingSoon" as const },
 ];
 
 const PLATFORM_SHORT: Record<string, string> = {
@@ -70,23 +92,34 @@ function mapStatus(status: string): "live" | "completed" {
   return "completed";
 }
 
-function timeLeft(dateStr: string | null): string {
-  if (!dateStr) return "—";
+function timeLeft(
+  dateStr: string | null,
+  labels: {
+    none: string;
+    ended: string;
+    day: string;
+    hour: string;
+    minute: string;
+  }
+): string {
+  if (!dateStr) return labels.none;
   const diff = new Date(dateStr).getTime() - Date.now();
-  if (diff < 0) return "Ended";
+  if (diff < 0) return labels.ended;
   const hours = Math.floor(diff / (1000 * 60 * 60));
   const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  if (hours >= 24) return `${Math.floor(hours / 24)}d ${hours % 24}h`;
-  return `${hours}h ${mins}m`;
+  if (hours >= 24) return `${Math.floor(hours / 24)}${labels.day} ${hours % 24}${labels.hour}`;
+  return `${hours}${labels.hour} ${mins}${labels.minute}`;
 }
 
 export function SearchClient() {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("search");
   const { query, debouncedQuery, setQuery } = useSearch(300);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [selectedMake, setSelectedMake] = useState("All Makes");
-  const [selectedPlatform, setSelectedPlatform] = useState("All Platforms");
-  const [selectedStatus, setSelectedStatus] = useState("All Statuses");
+  const [selectedMake, setSelectedMake] = useState(ALL);
+  const [selectedPlatform, setSelectedPlatform] = useState(ALL);
+  const [selectedStatus, setSelectedStatus] = useState(ALL);
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
   const [yearMin, setYearMin] = useState("");
@@ -96,15 +129,25 @@ export function SearchClient() {
   const [total, setTotal] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
 
+  const formatCurrencyLocal = useCallback(
+    (amount: number) =>
+      new Intl.NumberFormat(locale, {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0,
+      }).format(amount),
+    [locale]
+  );
+
   const fetchResults = useCallback(async () => {
     setIsSearching(true);
     try {
       const params = new URLSearchParams();
       params.set("limit", "120"); // Show all 120 cars
       if (debouncedQuery) params.set("query", debouncedQuery);
-      if (selectedMake !== "All Makes") params.set("make", selectedMake);
-      if (selectedPlatform !== "All Platforms") params.set("platform", selectedPlatform);
-      if (selectedStatus !== "All Statuses") params.set("status", selectedStatus);
+      if (selectedMake !== ALL) params.set("make", selectedMake);
+      if (selectedPlatform !== ALL) params.set("platform", selectedPlatform);
+      if (selectedStatus !== ALL) params.set("status", selectedStatus);
       const [sortField, sortDir] = sortBy.split("_");
       params.set("sortBy", sortField);
       params.set("sortOrder", sortDir);
@@ -122,13 +165,23 @@ export function SearchClient() {
   useEffect(() => { fetchResults(); }, [fetchResults]);
 
   const activeFilterCount = [
-    selectedMake !== "All Makes", selectedPlatform !== "All Platforms",
-    selectedStatus !== "All Statuses", !!priceMin, !!priceMax, !!yearMin, !!yearMax,
+    selectedMake !== ALL,
+    selectedPlatform !== ALL,
+    selectedStatus !== ALL,
+    !!priceMin,
+    !!priceMax,
+    !!yearMin,
+    !!yearMax,
   ].filter(Boolean).length;
 
   const clearFilters = () => {
-    setSelectedMake("All Makes"); setSelectedPlatform("All Platforms");
-    setSelectedStatus("All Statuses"); setPriceMin(""); setPriceMax(""); setYearMin(""); setYearMax("");
+    setSelectedMake(ALL);
+    setSelectedPlatform(ALL);
+    setSelectedStatus(ALL);
+    setPriceMin("");
+    setPriceMax("");
+    setYearMin("");
+    setYearMax("");
   };
 
   return (
@@ -142,7 +195,7 @@ export function SearchClient() {
           {/* Title */}
           <div className="shrink-0">
             <h1 className="text-xl font-semibold text-[#F2F0E9] tracking-tight">
-              Search <span className="text-gradient">Auctions</span>
+              {t("header.title")} <span className="text-gradient">{t("header.titleAccent")}</span>
             </h1>
           </div>
 
@@ -151,7 +204,7 @@ export function SearchClient() {
             <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[#4B5563]" />
             <Input
               type="search"
-              placeholder="Search make, model, year..."
+              placeholder={t("header.searchPlaceholder")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="h-10 rounded-full border-white/5 bg-[#0F1012] pl-10 pr-10 text-sm text-[#F2F0E9] placeholder:text-[#4B5563] focus-visible:border-[rgba(248,180,217,0.25)] focus-visible:ring-[rgba(248,180,217,0.1)] backdrop-blur-xl"
@@ -171,7 +224,7 @@ export function SearchClient() {
           {/* Results Count + Sort */}
           <div className="flex items-center gap-4 shrink-0 ml-auto">
             <span className="text-[11px] tracking-[0.1em] text-[#4B5563] tabular-nums">
-              {total} result{total !== 1 ? "s" : ""}
+              {t("header.results", { count: total })}
             </span>
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="h-8 w-[150px] rounded-full border-white/5 bg-[#0F1012] text-[#9CA3AF] text-xs">
@@ -179,7 +232,9 @@ export function SearchClient() {
               </SelectTrigger>
               <SelectContent>
                 {SORT_OPTIONS.map((o) => (
-                  <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  <SelectItem key={o.value} value={o.value}>
+                    {t(`sort.${o.key}`)}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -198,7 +253,7 @@ export function SearchClient() {
             onClick={() => setFiltersOpen(!filtersOpen)}
           >
             <SlidersHorizontal className="size-3" />
-            Filters
+            {t("filters.button")}
             {activeFilterCount > 0 && (
               <Badge className="ml-1 size-4 items-center justify-center rounded-full bg-[#F8B4D9] p-0 text-[9px] text-[#050505]">
                 {activeFilterCount}
@@ -208,10 +263,10 @@ export function SearchClient() {
           </Button>
 
           {/* Quick Filter Chips */}
-          {STATUSES.slice(1).map((status) => (
+          {STATUS_VALUES.map((status) => (
             <button
               key={status.value}
-              onClick={() => setSelectedStatus(selectedStatus === status.value ? "All Statuses" : status.value)}
+              onClick={() => setSelectedStatus(selectedStatus === status.value ? ALL : status.value)}
               className={cn(
                 "h-7 px-3 rounded-full text-[10px] font-medium tracking-[0.05em] transition-all border",
                 selectedStatus === status.value
@@ -219,7 +274,7 @@ export function SearchClient() {
                   : "bg-transparent text-[#9CA3AF] border-white/5 hover:border-[rgba(248,180,217,0.2)] hover:text-[#F2F0E9]"
               )}
             >
-              {status.label}
+              {t(`statuses.${status.key}`)}
             </button>
           ))}
 
@@ -229,8 +284,13 @@ export function SearchClient() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {MAKES.map((m) => (
-                <SelectItem key={m} value={m}>{m}</SelectItem>
+              <SelectItem key={ALL} value={ALL}>
+                {t("filters.allMakes")}
+              </SelectItem>
+              {MAKE_VALUES.map((m) => (
+                <SelectItem key={m} value={m}>
+                  {m}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -241,6 +301,9 @@ export function SearchClient() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem key={ALL} value={ALL}>
+                {t("filters.allPlatforms")}
+              </SelectItem>
               {PLATFORMS.map((p) => (
                 <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
               ))}
@@ -252,7 +315,7 @@ export function SearchClient() {
               onClick={clearFilters}
               className="h-7 px-3 text-[10px] text-[#4B5563] hover:text-[#F2F0E9] transition-colors"
             >
-              Clear all
+              {t("filters.clearAll")}
             </button>
           )}
         </div>
@@ -262,24 +325,24 @@ export function SearchClient() {
           <div className="mt-4 pt-4 border-t border-white/5">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div>
-                <label className="mb-1.5 block text-[9px] font-medium tracking-[0.2em] uppercase text-[#4B5563]">Year Range</label>
+                <label className="mb-1.5 block text-[9px] font-medium tracking-[0.2em] uppercase text-[#4B5563]">{t("filters.yearRange")}</label>
                 <div className="flex items-center gap-2">
-                  <Input type="number" placeholder="From" value={yearMin} onChange={(e) => setYearMin(e.target.value)} className="h-8 rounded-lg border-white/5 bg-[#0F1012] text-sm text-[#9CA3AF] placeholder:text-[#4B5563]" />
+                  <Input type="number" placeholder={t("filters.from")} value={yearMin} onChange={(e) => setYearMin(e.target.value)} className="h-8 rounded-lg border-white/5 bg-[#0F1012] text-sm text-[#9CA3AF] placeholder:text-[#4B5563]" />
                   <span className="text-[#4B5563]">-</span>
-                  <Input type="number" placeholder="To" value={yearMax} onChange={(e) => setYearMax(e.target.value)} className="h-8 rounded-lg border-white/5 bg-[#0F1012] text-sm text-[#9CA3AF] placeholder:text-[#4B5563]" />
+                  <Input type="number" placeholder={t("filters.to")} value={yearMax} onChange={(e) => setYearMax(e.target.value)} className="h-8 rounded-lg border-white/5 bg-[#0F1012] text-sm text-[#9CA3AF] placeholder:text-[#4B5563]" />
                 </div>
               </div>
               <div className="sm:col-span-2 lg:col-span-2">
-                <label className="mb-1.5 block text-[9px] font-medium tracking-[0.2em] uppercase text-[#4B5563]">Price Range</label>
+                <label className="mb-1.5 block text-[9px] font-medium tracking-[0.2em] uppercase text-[#4B5563]">{t("filters.priceRange")}</label>
                 <div className="flex items-center gap-2">
                   <div className="relative flex-1">
                     <DollarSign className="absolute left-2.5 top-1/2 size-3 -translate-y-1/2 text-[#4B5563]" />
-                    <Input type="number" placeholder="Min" value={priceMin} onChange={(e) => setPriceMin(e.target.value)} className="h-8 rounded-lg border-white/5 bg-[#0F1012] pl-7 text-sm text-[#9CA3AF] placeholder:text-[#4B5563]" />
+                    <Input type="number" placeholder={t("filters.min")} value={priceMin} onChange={(e) => setPriceMin(e.target.value)} className="h-8 rounded-lg border-white/5 bg-[#0F1012] pl-7 text-sm text-[#9CA3AF] placeholder:text-[#4B5563]" />
                   </div>
                   <span className="text-[#4B5563]">-</span>
                   <div className="relative flex-1">
                     <DollarSign className="absolute left-2.5 top-1/2 size-3 -translate-y-1/2 text-[#4B5563]" />
-                    <Input type="number" placeholder="Max" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} className="h-8 rounded-lg border-white/5 bg-[#0F1012] pl-7 text-sm text-[#9CA3AF] placeholder:text-[#4B5563]" />
+                    <Input type="number" placeholder={t("filters.max")} value={priceMax} onChange={(e) => setPriceMax(e.target.value)} className="h-8 rounded-lg border-white/5 bg-[#0F1012] pl-7 text-sm text-[#9CA3AF] placeholder:text-[#4B5563]" />
                   </div>
                 </div>
               </div>
@@ -300,16 +363,21 @@ export function SearchClient() {
           ) : results.length > 0 ? (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {results.map((result) => (
-                <InvestmentCard key={result.id} result={result} onClick={() => router.push(`/auctions/${result.id}`)} />
+                <InvestmentCard
+                  key={result.id}
+                  result={result}
+                  onClick={() => router.push(`/auctions/${result.id}`)}
+                  formatCurrency={formatCurrencyLocal}
+                />
               ))}
             </div>
           ) : (
             <div className="rounded-2xl border border-white/5 bg-[#0F1012]">
               <div className="flex flex-col items-center justify-center py-20">
                 <Search className="size-10 text-[#4B5563]/30" />
-                <p className="mt-4 text-sm font-medium text-[#9CA3AF]">No results found</p>
+                <p className="mt-4 text-sm font-medium text-[#9CA3AF]">{t("empty.title")}</p>
                 <p className="mt-1 max-w-sm text-center text-[11px] text-[#4B5563]">
-                  Try adjusting your search terms or filters.
+                  {t("empty.subtitle")}
                 </p>
                 <Button
                   variant="outline"
@@ -317,7 +385,7 @@ export function SearchClient() {
                   className="mt-6 rounded-full border-white/10 text-[#9CA3AF]"
                   onClick={() => { setQuery(""); clearFilters(); }}
                 >
-                  Clear Search
+                  {t("empty.clearSearch")}
                 </Button>
               </div>
             </div>
@@ -331,7 +399,17 @@ export function SearchClient() {
 // ─────────────────────────────────────────────────────────────────────────────
 // PREMIUM INVESTMENT CARD — Full-bleed image with overlay data
 // ─────────────────────────────────────────────────────────────────────────────
-function InvestmentCard({ result, onClick }: { result: AuctionResult; onClick: () => void }) {
+function InvestmentCard({
+  result,
+  onClick,
+  formatCurrency,
+}: {
+  result: AuctionResult;
+  onClick: () => void;
+  formatCurrency: (amount: number) => string;
+}) {
+  const t = useTranslations("search");
+  const tStatus = useTranslations("status");
   const isLive = mapStatus(result.status) === "live";
   const price = result.finalPrice ?? result.currentBid;
   const imageUrl = result.images?.[0] ?? null;
@@ -375,7 +453,7 @@ function InvestmentCard({ result, onClick }: { result: AuctionResult; onClick: (
                 <span className="relative inline-flex size-1.5 rounded-full bg-positive" />
               </span>
             )}
-            {isLive ? "Live" : "Sold"}
+            {isLive ? tStatus("live") : tStatus("sold")}
           </span>
 
           {/* Platform Badge */}
@@ -395,10 +473,10 @@ function InvestmentCard({ result, onClick }: { result: AuctionResult; onClick: (
           <div className="flex items-end justify-between mt-2">
             <div>
               <p className="text-[9px] font-medium tracking-[0.15em] uppercase text-[#9CA3AF]">
-                {isLive ? "Current Bid" : "Sold For"}
+                {isLive ? t("card.currentBid") : t("card.soldFor")}
               </p>
               <p className="text-xl font-bold text-[#F8B4D9] tabular-nums">
-                {price ? formatCurrency(price) : "—"}
+                {price ? formatCurrency(price) : t("common.none")}
               </p>
             </div>
 
@@ -407,12 +485,20 @@ function InvestmentCard({ result, onClick }: { result: AuctionResult; onClick: (
                 <div className="flex items-center gap-1 text-[#F2F0E9]">
                   <Clock className="size-3" />
                   <span className="text-[12px] font-mono font-medium tabular-nums">
-                    {timeLeft(result.endTime)}
+                    {timeLeft(result.endTime, {
+                      none: t("common.none"),
+                      ended: t("time.ended"),
+                      day: t("time.units.day"),
+                      hour: t("time.units.hour"),
+                      minute: t("time.units.minute"),
+                    })}
                   </span>
                 </div>
               )}
               <p className="text-[10px] text-[#4B5563] mt-0.5">
-                {result.bidCount > 0 ? `${result.bidCount} bids` : "No bids"}
+                {result.bidCount > 0
+                  ? t("card.bids", { count: result.bidCount })
+                  : t("card.noBids")}
               </p>
             </div>
           </div>

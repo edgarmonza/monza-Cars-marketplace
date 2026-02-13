@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useParams } from "next/navigation"
+import { Link, useRouter } from "@/i18n/navigation"
 import Image from "next/image"
-import Link from "next/link"
+import { useLocale, useTranslations } from "next-intl"
 import {
   ArrowLeft,
   ExternalLink,
@@ -110,32 +111,14 @@ interface AuctionDetail {
 // Mock Data for Deep Analytics
 // ---------------------------------------------------------------------------
 
-const mockStrategy: Record<string, { strategy: string; complexity: string; demand: string }> = {
-  Lamborghini: {
-    strategy: "Aggressive bidding justified given exceptional provenance and low mileage. The SV designation commands 30-40% premium over standard P400. Market liquidity remains strong for certified examples. Consider bidding early to establish position—sniping rarely works at this price point.",
-    complexity: "High",
-    demand: "Very High",
-  },
-  Porsche: {
-    strategy: "Patient, calculated approach recommended. Air-cooled 911 market shows depth with consistent buyer demand. Focus on condition and documentation—matching numbers and service history drive 20%+ premiums. Avoid emotional bidding; comparable sales support valuation.",
-    complexity: "Moderate",
-    demand: "High",
-  },
-  Ferrari: {
-    strategy: "Due diligence critical before bidding. Classiche certification status significantly impacts value. Consider engaging marque specialist for pre-purchase inspection. Market favors complete, documented examples over restored cars.",
-    complexity: "Very High",
-    demand: "High",
-  },
-  Nissan: {
-    strategy: "JDM market remains volatile with strong upward momentum. Verify import documentation and compliance. V-Spec and Nür variants command significant premiums. Stock, unmolested examples increasingly rare—condition trumps specification.",
-    complexity: "Moderate",
-    demand: "Extreme",
-  },
-  default: {
-    strategy: "Thorough pre-purchase inspection recommended. Research comparable sales within the last 12 months. Consider total cost of ownership including maintenance, storage, and insurance. Patient bidding typically yields better outcomes.",
-    complexity: "Moderate",
-    demand: "Moderate",
-  },
+const KNOWN_MAKE_KEYS = ["Lamborghini", "Porsche", "Ferrari", "Nissan"] as const
+type KnownMakeKey = (typeof KNOWN_MAKE_KEYS)[number]
+type MakeKey = KnownMakeKey | "default"
+
+function getMakeKey(make: string): MakeKey {
+  return (KNOWN_MAKE_KEYS as readonly string[]).includes(make)
+    ? (make as KnownMakeKey)
+    : "default"
 }
 
 const mockFinancials: Record<string, { holding: number; appreciation: string; maintenance: number; insurance: number }> = {
@@ -144,94 +127,6 @@ const mockFinancials: Record<string, { holding: number; appreciation: string; ma
   Ferrari: { holding: 35000, appreciation: "+10%", maintenance: 18000, insurance: 15000 },
   Nissan: { holding: 8000, appreciation: "+15%", maintenance: 4000, insurance: 3500 },
   default: { holding: 6000, appreciation: "+5%", maintenance: 3500, insurance: 2500 },
-}
-
-const mockRedFlags: Record<string, string[]> = {
-  Lamborghini: [
-    "Carburetors require specialized tuning; verify recent service",
-    "Clutch replacement labor-intensive (~$8,000+ at specialist)",
-    "Cooling system prone to issues in traffic; check fan operation",
-    "Frame susceptible to stress cracks at rear mounting points",
-  ],
-  Porsche: [
-    "Chain tensioner failure risk on early models (pre-1984)",
-    "Heat exchanger condition critical; rust inspection required",
-    "Galvanized vs non-galvanized body impacts long-term value",
-    "Verify matching numbers engine and transmission",
-  ],
-  Ferrari: [
-    "Cam belt service history critical ($5,000+ if overdue)",
-    "Sticky interior switches common; verify all electronics",
-    "Exhaust manifold cracks require specialist repair",
-    "Classiche rejection significantly impacts resale",
-  ],
-  Nissan: [
-    "ATTESA E-TS pump failure common; verify operation",
-    "RB26 head gasket issues if previously tuned",
-    "Rust in rear quarters and trunk common on JDM imports",
-    "Verify legal import status and EPA/DOT compliance",
-  ],
-  default: [
-    "Request comprehensive service history documentation",
-    "Verify VIN matches title and body panels",
-    "Check for evidence of previous accident damage",
-    "Confirm mileage with service records",
-  ],
-}
-
-const mockSellerQuestions: Record<string, string[]> = {
-  Lamborghini: [
-    "Has the battery tray been inspected for corrosion?",
-    "When were the carburetors last synchronized?",
-    "Is the air conditioning original and functional?",
-    "Any history of frame repairs or reinforcement?",
-  ],
-  Porsche: [
-    "When was the last valve adjustment performed?",
-    "Has the vehicle been used in any form of motorsport?",
-    "Are the date codes correct on all glass?",
-    "Has the transmission been rebuilt? By whom?",
-  ],
-  Ferrari: [
-    "Is Classiche certification in progress or obtainable?",
-    "When was the last cam belt service performed?",
-    "Are all tools and books present and original?",
-    "Has the car ever been repainted?",
-  ],
-  Nissan: [
-    "Has the vehicle been modified from stock specification?",
-    "What is the boost level and tune history?",
-    "Is the odometer reading in kilometers or miles?",
-    "Are all import documents available for review?",
-  ],
-  default: [
-    "Is a pre-purchase inspection permitted?",
-    "What is the service history since ownership?",
-    "Are there any known mechanical issues?",
-    "What is included in the sale (records, spare parts)?",
-  ],
-}
-
-const mockComparables: Record<string, { title: string; price: number; date: string; platform: string }[]> = {
-  Lamborghini: [
-    { title: "1971 Miura P400 SV", price: 2_650_000, date: "Nov 2025", platform: "RM Sotheby's" },
-    { title: "1972 Miura P400 SV", price: 2_350_000, date: "Aug 2025", platform: "Gooding" },
-    { title: "1969 Miura P400 S", price: 1_980_000, date: "May 2025", platform: "Bonhams" },
-    { title: "1970 Miura P400 S", price: 1_850_000, date: "Mar 2025", platform: "RM Sotheby's" },
-    { title: "1971 Miura P400 SV", price: 2_480_000, date: "Jan 2025", platform: "Gooding" },
-  ],
-  Porsche: [
-    { title: "1973 911 Carrera RS 2.7", price: 1_450_000, date: "Oct 2025", platform: "RM Sotheby's" },
-    { title: "1973 911 Carrera RS", price: 1_320_000, date: "Jul 2025", platform: "Gooding" },
-    { title: "1972 911 2.7 RS", price: 1_180_000, date: "Apr 2025", platform: "BaT" },
-    { title: "1973 911 RS Lightweight", price: 1_650_000, date: "Feb 2025", platform: "Bonhams" },
-    { title: "1973 911 Carrera RS", price: 1_280_000, date: "Dec 2024", platform: "RM Sotheby's" },
-  ],
-  default: [
-    { title: "Similar Model (Recent)", price: 125_000, date: "Nov 2025", platform: "BaT" },
-    { title: "Similar Model (Mid-Year)", price: 118_000, date: "Jul 2025", platform: "C&B" },
-    { title: "Similar Model (Earlier)", price: 112_000, date: "Mar 2025", platform: "BaT" },
-  ],
 }
 
 // ---------------------------------------------------------------------------
@@ -262,109 +157,13 @@ interface RegistryData {
   verified: boolean
 }
 
-const mockRegistryData: Record<string, RegistryData> = {
-  Lamborghini: {
-    chassisPrefix: "4846",
-    productionSequence: "#45 of 150",
-    totalProduced: 150,
-    config: {
-      exteriorColor: "Verde Pino",
-      exteriorCode: "20.517.A",
-      interiorColor: "Senape",
-      interiorMaterial: "Full leather w/ perforated inserts",
-      keyOptions: ["Weissach Package", "Matching Numbers", "Tool Roll Complete", "Books & Records"],
-    },
-    spottings: [
-      { year: 2018, event: "Concorso d'Eleganza", location: "Villa d'Este, Italy", source: "Registry" },
-      { year: 2020, event: "Private Sale", location: "Monaco", source: "RM Sotheby's" },
-      { year: 2022, event: "Documented Service", location: "Modena, Italy", source: "Factory Records" },
-      { year: 2024, event: "Current Listing", location: "California, USA", source: "BaT" },
-    ],
-    verified: true,
-  },
-  Porsche: {
-    chassisPrefix: "9113600",
-    productionSequence: "#112 of 1,580",
-    totalProduced: 1580,
-    config: {
-      exteriorColor: "Grand Prix White",
-      exteriorCode: "L90E",
-      interiorColor: "Black",
-      interiorMaterial: "Leatherette w/ Pepita inserts",
-      keyOptions: ["Lightweight", "Sport Seats", "Ducktail Spoiler", "Certificate of Authenticity"],
-    },
-    spottings: [
-      { year: 2015, event: "Restoration Completed", location: "Stuttgart, Germany", source: "Porsche Classic" },
-      { year: 2019, event: "Auction Result", location: "Monterey, CA", source: "Gooding & Co" },
-      { year: 2021, event: "Private Collection", location: "Zurich, Switzerland", source: "Registry" },
-      { year: 2024, event: "Current Listing", location: "New York, USA", source: "BaT" },
-    ],
-    verified: true,
-  },
-  Ferrari: {
-    chassisPrefix: "ZFFCW56A",
-    productionSequence: "#287 of 399",
-    totalProduced: 399,
-    config: {
-      exteriorColor: "Rosso Corsa",
-      exteriorCode: "300",
-      interiorColor: "Nero",
-      interiorMaterial: "Full leather Daytona seats",
-      keyOptions: ["Classiche Certified", "Carbon Fiber Package", "Scuderia Shields", "Full Service History"],
-    },
-    spottings: [
-      { year: 2017, event: "Classiche Certification", location: "Maranello, Italy", source: "Ferrari SpA" },
-      { year: 2020, event: "Major Service", location: "Beverly Hills, CA", source: "Authorized Dealer" },
-      { year: 2023, event: "Concours Entry", location: "Pebble Beach, CA", source: "Registry" },
-      { year: 2024, event: "Current Listing", location: "Miami, FL", source: "C&B" },
-    ],
-    verified: true,
-  },
-  Nissan: {
-    chassisPrefix: "BNR34-",
-    productionSequence: "#956 of 1,003",
-    totalProduced: 1003,
-    config: {
-      exteriorColor: "Bayside Blue",
-      exteriorCode: "TV2",
-      interiorColor: "Black",
-      interiorMaterial: "Alcantara w/ leather bolsters",
-      keyOptions: ["V-Spec II", "NISMO Exhaust", "Mine's ECU", "Complete Import Documents"],
-    },
-    spottings: [
-      { year: 2016, event: "Japan Export", location: "Tokyo, Japan", source: "JEVIC Certificate" },
-      { year: 2018, event: "US Import/Compliance", location: "Los Angeles, CA", source: "Customs Docs" },
-      { year: 2022, event: "Professional Detail", location: "Seattle, WA", source: "Seller Records" },
-      { year: 2024, event: "Current Listing", location: "Portland, OR", source: "BaT" },
-    ],
-    verified: true,
-  },
-  default: {
-    chassisPrefix: "VIN-",
-    productionSequence: "Standard Production",
-    totalProduced: 0,
-    config: {
-      exteriorColor: "Factory Color",
-      exteriorCode: "—",
-      interiorColor: "Factory Interior",
-      interiorMaterial: "Original Specification",
-      keyOptions: ["Service Records Available", "Clean Title"],
-    },
-    spottings: [
-      { year: 2020, event: "Previous Owner", location: "United States", source: "Title History" },
-      { year: 2024, event: "Current Listing", location: "United States", source: "Auction Platform" },
-    ],
-    verified: false,
-  },
-}
-
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatCurrency(amount: number | null): string {
+function formatCurrency(amount: number | null, locale: string): string {
   if (amount === null) return "—"
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 0,
@@ -372,20 +171,23 @@ function formatCurrency(amount: number | null): string {
   }).format(amount)
 }
 
-function formatShort(n: number): string {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`
-  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`
-  return `$${n.toLocaleString()}`
+function formatShort(n: number, locale: string): string {
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toLocaleString(locale, { maximumFractionDigits: 1 })}M`
+  if (n >= 1_000) return `$${(n / 1_000).toLocaleString(locale, { maximumFractionDigits: 0 })}K`
+  return `$${n.toLocaleString(locale)}`
 }
 
-function timeLeft(endTime: string): string {
+function timeLeft(
+  endTime: string,
+  labels: { ended: string; day: string; hour: string; minute: string }
+): string {
   const diff = new Date(endTime).getTime() - Date.now()
-  if (diff <= 0) return "Ended"
+  if (diff <= 0) return labels.ended
   const days = Math.floor(diff / 86400000)
   const hrs = Math.floor((diff % 86400000) / 3600000)
-  if (days > 0) return `${days}d ${hrs}h`
+  if (days > 0) return `${days}${labels.day} ${hrs}${labels.hour}`
   const mins = Math.floor((diff % 3600000) / 60000)
-  return `${hrs}h ${mins}m`
+  return `${hrs}${labels.hour} ${mins}${labels.minute}`
 }
 
 // ---------------------------------------------------------------------------
@@ -475,7 +277,15 @@ function StickyGallery({ images, title }: { images: string[]; title: string }) {
 // MODULE A: Executive Summary + Buy Box
 // ---------------------------------------------------------------------------
 
-function ExecutiveSummary({ auction }: { auction: AuctionDetail }) {
+function ExecutiveSummary({
+  auction,
+  t,
+  locale,
+}: {
+  auction: AuctionDetail
+  t: ReturnType<typeof useTranslations>
+  locale: string
+}) {
   const isLive = auction.status === "active"
   const bidTargetLow = auction.analysis?.pricePrediction.low || auction.currentBid! * 1.05
   const bidTargetHigh = auction.analysis?.pricePrediction.high || auction.currentBid! * 1.15
@@ -496,20 +306,25 @@ function ExecutiveSummary({ auction }: { auction: AuctionDetail }) {
           {/* Current Bid */}
           <div>
             <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-[rgba(255,252,247,0.4)]">
-              {isLive ? "Current Bid" : "Final Price"}
+              {isLive ? t("labels.currentBid") : t("labels.finalPrice")}
             </p>
             <p className="text-4xl font-bold text-[#FFFCF7] font-mono mt-1">
-              {formatCurrency(auction.currentBid)}
+              {formatCurrency(auction.currentBid, locale)}
             </p>
             <div className="flex items-center gap-3 mt-2 text-[rgba(255,252,247,0.5)]">
               <span className="flex items-center gap-1 text-[12px]">
                 <Gavel className="size-3" />
-                {auction.bidCount} bids
+                {t("bids.count", { count: auction.bidCount })}
               </span>
               {isLive && (
                 <span className="flex items-center gap-1 text-[12px]">
                   <Clock className="size-3" />
-                  {timeLeft(auction.endDate)}
+                  {timeLeft(auction.endDate, {
+                    ended: t("time.ended"),
+                    day: t("time.units.day"),
+                    hour: t("time.units.hour"),
+                    minute: t("time.units.minute"),
+                  })}
                 </span>
               )}
             </div>
@@ -518,13 +333,13 @@ function ExecutiveSummary({ auction }: { auction: AuctionDetail }) {
           {/* Bid Target */}
           <div className="text-right">
             <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-[#F8B4D9]">
-              Recommended Cap
+              {t("labels.recommendedCap")}
             </p>
             <p className="text-2xl font-bold text-[#F8B4D9] font-mono mt-1">
-              {formatShort(bidTargetLow)} — {formatShort(bidTargetHigh)}
+              {formatShort(bidTargetLow, locale)} — {formatShort(bidTargetHigh, locale)}
             </p>
             <p className="text-[11px] text-[rgba(255,252,247,0.4)] mt-1">
-              Based on market analysis
+              {t("labels.basedOnMarketAnalysis")}
             </p>
           </div>
         </div>
@@ -533,7 +348,7 @@ function ExecutiveSummary({ auction }: { auction: AuctionDetail }) {
         <div className="flex gap-3 mt-5">
           {isLive && (
             <button className="flex-1 rounded-full bg-[#F8B4D9] py-3.5 text-[13px] font-semibold tracking-[0.05em] uppercase text-[#0b0b10] hover:bg-[#fce4ec] transition-colors">
-              Place Bid
+              {t("actions.placeBid")}
             </button>
           )}
           <a
@@ -543,31 +358,41 @@ function ExecutiveSummary({ auction }: { auction: AuctionDetail }) {
             className="flex-1 rounded-full border border-[rgba(248,180,217,0.2)] py-3.5 text-center text-[13px] font-medium tracking-[0.05em] uppercase text-[rgba(255,252,247,0.7)] hover:text-[#FFFCF7] hover:border-[rgba(248,180,217,0.4)] transition-all flex items-center justify-center gap-2"
           >
             <ExternalLink className="size-4" />
-            View Original Listing
+            {t("actions.viewOriginalListing")}
           </a>
         </div>
 
         {/* WhatsApp Concierge */}
         <a
           href={`https://wa.me/491726690998?text=${encodeURIComponent(
-            `Hola Nicolás, estoy viendo el ${auction.year} ${auction.make} ${auction.model} en Monza Lab. Me interesa recibir el Investment Thesis y valoración actual.`
+            t("whatsapp.prefill", {
+              year: auction.year,
+              make: auction.make,
+              model: auction.model,
+            })
           )}`}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-3 flex items-center justify-center gap-2.5 rounded-full border border-[#F8B4D9]/40 bg-[rgba(15,14,22,0.8)] backdrop-blur-md py-3.5 text-[13px] font-medium tracking-[0.05em] uppercase text-[#FFFCF7] hover:border-[#F8B4D9]/70 hover:bg-[rgba(248,180,217,0.08)] transition-all group"
         >
           <MessageCircle className="size-4 text-[#F8B4D9] group-hover:scale-110 transition-transform" />
-          <span>Chat with Analyst</span>
+          <span>{t("actions.chatWithAnalyst")}</span>
         </a>
       </div>
 
       {/* Quick Specs */}
       <div className="mt-5 grid grid-cols-4 gap-3">
         {[
-          { label: "Mileage", value: auction.mileage ? `${auction.mileage.toLocaleString()} mi` : "—", icon: Gauge },
-          { label: "Engine", value: auction.engine || "—", icon: Cog },
-          { label: "Trans", value: auction.transmission || "—", icon: Cog },
-          { label: "Location", value: auction.location || "—", icon: MapPin },
+          {
+            label: t("specs.mileage"),
+            value: auction.mileage
+              ? `${auction.mileage.toLocaleString(locale)} ${t("units.miles")}`
+              : "—",
+            icon: Gauge,
+          },
+          { label: t("specs.engine"), value: auction.engine || "—", icon: Cog },
+          { label: t("specs.transmission"), value: auction.transmission || "—", icon: Cog },
+          { label: t("specs.location"), value: auction.location || "—", icon: MapPin },
         ].map((spec) => (
           <div key={spec.label} className="space-y-1">
             <div className="flex items-center gap-1 text-[rgba(255,252,247,0.4)]">
@@ -586,8 +411,14 @@ function ExecutiveSummary({ auction }: { auction: AuctionDetail }) {
 // MODULE B: Strategy & Alpha
 // ---------------------------------------------------------------------------
 
-function StrategyModule({ auction }: { auction: AuctionDetail }) {
-  const data = mockStrategy[auction.make] || mockStrategy.default
+function StrategyModule({
+  auction,
+  t,
+}: {
+  auction: AuctionDetail
+  t: ReturnType<typeof useTranslations>
+}) {
+  const makeKey = getMakeKey(auction.make)
   const score = auction.analysis?.score || 75
 
   return (
@@ -595,12 +426,12 @@ function StrategyModule({ auction }: { auction: AuctionDetail }) {
       <div className="flex items-center gap-2 mb-4">
         <Zap className="size-4 text-[#F8B4D9]" />
         <h2 className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#F8B4D9]">
-          Strategy Insights
+          {t("modules.strategyInsights")}
         </h2>
       </div>
 
       <p className="text-[14px] leading-relaxed text-[rgba(255,252,247,0.8)]">
-        {data.strategy}
+        {t(`mock.strategy.${makeKey}.strategy`)}
       </p>
 
       {/* Badges */}
@@ -611,13 +442,13 @@ function StrategyModule({ auction }: { auction: AuctionDetail }) {
           "bg-amber-500/15 text-amber-400 border border-amber-500/30"
         }`}>
           <Target className="size-3" />
-          Grade: {score >= 80 ? "AAA" : score >= 60 ? "AA" : "A"}
+          {t("labels.grade")} {score >= 80 ? "AAA" : score >= 60 ? "AA" : "A"}
         </span>
         <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(255,255,255,0.04)] px-3 py-1.5 text-[10px] font-medium text-[rgba(255,252,247,0.6)] border border-[rgba(255,255,255,0.08)]">
-          Complexity: {data.complexity}
+          {t("labels.complexity")}: {t(`mock.strategy.${makeKey}.complexity`)}
         </span>
         <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(255,255,255,0.04)] px-3 py-1.5 text-[10px] font-medium text-[rgba(255,252,247,0.6)] border border-[rgba(255,255,255,0.08)]">
-          Demand: {data.demand}
+          {t("labels.demand")}: {t(`mock.strategy.${makeKey}.demand`)}
         </span>
       </div>
     </div>
@@ -628,7 +459,15 @@ function StrategyModule({ auction }: { auction: AuctionDetail }) {
 // MODULE C: Financial Projection
 // ---------------------------------------------------------------------------
 
-function FinancialsModule({ auction }: { auction: AuctionDetail }) {
+function FinancialsModule({
+  auction,
+  t,
+  locale,
+}: {
+  auction: AuctionDetail
+  t: ReturnType<typeof useTranslations>
+  locale: string
+}) {
   const [period, setPeriod] = useState<1 | 3 | 5>(1)
   const data = mockFinancials[auction.make] || mockFinancials.default
   const currentValue = auction.currentBid || 100000
@@ -644,7 +483,7 @@ function FinancialsModule({ auction }: { auction: AuctionDetail }) {
         <div className="flex items-center gap-2">
           <BarChart3 className="size-4 text-[#F8B4D9]" />
           <h2 className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#F8B4D9]">
-            Financial Projection
+            {t("modules.financialProjection")}
           </h2>
         </div>
 
@@ -670,24 +509,24 @@ function FinancialsModule({ auction }: { auction: AuctionDetail }) {
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] p-3">
           <p className="text-[9px] font-medium tracking-[0.15em] uppercase text-[rgba(255,252,247,0.4)]">
-            Holding Cost ({period}yr)
+            {t("financial.holdingCost", { years: period })}
           </p>
           <p className="text-[18px] font-bold text-[#FFFCF7] font-mono mt-1">
-            {formatShort(totalHoldingCost)}
+            {formatShort(totalHoldingCost, locale)}
           </p>
           <p className="text-[10px] text-[rgba(255,252,247,0.4)] mt-1">
-            Maint: {formatShort(data.maintenance)}/yr · Ins: {formatShort(data.insurance)}/yr
+            {t("financial.maint")}: {formatShort(data.maintenance, locale)}/{t("financial.perYear")} · {t("financial.ins")}: {formatShort(data.insurance, locale)}/{t("financial.perYear")}
           </p>
         </div>
         <div className="rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] p-3">
           <p className="text-[9px] font-medium tracking-[0.15em] uppercase text-[rgba(255,252,247,0.4)]">
-            Appreciation
+            {t("financial.appreciation")}
           </p>
           <p className="text-[18px] font-bold text-emerald-400 font-mono mt-1">
-            {data.appreciation} / yr
+            {data.appreciation} / {t("financial.perYear")}
           </p>
           <p className="text-[10px] text-[rgba(255,252,247,0.4)] mt-1">
-            Projected: {formatShort(projectedValue)}
+            {t("financial.projected")}: {formatShort(projectedValue, locale)}
           </p>
         </div>
       </div>
@@ -696,10 +535,10 @@ function FinancialsModule({ auction }: { auction: AuctionDetail }) {
       <div className="mt-4 rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] p-3">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[9px] font-medium tracking-[0.15em] uppercase text-[rgba(255,252,247,0.4)]">
-            Net Yield ({period} Year)
+            {t("financial.netYield", { years: period })}
           </span>
           <span className={`text-[14px] font-bold font-mono ${netGain >= 0 ? "text-emerald-400" : "text-red-400"}`}>
-            {netGain >= 0 ? "+" : ""}{formatShort(netGain)}
+            {netGain >= 0 ? "+" : ""}{formatShort(netGain, locale)}
           </span>
         </div>
         <div className="h-2 rounded-full bg-[rgba(255,255,255,0.05)] overflow-hidden">
@@ -717,23 +556,30 @@ function FinancialsModule({ auction }: { auction: AuctionDetail }) {
 // MODULE D: Risk Assessment
 // ---------------------------------------------------------------------------
 
-function RiskModule({ auction }: { auction: AuctionDetail }) {
+function RiskModule({
+  auction,
+  t,
+}: {
+  auction: AuctionDetail
+  t: ReturnType<typeof useTranslations>
+}) {
   const [showQuestions, setShowQuestions] = useState(false)
-  const redFlags = mockRedFlags[auction.make] || mockRedFlags.default
-  const questions = mockSellerQuestions[auction.make] || mockSellerQuestions.default
+  const makeKey = getMakeKey(auction.make)
+  const redFlags = (t.raw(`mock.redFlags.${makeKey}`) as unknown as string[]) ?? []
+  const questions = (t.raw(`mock.sellerQuestions.${makeKey}`) as unknown as string[]) ?? []
 
   return (
     <div className="border-b border-[rgba(255,255,255,0.05)] py-5">
       <div className="flex items-center gap-2 mb-4">
         <AlertTriangle className="size-4 text-amber-400" />
         <h2 className="text-[11px] font-semibold tracking-[0.2em] uppercase text-amber-400">
-          Due Diligence
+          {t("modules.dueDiligence")}
         </h2>
       </div>
 
       {/* Red Flags */}
       <div className="space-y-2">
-        {redFlags.map((flag, i) => (
+        {redFlags.map((flag: string, i: number) => (
           <div key={i} className="flex items-start gap-2 text-[13px] text-[rgba(255,252,247,0.7)]">
             <AlertCircle className="size-3.5 text-amber-400 mt-0.5 shrink-0" />
             <span>{flag}</span>
@@ -747,12 +593,12 @@ function RiskModule({ auction }: { auction: AuctionDetail }) {
         className="mt-4 flex items-center gap-2 text-[12px] font-medium text-[#F8B4D9] hover:text-[#fce4ec] transition-colors"
       >
         <HelpCircle className="size-4" />
-        {showQuestions ? "Hide" : "Show"} Seller Questions ({questions.length})
+        {showQuestions ? t("actions.hide") : t("actions.show")} {t("labels.sellerQuestions", { count: questions.length })}
       </button>
 
       {showQuestions && (
         <div className="mt-3 space-y-2 pl-4 border-l-2 border-[rgba(248,180,217,0.2)]">
-          {questions.map((q, i) => (
+          {questions.map((q: string, i: number) => (
             <p key={i} className="text-[12px] text-[rgba(255,252,247,0.6)]">
               {q}
             </p>
@@ -767,20 +613,35 @@ function RiskModule({ auction }: { auction: AuctionDetail }) {
 // MODULE E: Market Context (Comparables)
 // ---------------------------------------------------------------------------
 
-function ComparablesModule({ auction }: { auction: AuctionDetail }) {
-  const sales = auction.analysis?.comparableSales || mockComparables[auction.make] || mockComparables.default
+function ComparablesModule({
+  auction,
+  t,
+  locale,
+}: {
+  auction: AuctionDetail
+  t: ReturnType<typeof useTranslations>
+  locale: string
+}) {
+  const makeKey = getMakeKey(auction.make)
+  const fallbackSales = (t.raw(`mock.comparables.${makeKey}`) as unknown as {
+    title: string
+    price: number
+    date: string
+    platform: string
+  }[]) ?? []
+  const sales = auction.analysis?.comparableSales || fallbackSales
 
   return (
     <div className="py-5">
       <div className="flex items-center gap-2 mb-4">
         <TrendingUp className="size-4 text-[#F8B4D9]" />
         <h2 className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#F8B4D9]">
-          Comparable Sales
+          {t("modules.comparableSales")}
         </h2>
       </div>
 
       <div className="space-y-2">
-        {sales.slice(0, 5).map((sale, i) => (
+        {sales.slice(0, 5).map((sale: { title: string; price: number; date: string; platform: string }, i: number) => (
           <div
             key={i}
             className="flex items-center justify-between py-2.5 border-b border-[rgba(255,255,255,0.04)] last:border-0"
@@ -792,7 +653,7 @@ function ComparablesModule({ auction }: { auction: AuctionDetail }) {
               </p>
             </div>
             <span className="text-[14px] font-bold font-mono text-[#FFFCF7] ml-4">
-              {formatShort(sale.price)}
+              {formatShort(sale.price, locale)}
             </span>
           </div>
         ))}
@@ -805,8 +666,19 @@ function ComparablesModule({ auction }: { auction: AuctionDetail }) {
 // MODULE F: Registry Intelligence
 // ---------------------------------------------------------------------------
 
-function RegistryIntelligenceModule({ auction }: { auction: AuctionDetail }) {
-  const registryData = mockRegistryData[auction.make] || mockRegistryData.default
+function RegistryIntelligenceModule({
+  auction,
+  t,
+  locale,
+}: {
+  auction: AuctionDetail
+  t: ReturnType<typeof useTranslations>
+  locale: string
+}) {
+  const makeKey = getMakeKey(auction.make)
+  const registryData =
+    (t.raw(`mock.registry.${makeKey}`) as unknown as RegistryData) ||
+    (t.raw("mock.registry.default") as unknown as RegistryData)
   const chassisNumber = auction.vin || `${registryData.chassisPrefix}${Math.floor(Math.random() * 9000) + 1000}`
 
   return (
@@ -816,14 +688,14 @@ function RegistryIntelligenceModule({ auction }: { auction: AuctionDetail }) {
         <div className="flex items-center gap-2">
           <Database className="size-4 text-[#F8B4D9]" />
           <h2 className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#F8B4D9]">
-            Registry Intelligence
+            {t("modules.registryIntelligence")}
           </h2>
         </div>
         {registryData.verified && (
           <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1">
             <BadgeCheck className="size-3 text-emerald-400" />
             <span className="text-[9px] font-semibold tracking-wider uppercase text-emerald-400">
-              Verified
+              {t("labels.verified")}
             </span>
           </div>
         )}
@@ -834,20 +706,20 @@ function RegistryIntelligenceModule({ auction }: { auction: AuctionDetail }) {
         <div className="flex items-center gap-2 mb-3">
           <Fingerprint className="size-3.5 text-[rgba(255,252,247,0.4)]" />
           <span className="text-[9px] font-medium tracking-[0.2em] uppercase text-[rgba(255,252,247,0.4)]">
-            Chassis Identity
+            {t("labels.chassisIdentity")}
           </span>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-[9px] text-[rgba(255,252,247,0.35)] uppercase tracking-wider mb-1">VIN / Chassis #</p>
+            <p className="text-[9px] text-[rgba(255,252,247,0.35)] uppercase tracking-wider mb-1">{t("labels.vinOrChassis")}</p>
             <p className="text-[15px] font-mono font-medium text-[#FFFCF7] tracking-wide">{chassisNumber}</p>
           </div>
           <div>
-            <p className="text-[9px] text-[rgba(255,252,247,0.35)] uppercase tracking-wider mb-1">Production</p>
+            <p className="text-[9px] text-[rgba(255,252,247,0.35)] uppercase tracking-wider mb-1">{t("labels.production")}</p>
             <p className="text-[13px] font-mono text-[#F8B4D9]">{registryData.productionSequence}</p>
             {registryData.totalProduced > 0 && (
               <p className="text-[10px] text-[rgba(255,252,247,0.4)] mt-0.5">
-                Total produced: {registryData.totalProduced.toLocaleString()}
+                {t("labels.totalProduced")}: {registryData.totalProduced.toLocaleString(locale)}
               </p>
             )}
           </div>
@@ -859,18 +731,18 @@ function RegistryIntelligenceModule({ auction }: { auction: AuctionDetail }) {
         <div className="flex items-center gap-2 mb-3">
           <Palette className="size-3.5 text-[rgba(255,252,247,0.4)]" />
           <span className="text-[9px] font-medium tracking-[0.2em] uppercase text-[rgba(255,252,247,0.4)]">
-            Factory Configuration
+            {t("labels.factoryConfiguration")}
           </span>
         </div>
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-3 mb-4">
           <div>
-            <p className="text-[9px] text-[rgba(255,252,247,0.35)] uppercase tracking-wider mb-1">Exterior</p>
+            <p className="text-[9px] text-[rgba(255,252,247,0.35)] uppercase tracking-wider mb-1">{t("labels.exterior")}</p>
             <p className="text-[12px] text-[#FFFCF7]">{registryData.config.exteriorColor}</p>
             <p className="text-[10px] font-mono text-[rgba(255,252,247,0.4)]">{registryData.config.exteriorCode}</p>
           </div>
           <div>
-            <p className="text-[9px] text-[rgba(255,252,247,0.35)] uppercase tracking-wider mb-1">Interior</p>
+            <p className="text-[9px] text-[rgba(255,252,247,0.35)] uppercase tracking-wider mb-1">{t("labels.interior")}</p>
             <p className="text-[12px] text-[#FFFCF7]">{registryData.config.interiorColor}</p>
             <p className="text-[10px] text-[rgba(255,252,247,0.4)]">{registryData.config.interiorMaterial}</p>
           </div>
@@ -878,7 +750,7 @@ function RegistryIntelligenceModule({ auction }: { auction: AuctionDetail }) {
 
         {/* Key Options */}
         <div>
-          <p className="text-[9px] text-[rgba(255,252,247,0.35)] uppercase tracking-wider mb-2">Key Options</p>
+          <p className="text-[9px] text-[rgba(255,252,247,0.35)] uppercase tracking-wider mb-2">{t("labels.keyOptions")}</p>
           <div className="flex flex-wrap gap-1.5">
             {registryData.config.keyOptions.map((option, i) => (
               <span
@@ -897,7 +769,7 @@ function RegistryIntelligenceModule({ auction }: { auction: AuctionDetail }) {
         <div className="flex items-center gap-2 mb-4">
           <History className="size-3.5 text-[rgba(255,252,247,0.4)]" />
           <span className="text-[9px] font-medium tracking-[0.2em] uppercase text-[rgba(255,252,247,0.4)]">
-            Asset Lifecycle
+            {t("labels.assetLifecycle")}
           </span>
         </div>
 
@@ -941,7 +813,9 @@ function RegistryIntelligenceModule({ auction }: { auction: AuctionDetail }) {
 
       {/* Registry Data Source */}
       <p className="mt-3 text-[9px] text-[rgba(255,252,247,0.25)] text-center">
-        Data sourced from Exclusive Car Registry • Last verified {new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+        {t("registry.dataSource", {
+          date: new Intl.DateTimeFormat(locale, { month: "short", year: "numeric" }).format(new Date()),
+        })}
       </p>
     </div>
   )
@@ -976,11 +850,18 @@ function DetailSkeleton() {
 export default function AuctionDetailClient() {
   const params = useParams()
   const router = useRouter()
+  const t = useTranslations("auctionDetail")
+  const locale = useLocale()
   const auctionId = params.id as string
 
   const [auction, setAuction] = useState<AuctionDetail | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<
+    | null
+    | { code: "not_found" }
+    | { code: "failed_to_load"; status: number }
+    | { code: "network_error" }
+  >(null)
 
   useEffect(() => {
     if (!auctionId) return
@@ -992,8 +873,12 @@ export default function AuctionDetailClient() {
       try {
         const res = await fetch(`/api/auctions/${auctionId}`)
         if (!res.ok) {
-          if (res.status === 404) throw new Error("Auction not found")
-          throw new Error(`Failed to load auction (${res.status})`)
+          if (res.status === 404) {
+            setError({ code: "not_found" })
+            return
+          }
+          setError({ code: "failed_to_load", status: res.status })
+          return
         }
         const json = await res.json()
         const rawAuction = json.data ?? json
@@ -1068,8 +953,8 @@ export default function AuctionDetailClient() {
           updatedAt: rawAuction.updatedAt,
         }
         setAuction(data)
-      } catch (err) {
-        setError((err as Error).message)
+      } catch {
+        setError({ code: "network_error" })
       } finally {
         setLoading(false)
       }
@@ -1081,19 +966,26 @@ export default function AuctionDetailClient() {
   if (loading) return <DetailSkeleton />
 
   if (error || !auction) {
+    const title =
+      error?.code === "failed_to_load"
+        ? t("errors.failedToLoad", { status: error.status })
+        : error?.code === "network_error"
+          ? t("errors.networkError")
+          : t("errors.notFound")
+
     return (
       <div className="min-h-screen bg-[#0b0b10] pt-[100px] flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="mx-auto rounded-full bg-red-500/10 p-4 w-fit">
             <AlertCircle className="size-8 text-red-400" />
           </div>
-          <h2 className="text-lg font-semibold text-[#FFFCF7]">{error ?? "Auction not found"}</h2>
+          <h2 className="text-lg font-semibold text-[#FFFCF7]">{title}</h2>
           <button
             onClick={() => router.back()}
             className="inline-flex items-center gap-2 text-[13px] text-[#F8B4D9] hover:text-[#fce4ec] transition-colors"
           >
             <ArrowLeft className="size-4" />
-            Go Back
+            {t("actions.goBack")}
           </button>
         </div>
       </div>
@@ -1111,12 +1003,12 @@ export default function AuctionDetailClient() {
               className="flex items-center gap-1.5 text-[12px] text-[rgba(255,252,247,0.5)] hover:text-[#F8B4D9] transition-colors"
             >
               <ArrowLeft className="size-4" />
-              Back to Feed
+              {t("actions.backToFeed")}
             </button>
             {auction.status === "active" && (
               <div className="flex items-center gap-1.5 text-[11px] text-emerald-400">
                 <div className="size-2 rounded-full bg-emerald-400 animate-pulse" />
-                Live Auction
+                {t("labels.liveAuction")}
               </div>
             )}
           </div>
@@ -1132,28 +1024,28 @@ export default function AuctionDetailClient() {
           {/* RIGHT: Data Terminal (Scrollable) */}
           <div className="h-[calc(100vh-180px)] overflow-y-auto no-scrollbar pr-2">
             {/* MODULE A: Executive Summary */}
-            <ExecutiveSummary auction={auction} />
+            <ExecutiveSummary auction={auction} t={t} locale={locale} />
 
             {/* MODULE F: Registry Intelligence */}
-            <RegistryIntelligenceModule auction={auction} />
+            <RegistryIntelligenceModule auction={auction} t={t} locale={locale} />
 
             {/* MODULE B: Strategy & Alpha */}
-            <StrategyModule auction={auction} />
+            <StrategyModule auction={auction} t={t} />
 
             {/* MODULE C: Financial Projection */}
-            <FinancialsModule auction={auction} />
+            <FinancialsModule auction={auction} t={t} locale={locale} />
 
             {/* MODULE D: Risk Assessment */}
-            <RiskModule auction={auction} />
+            <RiskModule auction={auction} t={t} />
 
             {/* MODULE E: Comparables */}
-            <ComparablesModule auction={auction} />
+            <ComparablesModule auction={auction} t={t} locale={locale} />
 
             {/* VIN */}
             {auction.vin && (
               <div className="py-5 border-t border-[rgba(255,255,255,0.05)]">
                 <p className="text-[9px] font-medium tracking-[0.2em] uppercase text-[rgba(255,252,247,0.4)]">
-                  VIN
+                  {t("labels.vin")}
                 </p>
                 <p className="text-[12px] font-mono text-[rgba(255,252,247,0.6)] mt-1">{auction.vin}</p>
               </div>

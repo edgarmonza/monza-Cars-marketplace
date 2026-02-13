@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
 import { SearchClient } from "./SearchClient";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Search Auctions | Monza Lab",
-  description:
-    "Search across thousands of live and completed auctions. Filter by make, model, year, platform, and price range.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "pages" });
+
+  return {
+    title: t("search.meta.title"),
+    description: t("search.meta.description"),
+  };
+}
 
 export default function SearchPage() {
   return (

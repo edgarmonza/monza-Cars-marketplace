@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect, useCallback, useTransition } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
+import { Link, useRouter } from "@/i18n/navigation"
 import Image from "next/image"
-import Link from "next/link"
 import {
   Search,
   SlidersHorizontal,
@@ -34,6 +34,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+
+import { useLocale, useTranslations } from "next-intl"
 
 // ---------------------------------------------------------------------------
 // Types
@@ -81,8 +83,9 @@ interface Filters {
 // Constants
 // ---------------------------------------------------------------------------
 
+const ALL = "__all__"
+
 const PLATFORMS = [
-  { value: "", label: "All Platforms" },
   { value: "bring-a-trailer", label: "Bring a Trailer" },
   { value: "cars-and-bids", label: "Cars & Bids" },
   { value: "pcarmarket", label: "PCAR Market" },
@@ -91,18 +94,17 @@ const PLATFORMS = [
 ]
 
 const SORT_OPTIONS = [
-  { value: "ending-soon", label: "Ending Soon" },
-  { value: "newly-listed", label: "Newly Listed" },
-  { value: "price-low", label: "Price: Low to High" },
-  { value: "price-high", label: "Price: High to Low" },
-  { value: "most-bids", label: "Most Bids" },
+  { value: "ending-soon", key: "endingSoon" as const },
+  { value: "newly-listed", key: "newlyListed" as const },
+  { value: "price-low", key: "priceLow" as const },
+  { value: "price-high", key: "priceHigh" as const },
+  { value: "most-bids", key: "mostBids" as const },
 ]
 
 const STATUS_OPTIONS = [
-  { value: "", label: "All Statuses" },
-  { value: "active", label: "Active" },
-  { value: "ended", label: "Ended" },
-  { value: "upcoming", label: "Upcoming" },
+  { value: "active", key: "active" as const },
+  { value: "ended", key: "ended" as const },
+  { value: "upcoming", key: "upcoming" as const },
 ]
 
 const POPULAR_MAKES = [
@@ -128,9 +130,13 @@ const POPULAR_MAKES = [
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatCurrency(amount: number | null): string {
-  if (amount === null) return "No bids"
-  return new Intl.NumberFormat("en-US", {
+function formatCurrencyLocal(
+  amount: number | null,
+  locale: string,
+  noBidsLabel: string
+): string {
+  if (amount === null) return noBidsLabel
+  return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 0,
@@ -138,39 +144,45 @@ function formatCurrency(amount: number | null): string {
   }).format(amount)
 }
 
-function formatTimeRemaining(endDate: string): string {
+function formatTimeRemaining(
+  endDate: string,
+  labels: { ended: string; day: string; hour: string; minute: string }
+): string {
   const end = new Date(endDate)
   const now = new Date()
   const diff = end.getTime() - now.getTime()
 
-  if (diff <= 0) return "Ended"
+  if (diff <= 0) return labels.ended
 
   const days = Math.floor(diff / (1000 * 60 * 60 * 24))
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
 
-  if (days > 0) return `${days}d ${hours}h`
-  if (hours > 0) return `${hours}h ${minutes}m`
-  return `${minutes}m`
+  if (days > 0) return `${days}${labels.day} ${hours}${labels.hour}`
+  if (hours > 0) return `${hours}${labels.hour} ${minutes}${labels.minute}`
+  return `${minutes}${labels.minute}`
 }
 
 function getReserveBadge(
   status: Auction["reserveStatus"]
-): { label: string; className: string } | null {
+): {
+  key: "noReserve" | "reserveMet" | "reserveNotMet"
+  className: string
+} | null {
   switch (status) {
     case "no_reserve":
       return {
-        label: "No Reserve",
+        key: "noReserve",
         className: "bg-amber-500/20 text-amber-400 border-amber-500/30",
       }
     case "met":
       return {
-        label: "Reserve Met",
+        key: "reserveMet",
         className: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
       }
     case "not_met":
       return {
-        label: "Reserve Not Met",
+        key: "reserveNotMet",
         className: "bg-red-500/20 text-red-400 border-red-500/30",
       }
     default:
@@ -247,10 +259,30 @@ function AuctionCard({
   auction: Auction
   view: "grid" | "list"
 }) {
+  const locale = useLocale()
+  const t = useTranslations("auctionsList")
+  const tStatus = useTranslations("status")
+
+  const [isEnding, setIsEnding] = useState(false)
+
+  useEffect(() => {
+    if (auction.status !== "active") {
+      setIsEnding(false)
+      return
+    }
+
+    const ONE_DAY_MS = 1000 * 60 * 60 * 24
+    const update = () => {
+      const msLeft = new Date(auction.endDate).getTime() - Date.now()
+      setIsEnding(msLeft > 0 && msLeft < ONE_DAY_MS)
+    }
+
+    update()
+    const id = window.setInterval(update, 60_000)
+    return () => window.clearInterval(id)
+  }, [auction.endDate, auction.status])
+
   const reserveBadge = getReserveBadge(auction.reserveStatus)
-  const isEnding =
-    auction.status === "active" &&
-    new Date(auction.endDate).getTime() - Date.now() < 1000 * 60 * 60 * 24
   const hasEnded = auction.status === "ended"
 
   if (view === "list") {
@@ -287,7 +319,7 @@ function AuctionCard({
               {auction.hasAnalysis && (
                 <div className="absolute top-2 right-2">
                   <Badge className="bg-amber-500/90 text-black text-[10px] font-semibold border-0">
-                    AI Analyzed
+                    {t("badges.aiAnalyzed")}
                   </Badge>
                 </div>
               )}
@@ -301,7 +333,9 @@ function AuctionCard({
                 </h3>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-500">
                   {auction.mileage !== null && (
-                    <span>{auction.mileage.toLocaleString()} miles</span>
+                    <span>
+                      {auction.mileage.toLocaleString(locale)} {t("units.milesLong")}
+                    </span>
                   )}
                   {auction.transmission && <span>{auction.transmission}</span>}
                   {auction.location && <span>{auction.location}</span>}
@@ -313,16 +347,16 @@ function AuctionCard({
                   {/* Current bid */}
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-zinc-500 mb-0.5">
-                      {hasEnded ? "Sold For" : "Current Bid"}
+                      {hasEnded ? t("card.soldFor") : t("card.currentBid")}
                     </p>
                     <p className="text-lg font-bold text-amber-400">
-                      {formatCurrency(auction.currentBid)}
+                      {formatCurrencyLocal(auction.currentBid, locale, t("card.noBids"))}
                     </p>
                   </div>
                   {/* Bids */}
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-zinc-500 mb-0.5">
-                      Bids
+                      {t("card.bids")}
                     </p>
                     <p className="text-sm font-medium text-zinc-300">
                       {auction.bidCount}
@@ -336,7 +370,7 @@ function AuctionCard({
                       variant="outline"
                       className={`text-[10px] ${reserveBadge.className}`}
                     >
-                      {reserveBadge.label}
+                      {t(`reserve.${reserveBadge.key}`)}
                     </Badge>
                   )}
                   {!hasEnded ? (
@@ -349,14 +383,19 @@ function AuctionCard({
                       }`}
                     >
                       <Clock className="size-3 mr-1" />
-                      {formatTimeRemaining(auction.endDate)}
+                      {formatTimeRemaining(auction.endDate, {
+                        ended: tStatus("ended"),
+                        day: t("time.units.day"),
+                        hour: t("time.units.hour"),
+                        minute: t("time.units.minute"),
+                      })}
                     </Badge>
                   ) : (
                     <Badge
                       variant="outline"
                       className="text-[10px] bg-zinc-800 text-zinc-500 border-zinc-700"
                     >
-                      Ended
+                      {tStatus("ended")}
                     </Badge>
                   )}
                 </div>
@@ -400,7 +439,7 @@ function AuctionCard({
             </Badge>
             {auction.hasAnalysis && (
               <Badge className="bg-amber-500/90 text-black text-[10px] font-semibold border-0">
-                AI Analyzed
+                {t("badges.aiAnalyzed")}
               </Badge>
             )}
           </div>
@@ -414,8 +453,13 @@ function AuctionCard({
                 }`}
               >
                 <Clock className="size-3" />
-                {formatTimeRemaining(auction.endDate)}
-                {isEnding && " remaining"}
+                {formatTimeRemaining(auction.endDate, {
+                  ended: tStatus("ended"),
+                  day: t("time.units.day"),
+                  hour: t("time.units.hour"),
+                  minute: t("time.units.minute"),
+                })}
+                {isEnding && t("time.remainingSuffix")}
               </div>
             </div>
           )}
@@ -429,7 +473,9 @@ function AuctionCard({
             </h3>
             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-zinc-500">
               {auction.mileage !== null && (
-                <span>{auction.mileage.toLocaleString()} mi</span>
+                <span>
+                  {auction.mileage.toLocaleString(locale)} {t("units.milesShort")}
+                </span>
               )}
               {auction.transmission && (
                 <>
@@ -451,10 +497,10 @@ function AuctionCard({
           <div className="flex items-end justify-between">
             <div>
               <p className="text-[10px] uppercase tracking-wider text-zinc-500 mb-0.5">
-                {hasEnded ? "Sold For" : "Current Bid"}
+                {hasEnded ? t("card.soldFor") : t("card.currentBid")}
               </p>
               <p className="text-lg font-bold text-amber-400">
-                {formatCurrency(auction.currentBid)}
+                {formatCurrencyLocal(auction.currentBid, locale, t("card.noBids"))}
               </p>
             </div>
             <div className="flex items-center gap-1.5">
@@ -463,7 +509,7 @@ function AuctionCard({
                   variant="outline"
                   className={`text-[10px] ${reserveBadge.className}`}
                 >
-                  {reserveBadge.label}
+                  {t(`reserve.${reserveBadge.key}`)}
                 </Badge>
               )}
               <div className="flex items-center gap-1 text-xs text-zinc-500">
@@ -493,6 +539,8 @@ function FilterSidebar({
   onReset: () => void
   resultCount: number
 }) {
+  const t = useTranslations("auctionsList")
+
   const hasActiveFilters =
     filters.platform || filters.make || filters.model || filters.status
 
@@ -500,14 +548,14 @@ function FilterSidebar({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-zinc-200 uppercase tracking-wider">
-          Filters
+          {t("filters.title")}
         </h3>
         {hasActiveFilters && (
           <button
             onClick={onReset}
             className="text-xs text-amber-400 hover:text-amber-300 transition-colors"
           >
-            Clear all
+            {t("filters.clearAll")}
           </button>
         )}
       </div>
@@ -515,20 +563,27 @@ function FilterSidebar({
       {/* Platform */}
       <div className="space-y-2">
         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">
-          Platform
+          {t("filters.platform")}
         </label>
         <Select
           value={filters.platform}
           onValueChange={(v) => onFilterChange("platform", v)}
         >
           <SelectTrigger className="w-full bg-zinc-900/80 border-zinc-800 text-zinc-200 h-9 text-sm">
-            <SelectValue placeholder="All Platforms" />
+            <SelectValue placeholder={t("filters.allPlatforms")} />
           </SelectTrigger>
           <SelectContent className="bg-zinc-900 border-zinc-800">
+            <SelectItem
+              key={ALL}
+              value={ALL}
+              className="text-zinc-200 focus:bg-zinc-800 focus:text-amber-400"
+            >
+              {t("filters.allPlatforms")}
+            </SelectItem>
             {PLATFORMS.map((p) => (
               <SelectItem
                 key={p.value}
-                value={p.value || "__all__"}
+                value={p.value}
                 className="text-zinc-200 focus:bg-zinc-800 focus:text-amber-400"
               >
                 {p.label}
@@ -541,23 +596,23 @@ function FilterSidebar({
       {/* Make */}
       <div className="space-y-2">
         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">
-          Make
+          {t("filters.make")}
         </label>
         <Select
           value={filters.make}
           onValueChange={(v) => onFilterChange("make", v)}
         >
           <SelectTrigger className="w-full bg-zinc-900/80 border-zinc-800 text-zinc-200 h-9 text-sm">
-            <SelectValue placeholder="All Makes" />
+            <SelectValue placeholder={t("filters.allMakes")} />
           </SelectTrigger>
           <SelectContent className="bg-zinc-900 border-zinc-800 max-h-60">
             {POPULAR_MAKES.map((m) => (
               <SelectItem
                 key={m || "__all__"}
-                value={m || "__all__"}
+                value={m || ALL}
                 className="text-zinc-200 focus:bg-zinc-800 focus:text-amber-400"
               >
-                {m || "All Makes"}
+                {m || t("filters.allMakes")}
               </SelectItem>
             ))}
           </SelectContent>
@@ -567,10 +622,10 @@ function FilterSidebar({
       {/* Model - free text */}
       <div className="space-y-2">
         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">
-          Model
+          {t("filters.model")}
         </label>
         <Input
-          placeholder="e.g. 911, M3, Supra..."
+          placeholder={t("filters.modelPlaceholder")}
           value={filters.model}
           onChange={(e) => onFilterChange("model", e.target.value)}
           className="bg-zinc-900/80 border-zinc-800 text-zinc-200 placeholder:text-zinc-600 h-9 text-sm"
@@ -580,23 +635,30 @@ function FilterSidebar({
       {/* Status */}
       <div className="space-y-2">
         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">
-          Status
+          {t("filters.status")}
         </label>
         <Select
           value={filters.status}
           onValueChange={(v) => onFilterChange("status", v)}
         >
           <SelectTrigger className="w-full bg-zinc-900/80 border-zinc-800 text-zinc-200 h-9 text-sm">
-            <SelectValue placeholder="All Statuses" />
+            <SelectValue placeholder={t("filters.allStatuses")} />
           </SelectTrigger>
           <SelectContent className="bg-zinc-900 border-zinc-800">
+            <SelectItem
+              key={ALL}
+              value={ALL}
+              className="text-zinc-200 focus:bg-zinc-800 focus:text-amber-400"
+            >
+              {t("filters.allStatuses")}
+            </SelectItem>
             {STATUS_OPTIONS.map((s) => (
               <SelectItem
                 key={s.value || "__all__"}
-                value={s.value || "__all__"}
+                value={s.value}
                 className="text-zinc-200 focus:bg-zinc-800 focus:text-amber-400"
               >
-                {s.label}
+                {t(`statuses.${s.key}`)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -606,7 +668,7 @@ function FilterSidebar({
       <Separator className="bg-zinc-800" />
 
       <p className="text-xs text-zinc-600">
-        {resultCount} {resultCount === 1 ? "auction" : "auctions"} found
+        {t("filters.resultsFound", { count: resultCount })}
       </p>
     </div>
   )
@@ -629,6 +691,8 @@ function MobileFilters({
   open: boolean
   onToggle: () => void
 }) {
+  const t = useTranslations("auctionsList")
+
   const hasActiveFilters =
     filters.platform || filters.make || filters.model || filters.status
   const activeCount = [
@@ -647,7 +711,7 @@ function MobileFilters({
         className="bg-zinc-900/80 border-zinc-800 text-zinc-300 hover:bg-zinc-800 hover:text-amber-400"
       >
         <SlidersHorizontal className="size-4 mr-1.5" />
-        Filters
+        {t("filters.title")}
         {activeCount > 0 && (
           <Badge className="ml-1.5 bg-amber-500/20 text-amber-400 border-amber-500/30 text-[10px] px-1.5">
             {activeCount}
@@ -659,7 +723,7 @@ function MobileFilters({
         <div className="mt-3 rounded-lg border border-zinc-800 bg-zinc-900/90 p-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-zinc-300">
-              Filter Auctions
+              {t("filters.mobileTitle")}
             </span>
             <div className="flex items-center gap-2">
               {hasActiveFilters && (
@@ -667,7 +731,7 @@ function MobileFilters({
                   onClick={onReset}
                   className="text-xs text-amber-400 hover:text-amber-300"
                 >
-                  Clear
+                  {t("filters.clear")}
                 </button>
               )}
               <button onClick={onToggle}>
@@ -682,13 +746,16 @@ function MobileFilters({
               onValueChange={(v) => onFilterChange("platform", v)}
             >
               <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-200 h-9 text-xs">
-                <SelectValue placeholder="Platform" />
+                <SelectValue placeholder={t("filters.platform")} />
               </SelectTrigger>
               <SelectContent className="bg-zinc-900 border-zinc-800">
+                <SelectItem key={ALL} value={ALL} className="text-zinc-200 text-xs">
+                  {t("filters.allPlatforms")}
+                </SelectItem>
                 {PLATFORMS.map((p) => (
                   <SelectItem
-                    key={p.value || "__all__"}
-                    value={p.value || "__all__"}
+                    key={p.value}
+                    value={p.value}
                     className="text-zinc-200 text-xs"
                   >
                     {p.label}
@@ -702,23 +769,23 @@ function MobileFilters({
               onValueChange={(v) => onFilterChange("make", v)}
             >
               <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-200 h-9 text-xs">
-                <SelectValue placeholder="Make" />
+                <SelectValue placeholder={t("filters.make")} />
               </SelectTrigger>
               <SelectContent className="bg-zinc-900 border-zinc-800 max-h-60">
                 {POPULAR_MAKES.map((m) => (
                   <SelectItem
                     key={m || "__all__"}
-                    value={m || "__all__"}
+                    value={m || ALL}
                     className="text-zinc-200 text-xs"
                   >
-                    {m || "All Makes"}
+                    {m || t("filters.allMakes")}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
             <Input
-              placeholder="Model..."
+              placeholder={t("filters.model")}
               value={filters.model}
               onChange={(e) => onFilterChange("model", e.target.value)}
               className="bg-zinc-800 border-zinc-700 text-zinc-200 placeholder:text-zinc-600 h-9 text-xs"
@@ -729,16 +796,19 @@ function MobileFilters({
               onValueChange={(v) => onFilterChange("status", v)}
             >
               <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-200 h-9 text-xs">
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder={t("filters.status")} />
               </SelectTrigger>
               <SelectContent className="bg-zinc-900 border-zinc-800">
+                <SelectItem key={ALL} value={ALL} className="text-zinc-200 text-xs">
+                  {t("filters.allStatuses")}
+                </SelectItem>
                 {STATUS_OPTIONS.map((s) => (
                   <SelectItem
-                    key={s.value || "__all__"}
-                    value={s.value || "__all__"}
+                    key={s.value}
+                    value={s.value}
                     className="text-zinc-200 text-xs"
                   >
-                    {s.label}
+                    {t(`statuses.${s.key}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -755,23 +825,25 @@ function MobileFilters({
 // ---------------------------------------------------------------------------
 
 function EmptyState({ onReset }: { onReset: () => void }) {
+  const t = useTranslations("auctionsList")
+
   return (
     <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
       <div className="rounded-full bg-zinc-800/60 p-5 mb-5">
         <Car className="size-10 text-zinc-600" />
       </div>
       <h3 className="text-lg font-semibold text-zinc-200 mb-2">
-        No auctions found
+        {t("empty.title")}
       </h3>
       <p className="text-sm text-zinc-500 max-w-sm mb-6">
-        Try adjusting your filters or search terms to discover more vehicles.
+        {t("empty.subtitle")}
       </p>
       <Button
         variant="outline"
         onClick={onReset}
         className="bg-zinc-900 border-zinc-800 text-zinc-300 hover:bg-zinc-800 hover:text-amber-400"
       >
-        Clear Filters
+        {t("empty.clearFilters")}
       </Button>
     </div>
   )
@@ -785,6 +857,9 @@ export default function AuctionsClient() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
+
+  const t = useTranslations("auctionsList")
+  const tStatus = useTranslations("status")
 
   // State
   const [auctions, setAuctions] = useState<Auction[]>([])
@@ -944,15 +1019,15 @@ export default function AuctionsClient() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-zinc-50 tracking-tight">
-                  Live Auctions
+                  {t("header.title")}
                 </h1>
                 <p className="text-sm text-zinc-500 mt-0.5">
-                  Track and analyze collector car auctions across platforms
+                  {t("header.subtitle")}
                 </p>
               </div>
               <div className="hidden sm:flex items-center gap-2 text-xs text-zinc-600">
                 <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                Live
+                {tStatus("live")}
               </div>
             </div>
 
@@ -960,7 +1035,7 @@ export default function AuctionsClient() {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-zinc-500" />
               <Input
-                placeholder="Search by year, make, model, or keyword..."
+                placeholder={t("header.searchPlaceholder")}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="pl-10 bg-zinc-900/80 border-zinc-800 text-zinc-200 placeholder:text-zinc-600 h-10"
@@ -994,14 +1069,14 @@ export default function AuctionsClient() {
                   {loading ? (
                     <span className="inline-flex items-center gap-1.5">
                       <Loader2 className="size-3 animate-spin" />
-                      Loading...
+                      {t("common.loading")}
                     </span>
                   ) : (
                     <>
                       <span className="font-medium text-zinc-300">
                         {total}
                       </span>{" "}
-                      {total === 1 ? "auction" : "auctions"}
+                      {t("results.auctionsLabel", { count: total })}
                     </>
                   )}
                 </p>
@@ -1024,7 +1099,7 @@ export default function AuctionsClient() {
                         value={s.value}
                         className="text-zinc-200 text-xs focus:bg-zinc-800 focus:text-amber-400"
                       >
-                        {s.label}
+                        {t(`sort.${s.key}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { DashboardClient } from "@/components/dashboard/DashboardClient";
+import { useTranslations } from "next-intl";
 
 type RegionalPricing = {
   currency: "$" | "€" | "£" | "¥";
@@ -52,18 +53,24 @@ type Auction = {
   category?: string;
 };
 
-function LoadingSpinner() {
+function LoadingSpinner({ label }: { label: string }) {
   return (
     <div className="h-screen w-full flex items-center justify-center bg-[#050505]">
       <div className="flex flex-col items-center gap-4">
         <div className="w-8 h-8 border-2 border-[#F8B4D9] border-t-transparent rounded-full animate-spin" />
-        <span className="text-[#9CA3AF] text-sm tracking-wide">Loading assets...</span>
+        <span className="text-[#9CA3AF] text-sm tracking-wide">{label}</span>
       </div>
     </div>
   );
 }
 
-function HomeContent() {
+function HomeContent({
+  loadingLabel,
+  emptyLabel,
+}: {
+  loadingLabel: string;
+  emptyLabel: string;
+}) {
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -103,13 +110,13 @@ function HomeContent() {
   }, []);
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner label={loadingLabel} />;
   }
 
   if (auctions.length === 0) {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-[#050505]">
-        <span className="text-[#9CA3AF] text-sm">No auctions found</span>
+        <span className="text-[#9CA3AF] text-sm">{emptyLabel}</span>
       </div>
     );
   }
@@ -118,9 +125,11 @@ function HomeContent() {
 }
 
 export default function Home() {
+  const t = useTranslations("home");
+
   return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <HomeContent />
+    <Suspense fallback={<LoadingSpinner label={t("loadingAssets")} />}>
+      <HomeContent loadingLabel={t("loadingAssets")} emptyLabel={t("noAuctionsFound")} />
     </Suspense>
   );
 }

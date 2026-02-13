@@ -2,28 +2,26 @@
 
 import { motion } from "framer-motion"
 import { Eye, Sparkles, Target } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 const steps = [
   {
     number: "01",
     icon: Eye,
-    title: "We Track",
-    description:
-      "Monitor live auctions across top platforms in real-time. Every listing, every bid, every detail -- captured and organized for you.",
+    titleKey: "steps.track.title",
+    descriptionKey: "steps.track.description",
   },
   {
     number: "02",
     icon: Sparkles,
-    title: "AI Analyzes",
-    description:
-      "Get detailed analysis, red flags, and fair price ranges powered by advanced AI. Know exactly what a vehicle is worth before you bid.",
+    titleKey: "steps.analyzes.title",
+    descriptionKey: "steps.analyzes.description",
   },
   {
     number: "03",
     icon: Target,
-    title: "You Bid Smart",
-    description:
-      "Make confident decisions with data-driven insights. No more guesswork, no more overpaying -- just smart, informed bidding.",
+    titleKey: "steps.bidSmart.title",
+    descriptionKey: "steps.bidSmart.description",
   },
 ]
 
@@ -38,6 +36,8 @@ const cardVariants = {
 } as const
 
 export function HowItWorksSection() {
+  const t = useTranslations("howItWorks")
+
   return (
     <section className="relative py-24 sm:py-32 monza-section-glow">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -50,14 +50,14 @@ export function HowItWorksSection() {
           transition={{ duration: 0.5 }}
         >
           <span className="mb-4 inline-block text-[11px] font-medium tracking-[0.2em] uppercase text-[#F8B4D9]">
-            How It Works
+            {t("kicker")}
           </span>
           <h2 className="text-3xl font-light tracking-tight text-[#FFFCF7] sm:text-4xl">
-            Your Unfair Advantage in{" "}
-            <span className="font-semibold text-gradient">Every Auction</span>
+            {t("title1")}{" "}
+            <span className="font-semibold text-gradient">{t("title2")}</span>
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm text-[rgba(255,252,247,0.45)] font-light">
-            Three simple steps between you and smarter bidding decisions.
+            {t("subtitle")}
           </p>
         </motion.div>
 
@@ -91,10 +91,10 @@ export function HowItWorksSection() {
 
               {/* Content */}
               <h3 className="mb-3 text-lg font-semibold text-[#FFFCF7]">
-                {step.title}
+                {t(step.titleKey)}
               </h3>
               <p className="text-sm leading-relaxed text-[rgba(255,252,247,0.4)] font-light">
-                {step.description}
+                {t(step.descriptionKey)}
               </p>
 
               {/* Bottom accent line */}

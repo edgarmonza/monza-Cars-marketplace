@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useTranslations } from "next-intl"
+import { Link, useRouter } from "@/i18n/navigation"
 import { motion } from "framer-motion"
 import { Search, TrendingUp, Shield, Car } from "lucide-react"
-import Link from "next/link"
 
 const popularMakes = [
   { name: "Porsche", slug: "porsche" },
@@ -24,20 +24,21 @@ interface HeroStats {
 export function HeroSection({ stats }: { stats?: HeroStats }) {
   const [searchQuery, setSearchQuery] = useState("")
   const router = useRouter()
+  const t = useTranslations("hero")
 
   const displayStats = [
     {
-      label: "Auctions Tracked",
+      label: t("stats.auctionsTracked"),
       value: stats?.totalAuctions ? stats.totalAuctions.toLocaleString() : "0",
       icon: Car,
     },
     {
-      label: "AI Analyses",
+      label: t("stats.aiAnalyses"),
       value: stats?.totalAnalyses ? stats.totalAnalyses.toLocaleString() : "0",
       icon: Shield,
     },
     {
-      label: "Platforms Active",
+      label: t("stats.platformsActive"),
       value: stats?.platformsActive ? stats.platformsActive.toString() : "0",
       icon: TrendingUp,
     },
@@ -112,7 +113,7 @@ export function HeroSection({ stats }: { stats?: HeroStats }) {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#F8B4D9] opacity-75" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#F8B4D9]" />
             </span>
-            Live Auction Intelligence
+            {t("badge")}
           </span>
         </motion.div>
 
@@ -123,9 +124,9 @@ export function HeroSection({ stats }: { stats?: HeroStats }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <span className="block text-[#FFFCF7]">Building</span>
-          <span className="block text-gradient font-semibold">Investment-Grade</span>
-          <span className="block text-[#FFFCF7]">Assets</span>
+          <span className="block text-[#FFFCF7]">{t("headline1")}</span>
+          <span className="block text-gradient font-semibold">{t("headline2")}</span>
+          <span className="block text-[#FFFCF7]">{t("headline3")}</span>
         </motion.h1>
 
         {/* Subheadline */}
@@ -135,7 +136,7 @@ export function HeroSection({ stats }: { stats?: HeroStats }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          AI-powered auction analysis for classic vehicles. Make smarter bids with data-driven insights from top platforms.
+          {t("subheadline")}
         </motion.p>
 
         {/* Search bar — Monza glassmorphism */}
@@ -152,7 +153,7 @@ export function HeroSection({ stats }: { stats?: HeroStats }) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by make, model, or year..."
+              placeholder={t("searchPlaceholder")}
               className="h-14 w-full bg-transparent text-sm text-[#FFFCF7] placeholder:text-[rgba(255,252,247,0.3)] focus:outline-none"
             />
           </div>
@@ -160,7 +161,7 @@ export function HeroSection({ stats }: { stats?: HeroStats }) {
             type="submit"
             className="m-2 flex h-10 shrink-0 items-center gap-2 rounded-full bg-[#F8B4D9] px-6 text-[11px] font-semibold tracking-[0.1em] uppercase text-[#0b0b10] transition-all hover:bg-[#fce4ec] hover:shadow-lg hover:shadow-[rgba(248,180,217,0.2)]"
           >
-            Search
+            {t("search")}
           </button>
         </motion.form>
 
@@ -172,7 +173,7 @@ export function HeroSection({ stats }: { stats?: HeroStats }) {
           transition={{ duration: 0.5, delay: 0.7 }}
         >
           <span className="mr-1 text-[11px] tracking-[0.15em] uppercase text-[rgba(255,252,247,0.3)]">
-            Popular:
+            {t("popular")}
           </span>
           {popularMakes.map((make) => (
             <Link

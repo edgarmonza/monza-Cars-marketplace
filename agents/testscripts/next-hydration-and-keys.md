@@ -7,6 +7,10 @@ Prerequisites:
 - Dependencies installed: `npm ci`
 
 Steps:
+0) i18n key parity (guards missing translations)
+   - Command: `node agents/testscripts/i18n-verify.mjs`
+   - Expected: PASS; no missing/extra keys across `messages/*.json`.
+
 1) Static build (catches app-router/layout errors)
    - Command: `npm run build`
    - Expected: build completes successfully; no layout/runtime errors.

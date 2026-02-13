@@ -36,8 +36,11 @@
     "noCredits": "クレジット残高なし",
     "noCreditsDesc": "分析クレジットをすべて使用しました。車両の分析を続けるには、クレジットを購入してください。",
     "email": "メールアドレス",
+    "emailPlaceholder": "you@example.com",
     "password": "パスワード",
+    "passwordPlaceholder": "パスワードを入力",
     "name": "名前",
+    "namePlaceholder": "お名前",
     "continueWithGoogle": "Googleで続行",
     "orContinueWith": "または次で続行",
     "alreadyHaveAccount": "すでにアカウントをお持ちですか？",
@@ -45,17 +48,58 @@
     "welcomeBack": "おかえりなさい",
     "signInDesc": "クレジットにアクセスするにはログインしてください",
     "createAccountTitle": "アカウント作成",
-    "createAccountDesc": "毎月3つの無料クレジットを取得"
+    "createAccountDesc": "毎月3つの無料クレジットを取得",
+    "confirmEmail": "メールを確認してアカウントを有効化してください",
+    "unexpectedError": "予期しないエラーが発生しました",
+    "loading": "読み込み中...",
+    "or": "または",
+    "switchToSignUp": "アカウントをお持ちでないですか？ 登録",
+    "switchToSignIn": "すでにアカウントをお持ちですか？ ログイン",
+    "analysisRequiresSignInTitle": "分析にはログインが必要です",
+    "analysisRequiresSignInDesc": "この車両を分析するにはログインしてください",
+    "newAccountsCredits": "新規アカウントは分析クレジットを3つ無料で受け取れます"
   },
   "hero": {
     "badge": "ライブオークションインテリジェンス",
-    "headline1": "コレクター車両の",
-    "headline2": "取得のための",
-    "headline3": "インテリジェントターミナル",
-    "subheadline": "コレクター車両のためのAI駆動オークション分析。データに基づくインサイトでよりスマートな入札を。",
+    "headline1": "投資級",
+    "headline2": "自動車資産を",
+    "headline3": "構築",
+    "subheadline": "クラシック車向けのAI駆動オークション分析。主要プラットフォームのデータインサイトで、よりスマートに入札。",
     "searchPlaceholder": "メーカー、モデル、年式で検索...",
     "search": "検索",
-    "popular": "人気:"
+    "popular": "人気:",
+    "stats": {
+      "auctionsTracked": "追跡中のオークション",
+      "aiAnalyses": "AI分析",
+      "platformsActive": "稼働中プラットフォーム"
+    }
+  },
+  "howItWorks": {
+    "kicker": "使い方",
+    "title1": "すべてのオークションでの",
+    "title2": "あなたの優位性",
+    "subtitle": "よりスマートな入札判断まで、たった3ステップ。",
+    "steps": {
+      "track": {
+        "title": "追跡",
+        "description": "主要プラットフォームのライブオークションをリアルタイムで監視。すべての出品、入札、詳細を収集・整理します。"
+      },
+      "analyzes": {
+        "title": "AI解析",
+        "description": "AIによる詳細分析、注意点、適正価格レンジを提供。入札前に価値を把握できます。"
+      },
+      "bidSmart": {
+        "title": "賢く入札",
+        "description": "データに基づくインサイトで自信を持って判断。推測や過払いを減らし、スマートに入札。"
+      }
+    }
+  },
+  "featuredAuctions": {
+    "kicker": "検証済み売買",
+    "subtitle": "直近の高額取引をキュレーション。実車体、検証済みプロヴェナンス、実際の落札価格。",
+    "viewListing": "出品を見る",
+    "hammerPrice": "落札価格",
+    "dataNote": "データはBring a TrailerおよびRM Sotheby'sから取得。販売時点で価格を検証済み。"
   },
   "status": {
     "active": "進行中",
@@ -77,7 +121,329 @@
     "market": "市場",
     "backTo": "{make}に戻る",
     "contact": "連絡",
-    "contactAdvisor": "アドバイザーに連絡"
+    "contactAdvisor": "アドバイザーに連絡",
+    "aboutThisVehicle": "この車について",
+    "editorial": "編集部",
+    "timeLeft": "残り時間",
+    "soldFor": "落札価格",
+    "currentBid": "現在価格",
+    "bids": "入札",
+    "status": "ステータス",
+    "sellersDescription": "売り手の説明",
+    "source": "出典: {platform} の掲載",
+    "similarVehicles": "類似車両 ({count})",
+    "saleInformation": "販売情報",
+    "platform": "プラットフォーム",
+    "note": {
+      "label": "注:",
+      "text": "過去の価格データや将来予測は利用できません。以下の所有コストは、この種の車両の一般的な費用に基づく推定値です。"
+    },
+    "ownershipCosts": {
+      "title": "年間所有コスト(推定)",
+      "estimates": "推定",
+      "insurance": "保険(合意価格)",
+      "storage": "空調保管",
+      "service": "整備・メンテナンス"
+    }
+  },
+  "auctionDetail": {
+    "actions": {
+      "placeBid": "入札する",
+      "viewOriginalListing": "元の出品を見る",
+      "chatWithAnalyst": "アナリストに相談",
+      "goBack": "戻る",
+      "backToFeed": "フィードに戻る",
+      "show": "表示",
+      "hide": "非表示"
+    },
+    "labels": {
+      "currentBid": "現在の入札額",
+      "finalPrice": "最終価格",
+      "recommendedCap": "推奨上限",
+      "basedOnMarketAnalysis": "市場分析に基づく",
+      "grade": "グレード:",
+      "complexity": "難易度",
+      "demand": "需要",
+      "sellerQuestions": "売り手への質問（{count}件）",
+      "liveAuction": "ライブオークション",
+      "vin": "VIN",
+      "verified": "検証済み",
+      "chassisIdentity": "シャシー識別",
+      "vinOrChassis": "VIN / シャシー番号",
+      "production": "生産",
+      "totalProduced": "生産台数",
+      "factoryConfiguration": "工場出荷仕様",
+      "exterior": "外装",
+      "interior": "内装",
+      "keyOptions": "主要オプション",
+      "assetLifecycle": "ライフサイクル"
+    },
+    "modules": {
+      "strategyInsights": "戦略インサイト",
+      "financialProjection": "財務予測",
+      "dueDiligence": "デューデリジェンス",
+      "comparableSales": "比較取引",
+      "registryIntelligence": "レジストリ情報"
+    },
+    "specs": {
+      "mileage": "走行距離",
+      "engine": "エンジン",
+      "transmission": "トランスミッション",
+      "location": "所在地"
+    },
+    "units": {
+      "miles": "mi"
+    },
+    "bids": {
+      "count": "{count, plural, other {#件の入札}}"
+    },
+    "time": {
+      "ended": "終了",
+      "units": {
+        "day": "日",
+        "hour": "時間",
+        "minute": "分"
+      }
+    },
+    "financial": {
+      "holdingCost": "保有コスト（{years}年）",
+      "maint": "整備",
+      "ins": "保険",
+      "perYear": "年",
+      "appreciation": "上昇率",
+      "projected": "予測",
+      "netYield": "純利回り（{years}年）"
+    },
+    "registry": {
+      "dataSource": "Exclusive Car Registry提供 • 最終検証 {date}"
+    },
+    "errors": {
+      "notFound": "オークションが見つかりません",
+      "failedToLoad": "オークションの読み込みに失敗しました（{status}）",
+      "networkError": "ネットワークエラー（オークション読み込み）"
+    },
+    "whatsapp": {
+      "prefill": "こんにちはNicolasさん、Monza Labで{year} {make} {model}を見ています。Investment Thesisと現在の評価を受け取りたいです。"
+    },
+    "mock": {
+      "strategy": {
+        "Lamborghini": {
+          "strategy": "希少な来歴と低走行を踏まえると、やや攻めた入札も合理的です。SVは標準P400に対して30-40%のプレミアムが付きやすく、認定個体の流動性も高い傾向です。早めにポジションを取る入札が有利で、終盤のスナイプはこの価格帯では機能しにくいです。",
+          "complexity": "高",
+          "demand": "非常に高い"
+        },
+        "Porsche": {
+          "strategy": "慎重で計画的なアプローチが推奨です。空冷911は買い手の厚みがあり、状態と書類が価値を大きく左右します。マッチングナンバーと整備履歴は20%超のプレミアム要因になり得ます。感情的な入札は避け、比較取引で上限を裏付けましょう。",
+          "complexity": "中",
+          "demand": "高い"
+        },
+        "Ferrari": {
+          "strategy": "入札前のデューデリジェンスが最重要です。Classiche認定の有無は価値に大きく影響します。可能ならブランド専門家による事前検査を検討してください。市場はレストア車よりも、書類が揃ったオリジナルに近い個体を好む傾向があります。",
+          "complexity": "非常に高",
+          "demand": "高い"
+        },
+        "Nissan": {
+          "strategy": "JDM市場はボラティリティが高い一方で上昇モメンタムも強いです。輸入書類と適合性の確認が必須。V-SpecやN\u00fcrは大きなプレミアムが付きます。ノーマルで手が入っていない個体は希少化しており、仕様よりコンディションが重要です。",
+          "complexity": "中",
+          "demand": "極めて高い"
+        },
+        "default": {
+          "strategy": "購入前検査を強く推奨します。過去12か月の比較取引を調べ、整備・保管・保険を含む総保有コストも考慮してください。焦らずに入札する方が結果が良いことが多いです。",
+          "complexity": "中",
+          "demand": "中"
+        }
+      },
+      "redFlags": {
+        "Lamborghini": [
+          "キャブレターは専門的な調整が必要。直近の整備内容を確認",
+          "クラッチ交換は工賃が高額（専門店で約$8,000+）",
+          "渋滞時に冷却が厳しい場合あり。ファン動作を確認",
+          "リア側マウント周辺に応力割れが出る可能性"
+        ],
+        "Porsche": [
+          "初期モデル（1984年以前）はチェーンテンショナー故障リスク",
+          "熱交換器の状態が重要。錆の点検が必要",
+          "亜鉛メッキ有無で長期価値が変わる",
+          "マッチングナンバー（エンジン/ミッション）を確認"
+        ],
+        "Ferrari": [
+          "タイミングベルト整備履歴が重要（期限切れだと$5,000+）",
+          "内装スイッチのベタつきが多い。電装を確認",
+          "エキマニ割れは専門修理が必要",
+          "Classiche不合格は再販価値に大きく影響"
+        ],
+        "Nissan": [
+          "ATTESA E-TSポンプ故障は一般的。作動確認",
+          "過去チューニング車はRB26ヘッドガスケット注意",
+          "JDM輸入車はリアクォーター/トランクの錆が多い",
+          "輸入の合法性とEPA/DOT適合を確認"
+        ],
+        "default": [
+          "整備履歴の資料一式を依頼",
+          "VINが書類とボディパネルで一致するか確認",
+          "事故歴の痕跡をチェック",
+          "走行距離を整備記録で裏取り"
+        ]
+      },
+      "sellerQuestions": {
+        "Lamborghini": [
+          "バッテリートレイの腐食点検は実施済みですか？",
+          "キャブの同期はいつ行いましたか？",
+          "エアコンはオリジナルで動作しますか？",
+          "フレーム修理や補強の履歴はありますか？"
+        ],
+        "Porsche": [
+          "バルブ調整はいつ実施しましたか？",
+          "モータースポーツ使用歴はありますか？",
+          "ガラスのデイトコードは全て一致していますか？",
+          "トランスミッションはオーバーホール済みですか？誰が？"
+        ],
+        "Ferrari": [
+          "Classiche認定は進行中、または取得可能ですか？",
+          "タイミングベルト整備はいつ実施しましたか？",
+          "工具とブック類は揃っていてオリジナルですか？",
+          "再塗装歴はありますか？"
+        ],
+        "Nissan": [
+          "純正状態から改造はありますか？",
+          "ブースト圧とチューニング履歴は？",
+          "メーター表示はkmですか、miですか？",
+          "輸入書類は確認できますか？"
+        ],
+        "default": [
+          "購入前検査（PPI）は可能ですか？",
+          "所有期間中の整備履歴は？",
+          "既知の機械的トラブルはありますか？",
+          "販売に含まれるもの（記録、予備部品など）は？"
+        ]
+      },
+      "comparables": {
+        "Lamborghini": [
+          { "title": "1971 Miura P400 SV", "price": 2650000, "date": "2025年11月", "platform": "RM Sotheby's" },
+          { "title": "1972 Miura P400 SV", "price": 2350000, "date": "2025年8月", "platform": "Gooding" },
+          { "title": "1969 Miura P400 S", "price": 1980000, "date": "2025年5月", "platform": "Bonhams" },
+          { "title": "1970 Miura P400 S", "price": 1850000, "date": "2025年3月", "platform": "RM Sotheby's" },
+          { "title": "1971 Miura P400 SV", "price": 2480000, "date": "2025年1月", "platform": "Gooding" }
+        ],
+        "Porsche": [
+          { "title": "1973 911 Carrera RS 2.7", "price": 1450000, "date": "2025年10月", "platform": "RM Sotheby's" },
+          { "title": "1973 911 Carrera RS", "price": 1320000, "date": "2025年7月", "platform": "Gooding" },
+          { "title": "1972 911 2.7 RS", "price": 1180000, "date": "2025年4月", "platform": "BaT" },
+          { "title": "1973 911 RS Lightweight", "price": 1650000, "date": "2025年2月", "platform": "Bonhams" },
+          { "title": "1973 911 Carrera RS", "price": 1280000, "date": "2024年12月", "platform": "RM Sotheby's" }
+        ],
+        "Ferrari": [
+          { "title": "2008 Ferrari F430", "price": 210000, "date": "2025年9月", "platform": "BaT" },
+          { "title": "2007 Ferrari F430", "price": 198000, "date": "2025年6月", "platform": "C&B" },
+          { "title": "2009 Ferrari 430 Scuderia", "price": 345000, "date": "2025年2月", "platform": "RM Sotheby's" }
+        ],
+        "Nissan": [
+          { "title": "2002 Nissan Skyline GT-R V-Spec II", "price": 185000, "date": "2025年11月", "platform": "BaT" },
+          { "title": "1999 Nissan Skyline GT-R", "price": 152000, "date": "2025年7月", "platform": "C&B" },
+          { "title": "2002 Nissan Skyline GT-R V-Spec II N\u00fcr", "price": 240000, "date": "2025年3月", "platform": "BaT" }
+        ],
+        "default": [
+          { "title": "類似モデル（直近）", "price": 125000, "date": "2025年11月", "platform": "BaT" },
+          { "title": "類似モデル（中頃）", "price": 118000, "date": "2025年7月", "platform": "C&B" },
+          { "title": "類似モデル（以前）", "price": 112000, "date": "2025年3月", "platform": "BaT" }
+        ]
+      },
+      "registry": {
+        "Lamborghini": {
+          "chassisPrefix": "4846",
+          "productionSequence": "150台中45番",
+          "totalProduced": 150,
+          "config": {
+            "exteriorColor": "Verde Pino",
+            "exteriorCode": "20.517.A",
+            "interiorColor": "Senape",
+            "interiorMaterial": "フルレザー（パンチングインサート）",
+            "keyOptions": ["Weissachパッケージ", "マッチングナンバー", "工具一式", "ブック/記録"]
+          },
+          "spottings": [
+            { "year": 2018, "event": "Concorso d'Eleganza", "location": "イタリア・ヴィラ・デステ", "source": "レジストリ" },
+            { "year": 2020, "event": "プライベートセール", "location": "モナコ", "source": "RM Sotheby's" },
+            { "year": 2022, "event": "整備記録", "location": "イタリア・モデナ", "source": "ファクトリー記録" },
+            { "year": 2024, "event": "現在の出品", "location": "米国カリフォルニア", "source": "BaT" }
+          ],
+          "verified": true
+        },
+        "Porsche": {
+          "chassisPrefix": "9113600",
+          "productionSequence": "1,580台中112番",
+          "totalProduced": 1580,
+          "config": {
+            "exteriorColor": "Grand Prix White",
+            "exteriorCode": "L90E",
+            "interiorColor": "Black",
+            "interiorMaterial": "レザー調（Pepitaインサート）",
+            "keyOptions": ["ライトウェイト", "スポーツシート", "ダックテール", "真正性証明書"]
+          },
+          "spottings": [
+            { "year": 2015, "event": "レストア完了", "location": "ドイツ・シュトゥットガルト", "source": "Porsche Classic" },
+            { "year": 2019, "event": "オークション結果", "location": "米国モントレー（CA）", "source": "Gooding & Co" },
+            { "year": 2021, "event": "プライベートコレクション", "location": "スイス・チューリッヒ", "source": "レジストリ" },
+            { "year": 2024, "event": "現在の出品", "location": "米国ニューヨーク", "source": "BaT" }
+          ],
+          "verified": true
+        },
+        "Ferrari": {
+          "chassisPrefix": "ZFFCW56A",
+          "productionSequence": "399台中287番",
+          "totalProduced": 399,
+          "config": {
+            "exteriorColor": "Rosso Corsa",
+            "exteriorCode": "300",
+            "interiorColor": "Nero",
+            "interiorMaterial": "フルレザー（デイトナシート）",
+            "keyOptions": ["Classiche認定", "カーボンパッケージ", "スクーデリアシールド", "フル整備履歴"]
+          },
+          "spottings": [
+            { "year": 2017, "event": "Classiche認定", "location": "イタリア・マラネロ", "source": "Ferrari SpA" },
+            { "year": 2020, "event": "メジャーサービス", "location": "米国ビバリーヒルズ（CA）", "source": "正規ディーラー" },
+            { "year": 2023, "event": "コンクール出場", "location": "米国ペブルビーチ（CA）", "source": "レジストリ" },
+            { "year": 2024, "event": "現在の出品", "location": "米国マイアミ（FL）", "source": "C&B" }
+          ],
+          "verified": true
+        },
+        "Nissan": {
+          "chassisPrefix": "BNR34-",
+          "productionSequence": "1,003台中956番",
+          "totalProduced": 1003,
+          "config": {
+            "exteriorColor": "Bayside Blue",
+            "exteriorCode": "TV2",
+            "interiorColor": "Black",
+            "interiorMaterial": "アルカンターラ（レザーボルスター）",
+            "keyOptions": ["V-Spec II", "NISMOマフラー", "Mine's ECU", "輸入書類一式"]
+          },
+          "spottings": [
+            { "year": 2016, "event": "日本からの輸出", "location": "日本・東京", "source": "JEVIC証明" },
+            { "year": 2018, "event": "米国輸入/適合", "location": "米国ロサンゼルス（CA）", "source": "通関書類" },
+            { "year": 2022, "event": "プロによるディテール", "location": "米国シアトル（WA）", "source": "売主記録" },
+            { "year": 2024, "event": "現在の出品", "location": "米国ポートランド（OR）", "source": "BaT" }
+          ],
+          "verified": true
+        },
+        "default": {
+          "chassisPrefix": "VIN-",
+          "productionSequence": "標準生産",
+          "totalProduced": 0,
+          "config": {
+            "exteriorColor": "Factory Color",
+            "exteriorCode": "-",
+            "interiorColor": "Factory Interior",
+            "interiorMaterial": "Original Specification",
+            "keyOptions": ["整備記録あり", "クリーンタイトル"]
+          },
+          "spottings": [
+            { "year": 2020, "event": "前オーナー", "location": "米国", "source": "タイトル履歴" },
+            { "year": 2024, "event": "現在の出品", "location": "米国", "source": "オークションプラットフォーム" }
+          ],
+          "verified": false
+        }
+      }
+    }
   },
   "oracle": {
     "aiAnalysis": "AI分析",
@@ -90,7 +456,80 @@
     "viewSimilar": "類似を見る",
     "viewAll": "すべて見る",
     "viewCollection": "コレクションを見る",
-    "relatedActions": "関連アクション"
+    "relatedActions": "関連アクション",
+    "comingSoon": {
+      "marketReport": "マーケットレポートは近日公開...",
+      "priceAlerts": "価格アラートは近日公開..."
+    },
+    "chips": {
+      "viewCarDetails": "車両詳細を見る",
+      "viewFullDetails": "詳細を見る",
+      "similarCars": "類似車両",
+      "browseBrand": "ブランドを見る",
+      "viewLiveAuctions": "ライブオークションを見る",
+      "browseAll": "すべて見る",
+      "browseByBrand": "ブランド別に見る",
+      "viewAllUnderBudget": "予算内をすべて見る",
+      "bestRoiCars": "ROIが高い車を見る",
+      "setPriceAlert": "価格アラートを設定",
+      "viewAllBrand": "{brand}をすべて見る",
+      "compareModels": "モデルを比較",
+      "setAlerts": "アラートを設定"
+    },
+    "responses": {
+      "singleCar": "**{title}**\n\n{thesis}\n\n**フェア価格:** {fairLow} — {fairHigh}\n\n**投資:** グレード {grade} | {trend}",
+      "multipleFound": "{count}件見つかりました:",
+      "noMatch": "**Monza Lab Collection**\n\n投資向けにキュレーションされた車両が{totalCars}件あります。\n\n**平均上昇率:** +{avgAppreciation}%/年\n\n\"Porsche\"や\"Ferrari\"などのメーカー、または具体的なモデル名で検索してみてください。",
+      "currentCar": "**{title}**\n\n**投資分析:**\n• グレード: **{grade}**\n• トレンド: **{trend}**\n\n**地域別フェアバリュー:**\n• 🇺🇸 {usLow} — {usHigh}\n• 🇪🇺 {euLow} — {euHigh}\n• 🇬🇧 {ukLow} — {ukHigh}\n\n**ポイント:**\n{thesis}",
+      "currentCarFallback": "**{title}**\n\n現在価格: {price}\n\n詳しい分析は上部の投資(Investment)とデューデリジェンス(Due Diligence)をご覧ください。",
+      "noMatchForQuery": "\"{query}\"に関する具体的な情報が見つかりませんでした。\n\n閲覧中の**{title}**を分析しますか？価値、投資見通し、履歴などを推定できます。"
+    }
+  },
+  "pages": {
+    "auctions": {
+      "loading": "オークションを読み込み中...",
+      "meta": {
+        "title": "ライブオークション | Monza Lab",
+        "description": "Bring a Trailer、Cars & Bids、RM Sotheby'sなどのコレクター車オークションを閲覧・分析。入札前にAIインサイトを取得。",
+        "ogTitle": "ライブオークション | Monza Lab",
+        "ogDescription": "主要プラットフォームのコレクター車オークションを閲覧・分析。"
+      }
+    },
+    "search": {
+      "meta": {
+        "title": "オークション検索 | Monza Lab",
+        "description": "ライブおよび終了済みオークションを検索。メーカー、モデル、年式、プラットフォーム、価格帯で絞り込み。"
+      }
+    },
+    "history": {
+      "meta": {
+        "title": "市場トレンド | Monza Lab",
+        "description": "クラシック／コレクター車の過去オークション結果と市場トレンドを確認。"
+      }
+    }
+  },
+  "history": {
+    "kicker": "マーケットインテリジェンス",
+    "title1": "市場",
+    "title2": "トレンド",
+    "subtitle": "過去オークション結果を分析し、価格推移を追跡。メーカー、モデル、プラットフォーム横断でトレンドを把握します。",
+    "stats": {
+      "auctionsTracked": "追跡中のオークション",
+      "makesCovered": "対象メーカー",
+      "platforms": "プラットフォーム",
+      "dataPoints": "データポイント"
+    },
+    "topPerformers": "トップパフォーマー",
+    "salesRecorded": "{count, plural, one {#件の販売} other {#件の販売}}",
+    "na": "N/A",
+    "empty": {
+      "title": "まだ市場データがありません。",
+      "subtitle": "履歴トレンドと分析は近日公開予定です。"
+    }
+  },
+  "home": {
+    "loadingAssets": "資産を読み込み中...",
+    "noAuctionsFound": "オークションが見つかりません"
   },
   "language": {
     "select": "言語",
@@ -151,6 +590,267 @@
     "verified": "認証済み",
     "critical": "重要",
     "recommended": "推奨"
+  },
+  "search": {
+    "header": {
+      "title": "検索",
+      "titleAccent": "オークション",
+      "searchPlaceholder": "メーカー、モデル、年式で検索...",
+      "results": "{count, plural, one {# 件} other {# 件}}"
+    },
+    "filters": {
+      "button": "フィルター",
+      "allMakes": "すべてのメーカー",
+      "allPlatforms": "すべてのプラットフォーム",
+      "clearAll": "すべてクリア",
+      "yearRange": "年式範囲",
+      "from": "開始",
+      "to": "終了",
+      "priceRange": "価格帯",
+      "min": "最小",
+      "max": "最大"
+    },
+    "statuses": {
+      "live": "開催中",
+      "completed": "終了"
+    },
+    "sort": {
+      "newestFirst": "新着順",
+      "oldestFirst": "古い順",
+      "priceHighToLow": "価格: 高い順",
+      "priceLowToHigh": "価格: 安い順",
+      "endingSoon": "終了間近"
+    },
+    "empty": {
+      "title": "結果が見つかりません",
+      "subtitle": "検索条件またはフィルターを調整してください。",
+      "clearSearch": "検索をクリア"
+    },
+    "card": {
+      "currentBid": "現在価格",
+      "soldFor": "落札価格",
+      "bids": "{count, plural, one {# 件の入札} other {# 件の入札}}",
+      "noBids": "入札なし"
+    },
+    "time": {
+      "ended": "終了",
+      "units": {
+        "day": "日",
+        "hour": "時間",
+        "minute": "分"
+      }
+    },
+    "common": {
+      "none": "—"
+    }
+  },
+  "auctionsList": {
+    "header": {
+      "title": "ライブオークション",
+      "subtitle": "複数プラットフォームのコレクターオークションを追跡・分析",
+      "searchPlaceholder": "年式、メーカー、モデル、キーワードで検索..."
+    },
+    "common": {
+      "loading": "読み込み中..."
+    },
+    "results": {
+      "auctionsLabel": "{count, plural, one {件} other {件}}"
+    },
+    "sort": {
+      "endingSoon": "終了間近",
+      "newlyListed": "新着",
+      "priceLow": "価格: 安い順",
+      "priceHigh": "価格: 高い順",
+      "mostBids": "入札数が多い順"
+    },
+    "filters": {
+      "title": "フィルター",
+      "mobileTitle": "オークションを絞り込み",
+      "clear": "クリア",
+      "clearAll": "すべてクリア",
+      "platform": "プラットフォーム",
+      "allPlatforms": "すべてのプラットフォーム",
+      "make": "メーカー",
+      "allMakes": "すべてのメーカー",
+      "model": "モデル",
+      "modelPlaceholder": "例: 911, M3, Supra...",
+      "status": "ステータス",
+      "allStatuses": "すべてのステータス",
+      "resultsFound": "{count, plural, one {# 件見つかりました} other {# 件見つかりました}}"
+    },
+    "statuses": {
+      "active": "開催中",
+      "ended": "終了",
+      "upcoming": "予定"
+    },
+    "empty": {
+      "title": "オークションが見つかりません",
+      "subtitle": "フィルターや検索条件を調整してみてください。",
+      "clearFilters": "フィルターをクリア"
+    },
+    "badges": {
+      "aiAnalyzed": "AI解析済み"
+    },
+    "units": {
+      "milesLong": "マイル",
+      "milesShort": "mi"
+    },
+    "time": {
+      "units": {
+        "day": "日",
+        "hour": "時間",
+        "minute": "分"
+      },
+      "remainingSuffix": " 残り"
+    },
+    "reserve": {
+      "noReserve": "リザーブなし",
+      "reserveMet": "リザーブ達成",
+      "reserveNotMet": "リザーブ未達"
+    }
+  },
+  "dashboard": {
+    "liveAuctions": {
+      "title": "ライブオークション",
+      "searchPlaceholder": "車を検索...",
+      "tabs": {
+        "allLive": "すべて",
+        "byPrice": "価格順",
+        "byBrand": "メーカー別"
+      },
+      "selectBrand": "メーカーを選択...",
+      "allBrands": "すべてのメーカー",
+      "resultSummary": "{count, plural, one {# 件} other {# 件}} ・価格順",
+      "empty": {
+        "title": "オークションが見つかりません",
+        "subtitle": "フィルターを調整してください"
+      },
+      "quickAccess": "クイックアクセス"
+    },
+    "brandNav": {
+      "title": "メーカーを探す",
+      "manufacturers": "{count, plural, one {# 社} other {# 社}}",
+      "totalCars": "総車両数",
+      "aaaBrands": "AAAメーカー",
+      "carsCount": "{count, plural, one {# 台} other {# 台}}"
+    },
+    "brandCard": {
+      "carsCount": "{count, plural, one {# 台} other {# 台}}",
+      "priceRange": "価格帯",
+      "trend": "トレンド",
+      "collection": "コレクション",
+      "vehiclesCount": "{count, plural, one {# 台} other {# 台}}",
+      "more": "+{count}件",
+      "exploreCollection": "コレクションを見る"
+    },
+    "mobileBrand": {
+      "collectorVehicles": "{count, plural, one {# 台} other {# 台}}",
+      "explore": "{brand}を探す"
+    },
+    "context": {
+      "investmentThesis": "投資ポイント",
+      "fiveYearAppreciation": "5年の推移",
+      "fairValueByRegion": "地域別フェアバリュー",
+      "annualOwnershipCost": "年間所有コスト",
+      "insurance": "保険",
+      "storage": "保管",
+      "service": "整備",
+      "totalAnnual": "年間合計",
+      "perYear": "/年",
+      "alsoConsider": "あわせて検討",
+      "recentSales": "最近の販売",
+      "askAboutThisCar": "この車について質問",
+      "askWhatsAppMessage": "こんにちは。Monza Labで{make} {model}を閲覧しています。この車の現在の評価と投資ポテンシャルについて知りたいです。"
+    },
+    "asset": {
+      "noImage": "画像なし",
+      "fullAnalysis": "詳細分析",
+      "metrics": {
+        "grade": "グレード",
+        "trend": "トレンド",
+        "fairValue": "フェアバリュー",
+        "category": "カテゴリー",
+        "collector": "コレクター"
+      }
+    },
+    "brandContext": {
+      "overview": "ブランド概要",
+      "fiveYearTrend": "5年トレンド",
+      "collectionStats": "コレクション統計",
+      "vehicles": "台数",
+      "topGrade": "トップグレード",
+      "minPrice": "最小価格",
+      "maxPrice": "最大価格",
+      "categories": "カテゴリー",
+      "similarBrands": "類似メーカー",
+      "explore": "{brand}を見る"
+    }
+  },
+  "makePage": {
+    "hero": {
+      "backToCollection": "コレクションに戻る",
+      "brandCollection": "ブランドコレクション",
+      "liveCount": "{count} 開催中",
+      "priceRange": "価格帯",
+      "listings": "掲載数",
+      "sold": "売却済み"
+    },
+    "filters": {
+      "filters": "フィルター",
+      "price": "価格",
+      "sort": "並び替え",
+      "clearWithCount": "クリア ({count})",
+      "searchModelsPlaceholder": "{make}のモデルを検索...",
+      "searchMakePlaceholder": "{make}を検索...",
+      "model": "モデル",
+      "allModels": "すべてのモデル",
+      "priceRange": "価格帯",
+      "status": "ステータス",
+      "statusAll": "すべて",
+      "sortBy": "並び替え"
+    },
+    "sort": {
+      "priceHighToLow": "価格: 高い順",
+      "priceLowToHigh": "価格: 安い順",
+      "yearNewestFirst": "年式: 新しい順",
+      "yearOldestFirst": "年式: 古い順",
+      "mostListed": "掲載数順"
+    },
+    "sidebar": {
+      "dataSource": "実際のオークション結果に基づく価格。{count}件を追跡中。",
+      "about": "{make}について",
+      "editorial": "編集部",
+      "estimatedAnnualCosts": "年間コスト(推定)",
+      "estimates": "推定",
+      "insurance": "保険",
+      "storage": "保管",
+      "service": "整備",
+      "total": "合計",
+      "perYear": "/年",
+      "costsNote": "業界平均に基づく推定です。実際の費用は変動します。",
+      "speakWithAdvisor": "アドバイザーに相談"
+    },
+    "results": {
+      "modelsTitle": "{make} モデル",
+      "summary": "{filtered}/{totalModels} モデル ・ 車両合計 {totalVehicles}"
+    },
+    "empty": {
+      "title": "モデルが見つかりません",
+      "subtitle": "フィルターを調整して結果を増やしてください。",
+      "clearAll": "フィルターをすべてクリア"
+    },
+    "model": {
+      "priceRange": "価格帯",
+      "viewCollection": "コレクションを見る"
+    },
+    "mobileFilters": {
+      "title": "フィルター",
+      "showResults": "{count}件を表示"
+    },
+    "card": {
+      "currentBid": "現在価格",
+      "soldFor": "落札価格"
+    }
   },
   "metadata": {
     "title": "Monza Lab | 投資級自動車資産",

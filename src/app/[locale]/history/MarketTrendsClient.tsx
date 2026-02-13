@@ -1,6 +1,7 @@
 "use client";
 
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
 type Trend = {
   make: string;
@@ -10,11 +11,15 @@ type Trend = {
   trend: string | null;
 };
 
-function formatPrice(n: number | null): string {
-  if (n === null) return "N/A";
+function formatPrice(n: number | null, locale: string, naLabel: string): string {
+  if (n === null) return naLabel;
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${n.toLocaleString()}`;
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(n);
 }
 
 function TrendIcon({ trend }: { trend: string | null }) {
@@ -29,12 +34,15 @@ function TrendIcon({ trend }: { trend: string | null }) {
 }
 
 export function MarketTrendsClient({ initialTrends }: { initialTrends: Trend[] }) {
+  const locale = useLocale();
+  const t = useTranslations("history");
+
   if (initialTrends.length === 0) {
     return (
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="rounded-2xl border border-[rgba(248,180,217,0.08)] bg-[rgba(15,14,22,0.4)] p-8 text-center">
-          <p className="text-[#9CA3AF]">No market data available yet.</p>
-          <p className="mt-2 text-sm text-[#6B7280]">Check back soon for historical trends and analytics.</p>
+          <p className="text-[#9CA3AF]">{t("empty.title")}</p>
+          <p className="mt-2 text-sm text-[#6B7280]">{t("empty.subtitle")}</p>
         </div>
       </section>
     );
@@ -42,7 +50,7 @@ export function MarketTrendsClient({ initialTrends }: { initialTrends: Trend[] }
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <h2 className="text-lg font-semibold text-[#F2F0E9] mb-6">Top Performers</h2>
+      <h2 className="text-lg font-semibold text-[#F2F0E9] mb-6">{t("topPerformers")}</h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {initialTrends.map((trend, i) => (
           <div
@@ -55,14 +63,14 @@ export function MarketTrendsClient({ initialTrends }: { initialTrends: Trend[] }
                   {trend.make} {trend.model}
                 </h3>
                 <p className="text-[12px] text-[#6B7280] mt-1">
-                  {trend.totalSales} sales recorded
+                  {t("salesRecorded", { count: trend.totalSales })}
                 </p>
               </div>
               <TrendIcon trend={trend.trend} />
             </div>
             <div className="mt-4 flex items-baseline justify-between">
               <span className="text-xl font-bold font-mono text-[#F8B4D9]">
-                {formatPrice(trend.avgPrice)}
+                {formatPrice(trend.avgPrice, locale, t("na"))}
               </span>
               {trend.trend && (
                 <span className={`text-[12px] font-medium ${

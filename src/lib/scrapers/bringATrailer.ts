@@ -98,7 +98,7 @@ async function fetchPage(url: string): Promise<string> {
 /**
  * Parse a price string like "$45,000" or "Bid to $12,500" into a number.
  */
-function parsePrice(text: string | undefined): number | null {
+export function parsePrice(text: string | undefined): number | null {
   if (!text) return null;
   const cleaned = text.replace(/[^0-9.]/g, '');
   const num = parseFloat(cleaned);
@@ -108,7 +108,7 @@ function parsePrice(text: string | undefined): number | null {
 /**
  * Parse a mileage string like "45,230 Miles" into a number.
  */
-function parseMileage(text: string | undefined): number | null {
+export function parseMileage(text: string | undefined): number | null {
   if (!text) return null;
   const cleaned = text.replace(/[^0-9]/g, '');
   const num = parseInt(cleaned, 10);
@@ -119,7 +119,7 @@ function parseMileage(text: string | undefined): number | null {
  * Extract year, make, and model from an auction title.
  * BaT titles typically follow the pattern: "YEAR MAKE MODEL ..."
  */
-function parseTitleComponents(title: string): {
+export function parseTitleComponents(title: string): {
   year: number;
   make: string;
   model: string;
@@ -170,7 +170,7 @@ function parseTitleComponents(title: string): {
 /**
  * Generate a deterministic external ID from a BaT auction URL.
  */
-function extractExternalId(url: string): string {
+export function extractExternalId(url: string): string {
   // BaT URLs look like: /listing/1990-porsche-911-carrera-4-cabriolet/
   const match = url.match(/\/listing\/([^/]+)/);
   if (match) return `bat-${match[1]}`;
@@ -253,7 +253,7 @@ export async function scrapeListings(
   return { auctions, errors };
 }
 
-function parseAuctionCard(
+export function parseAuctionCard(
   $: cheerio.CheerioAPI,
   el: cheerio.Element,
 ): BaTAuction | null {

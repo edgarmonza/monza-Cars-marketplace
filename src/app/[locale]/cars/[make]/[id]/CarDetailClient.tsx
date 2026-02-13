@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
 import { motion, AnimatePresence } from "framer-motion"
+import { useLocale, useTranslations } from "next-intl"
 import {
   ArrowLeft,
   TrendingUp,
@@ -33,12 +34,12 @@ import { MobileCarCTA } from "@/components/mobile"
 // ─── TABS ───
 type TabId = "overview" | "investment" | "diligence" | "market"
 
-const tabs: { id: TabId; label: string; icon: React.ReactNode }[] = [
-  { id: "overview", label: "Overview", icon: <FileText className="size-4" /> },
-  { id: "investment", label: "Investment", icon: <TrendingUp className="size-4" /> },
-  { id: "diligence", label: "Due Diligence", icon: <Shield className="size-4" /> },
-  { id: "market", label: "Market", icon: <Globe className="size-4" /> },
-]
+const tabIcons: Record<TabId, React.ReactNode> = {
+  overview: <FileText className="size-4" />,
+  investment: <TrendingUp className="size-4" />,
+  diligence: <Shield className="size-4" />,
+  market: <Globe className="size-4" />,
+}
 
 // ─── MOCK DATA ───
 const redFlags: Record<string, string[]> = {
@@ -302,10 +303,22 @@ function SimilarCarCard({ car }: { car: CollectorCar }) {
 
 // ─── MAIN COMPONENT ───
 export function CarDetailClient({ car, similarCars }: { car: CollectorCar; similarCars: CollectorCar[] }) {
+  const locale = useLocale()
+  const t = useTranslations("carDetail")
+  const tAuction = useTranslations("auctionDetail")
+  const tStatus = useTranslations("status")
+
   const [activeTab, setActiveTab] = useState<TabId>("overview")
   const [showSticky, setShowSticky] = useState(false)
   const [showAdvisorChat, setShowAdvisorChat] = useState(false)
   const heroRef = useRef<HTMLDivElement>(null)
+
+  const tabs: { id: TabId; label: string; icon: React.ReactNode }[] = [
+    { id: "overview", label: t("overview"), icon: tabIcons.overview },
+    { id: "investment", label: t("investment"), icon: tabIcons.investment },
+    { id: "diligence", label: t("dueDiligence"), icon: tabIcons.diligence },
+    { id: "market", label: t("market"), icon: tabIcons.market },
+  ]
 
   const isLive = car.status === "ACTIVE" || car.status === "ENDING_SOON"
   const flags = redFlags[car.make] || redFlags.default
@@ -425,7 +438,7 @@ export function CarDetailClient({ car, similarCars }: { car: CollectorCar; simil
             <div className="mt-6 flex flex-wrap items-center gap-6">
               <div>
                 <p className="text-[10px] text-white/40 uppercase tracking-wider">
-                  {car.status === "ENDED" ? "Sold For" : "Current Bid"}
+                  {car.status === "ENDED" ? t("soldFor") : t("currentBid")}
                 </p>
                 <p className="text-2xl md:text-3xl font-bold font-mono text-[#F2F0E9]">
                   {formatPrice(car.currentBid)}
@@ -433,21 +446,21 @@ export function CarDetailClient({ car, similarCars }: { car: CollectorCar; simil
               </div>
               <div className="h-10 w-px bg-white/10" />
               <div>
-                <p className="text-[10px] text-white/40 uppercase tracking-wider">Mileage</p>
+                <p className="text-[10px] text-white/40 uppercase tracking-wider">{tAuction("specs.mileage")}</p>
                 <p className="text-xl font-bold text-[#F2F0E9]">
-                  {car.mileage.toLocaleString()} {car.mileageUnit}
+                  {car.mileage.toLocaleString(locale)} {car.mileageUnit}
                 </p>
               </div>
               <div className="h-10 w-px bg-white/10" />
               <div>
-                <p className="text-[10px] text-white/40 uppercase tracking-wider">Location</p>
+                <p className="text-[10px] text-white/40 uppercase tracking-wider">{tAuction("specs.location")}</p>
                 <p className="text-xl font-bold text-[#F2F0E9]">{car.region}</p>
               </div>
               {isLive && (
                 <>
                   <div className="h-10 w-px bg-white/10" />
                   <div>
-                    <p className="text-[10px] text-white/40 uppercase tracking-wider">Time Left</p>
+                    <p className="text-[10px] text-white/40 uppercase tracking-wider">{t("timeLeft")}</p>
                     <p className="text-xl font-bold text-amber-400 font-mono">{timeLeft(car.endTime)}</p>
                   </div>
                 </>
@@ -497,30 +510,30 @@ export function CarDetailClient({ car, similarCars }: { car: CollectorCar; simil
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <Sparkles className="size-5 text-[#F8B4D9]" />
-                    <h2 className="text-[13px] font-semibold text-[#F2F0E9]">About This Vehicle</h2>
+                    <h2 className="text-[13px] font-semibold text-[#F2F0E9]">{t("aboutThisVehicle")}</h2>
                   </div>
-                  <span className="text-[9px] text-[#4B5563] bg-white/5 px-2 py-0.5 rounded">Editorial</span>
+                  <span className="text-[9px] text-[#4B5563] bg-white/5 px-2 py-0.5 rounded">{t("editorial")}</span>
                 </div>
                 <p className="text-[14px] leading-relaxed text-[#9CA3AF]">{car.thesis}</p>
               </div>
 
               {/* Specs Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <StatCard label="Mileage" value={`${car.mileage.toLocaleString()} ${car.mileageUnit}`} icon={<Gauge className="size-4" />} />
-                <StatCard label="Engine" value={car.engine} icon={<Cog className="size-4" />} />
-                <StatCard label="Transmission" value={car.transmission} icon={<Cog className="size-4" />} />
-                <StatCard label="Location" value={car.location} icon={<MapPin className="size-4" />} />
+                <StatCard label={tAuction("specs.mileage")} value={`${car.mileage.toLocaleString(locale)} ${car.mileageUnit}`} icon={<Gauge className="size-4" />} />
+                <StatCard label={tAuction("specs.engine")} value={car.engine} icon={<Cog className="size-4" />} />
+                <StatCard label={tAuction("specs.transmission")} value={car.transmission} icon={<Cog className="size-4" />} />
+                <StatCard label={tAuction("specs.location")} value={car.location} icon={<MapPin className="size-4" />} />
               </div>
 
               {/* Provenance */}
-              <CollapsibleSection title="Seller's Description" icon={<History className="size-5" />} defaultOpen>
+              <CollapsibleSection title={t("sellersDescription")} icon={<History className="size-5" />} defaultOpen>
                 <p className="text-[13px] text-[#9CA3AF] leading-relaxed">{car.history}</p>
-                <p className="text-[10px] text-[#4B5563] mt-3 italic">Source: {car.platform.replace(/_/g, " ")} listing</p>
+                <p className="text-[10px] text-[#4B5563] mt-3 italic">{t("source", { platform: car.platform.replace(/_/g, " ") })}</p>
               </CollapsibleSection>
 
               {/* Similar Cars */}
               {similarCars.length > 0 && (
-                <CollapsibleSection title={`Similar Vehicles (${similarCars.length})`} icon={<Car className="size-5" />} defaultOpen>
+                <CollapsibleSection title={t("similarVehicles", { count: similarCars.length })} icon={<Car className="size-5" />} defaultOpen>
                   <div className="space-y-3">
                     {similarCars.slice(0, 4).map(c => (
                       <SimilarCarCard key={c.id} car={c} />
@@ -545,27 +558,31 @@ export function CarDetailClient({ car, similarCars }: { car: CollectorCar; simil
               <div className="rounded-2xl bg-[rgba(15,14,22,0.6)] border border-white/5 p-6">
                 <div className="flex items-center gap-2 mb-6">
                   <Globe className="size-5 text-[#F8B4D9]" />
-                  <h2 className="text-[13px] font-semibold text-[#F2F0E9]">Sale Information</h2>
+                  <h2 className="text-[13px] font-semibold text-[#F2F0E9]">{t("saleInformation")}</h2>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="rounded-xl p-4 bg-white/[0.02] border border-white/5">
-                    <p className="text-[10px] text-[#4B5563] uppercase tracking-wider mb-2">Platform</p>
+                    <p className="text-[10px] text-[#4B5563] uppercase tracking-wider mb-2">{t("platform")}</p>
                     <p className="text-[16px] font-semibold text-[#F2F0E9]">{car.platform.replace(/_/g, " ")}</p>
                   </div>
                   <div className="rounded-xl p-4 bg-white/[0.02] border border-white/5">
                     <p className="text-[10px] text-[#4B5563] uppercase tracking-wider mb-2">
-                      {car.status === "ENDED" ? "Sold For" : "Current Bid"}
+                      {car.status === "ENDED" ? t("soldFor") : t("currentBid")}
                     </p>
                     <p className="text-[16px] font-bold font-mono text-[#F8B4D9]">{formatPrice(car.currentBid)}</p>
                   </div>
                   <div className="rounded-xl p-4 bg-white/[0.02] border border-white/5">
-                    <p className="text-[10px] text-[#4B5563] uppercase tracking-wider mb-2">Bids</p>
+                    <p className="text-[10px] text-[#4B5563] uppercase tracking-wider mb-2">{t("bids")}</p>
                     <p className="text-[16px] font-semibold text-[#F2F0E9]">{car.bidCount}</p>
                   </div>
                   <div className="rounded-xl p-4 bg-white/[0.02] border border-white/5">
-                    <p className="text-[10px] text-[#4B5563] uppercase tracking-wider mb-2">Status</p>
+                    <p className="text-[10px] text-[#4B5563] uppercase tracking-wider mb-2">{t("status")}</p>
                     <p className={`text-[16px] font-semibold ${car.status === "ACTIVE" || car.status === "ENDING_SOON" ? "text-emerald-400" : "text-[#9CA3AF]"}`}>
-                      {car.status === "ENDED" ? "Sold" : car.status === "ENDING_SOON" ? "Ending Soon" : "Active"}
+                      {car.status === "ENDED"
+                        ? tStatus("sold")
+                        : car.status === "ENDING_SOON"
+                          ? tStatus("endingSoon")
+                          : tStatus("active")}
                     </p>
                   </div>
                 </div>
@@ -576,35 +593,34 @@ export function CarDetailClient({ car, similarCars }: { car: CollectorCar; simil
                 <AlertTriangle className="size-4 text-amber-400 mt-0.5 shrink-0" />
                 <div>
                   <p className="text-[12px] text-amber-200/80">
-                    <strong>Note:</strong> Historical price data and future projections are not available.
-                    The ownership costs below are estimates based on typical costs for this vehicle type.
+                    <strong>{t("note.label")}</strong> {t("note.text")}
                   </p>
                 </div>
               </div>
 
               {/* Annual Ownership Breakdown */}
-              <CollapsibleSection title="Estimated Annual Ownership Costs" icon={<Wrench className="size-5" />} defaultOpen badge={
-                <span className="text-[9px] text-[#4B5563] bg-white/5 px-2 py-0.5 rounded">Estimates</span>
+              <CollapsibleSection title={t("ownershipCosts.title")} icon={<Wrench className="size-5" />} defaultOpen badge={
+                <span className="text-[9px] text-[#4B5563] bg-white/5 px-2 py-0.5 rounded">{t("ownershipCosts.estimates")}</span>
               }>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between py-3 border-b border-white/5">
                     <div className="flex items-center gap-3">
                       <Shield className="size-4 text-[#4B5563]" />
-                      <span className="text-[13px] text-[#9CA3AF]">Insurance (Agreed Value)</span>
+                      <span className="text-[13px] text-[#9CA3AF]">{t("ownershipCosts.insurance")}</span>
                     </div>
                     <span className="text-[15px] font-mono font-semibold text-[#F2F0E9]">{formatPrice(costs.insurance)}</span>
                   </div>
                   <div className="flex items-center justify-between py-3 border-b border-white/5">
                     <div className="flex items-center gap-3">
                       <MapPin className="size-4 text-[#4B5563]" />
-                      <span className="text-[13px] text-[#9CA3AF]">Climate-Controlled Storage</span>
+                      <span className="text-[13px] text-[#9CA3AF]">{t("ownershipCosts.storage")}</span>
                     </div>
                     <span className="text-[15px] font-mono font-semibold text-[#F2F0E9]">{formatPrice(costs.storage)}</span>
                   </div>
                   <div className="flex items-center justify-between py-3 border-b border-white/5">
                     <div className="flex items-center gap-3">
                       <Wrench className="size-4 text-[#4B5563]" />
-                      <span className="text-[13px] text-[#9CA3AF]">Service & Maintenance</span>
+                      <span className="text-[13px] text-[#9CA3AF]">{t("ownershipCosts.service")}</span>
                     </div>
                     <span className="text-[15px] font-mono font-semibold text-[#F2F0E9]">{formatPrice(costs.maintenance)}</span>
                   </div>

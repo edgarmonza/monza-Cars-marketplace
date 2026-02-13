@@ -36,8 +36,11 @@
     "noCredits": "No Credits Remaining",
     "noCreditsDesc": "You've used all your analysis credits. Purchase more to continue analyzing vehicles.",
     "email": "Email",
+    "emailPlaceholder": "you@example.com",
     "password": "Password",
+    "passwordPlaceholder": "Enter your password",
     "name": "Name",
+    "namePlaceholder": "Your name",
     "continueWithGoogle": "Continue with Google",
     "orContinueWith": "or continue with",
     "alreadyHaveAccount": "Already have an account?",
@@ -45,17 +48,58 @@
     "welcomeBack": "Welcome Back",
     "signInDesc": "Sign in to access your analysis credits",
     "createAccountTitle": "Create Account",
-    "createAccountDesc": "Get 3 free analysis credits every month"
+    "createAccountDesc": "Get 3 free analysis credits every month",
+    "confirmEmail": "Check your email to confirm your account",
+    "unexpectedError": "An unexpected error occurred",
+    "loading": "Loading...",
+    "or": "or",
+    "switchToSignUp": "Don't have an account? Sign up",
+    "switchToSignIn": "Already have an account? Sign in",
+    "analysisRequiresSignInTitle": "Analysis Requires Sign In",
+    "analysisRequiresSignInDesc": "Sign in to analyze this vehicle",
+    "newAccountsCredits": "New accounts receive 3 free analysis credits"
   },
   "hero": {
     "badge": "Live Auction Intelligence",
-    "headline1": "The Intelligent Terminal for",
-    "headline2": "Collector Vehicle",
-    "headline3": "Acquisition",
-    "subheadline": "AI-powered auction analysis for collector vehicles. Make smarter bids with data-driven insights from top platforms.",
+    "headline1": "Building",
+    "headline2": "Investment-Grade",
+    "headline3": "Assets",
+    "subheadline": "AI-powered auction analysis for classic vehicles. Make smarter bids with data-driven insights from top platforms.",
     "searchPlaceholder": "Search by make, model, or year...",
     "search": "Search",
-    "popular": "Popular:"
+    "popular": "Popular:",
+    "stats": {
+      "auctionsTracked": "Auctions Tracked",
+      "aiAnalyses": "AI Analyses",
+      "platformsActive": "Platforms Active"
+    }
+  },
+  "howItWorks": {
+    "kicker": "How It Works",
+    "title1": "Your Unfair Advantage in",
+    "title2": "Every Auction",
+    "subtitle": "Three simple steps between you and smarter bidding decisions.",
+    "steps": {
+      "track": {
+        "title": "We Track",
+        "description": "Monitor live auctions across top platforms in real-time. Every listing, every bid, every detail -- captured and organized for you."
+      },
+      "analyzes": {
+        "title": "AI Analyzes",
+        "description": "Get detailed analysis, red flags, and fair price ranges powered by advanced AI. Know exactly what a vehicle is worth before you bid."
+      },
+      "bidSmart": {
+        "title": "You Bid Smart",
+        "description": "Make confident decisions with data-driven insights. No more guesswork, no more overpaying -- just smart, informed bidding."
+      }
+    }
+  },
+  "featuredAuctions": {
+    "kicker": "Verified Sales",
+    "subtitle": "Curated selection of recent high-value transactions. Real chassis, verified provenance, actual hammer prices.",
+    "viewListing": "View Listing",
+    "hammerPrice": "Hammer Price",
+    "dataNote": "Data sourced directly from Bring a Trailer and RM Sotheby's. Prices verified at time of sale."
   },
   "status": {
     "active": "Active",
@@ -77,7 +121,329 @@
     "market": "Market",
     "backTo": "Back to {make}",
     "contact": "Contact",
-    "contactAdvisor": "Contact Advisor"
+    "contactAdvisor": "Contact Advisor",
+    "aboutThisVehicle": "About This Vehicle",
+    "editorial": "Editorial",
+    "timeLeft": "Time Left",
+    "soldFor": "Sold For",
+    "currentBid": "Current Bid",
+    "bids": "Bids",
+    "status": "Status",
+    "sellersDescription": "Seller's Description",
+    "source": "Source: {platform} listing",
+    "similarVehicles": "Similar Vehicles ({count})",
+    "saleInformation": "Sale Information",
+    "platform": "Platform",
+    "note": {
+      "label": "Note:",
+      "text": "Historical price data and future projections are not available. The ownership costs below are estimates based on typical costs for this vehicle type."
+    },
+    "ownershipCosts": {
+      "title": "Estimated Annual Ownership Costs",
+      "estimates": "Estimates",
+      "insurance": "Insurance (Agreed Value)",
+      "storage": "Climate-Controlled Storage",
+      "service": "Service & Maintenance"
+    }
+  },
+  "auctionDetail": {
+    "actions": {
+      "placeBid": "Place Bid",
+      "viewOriginalListing": "View Original Listing",
+      "chatWithAnalyst": "Chat with Analyst",
+      "goBack": "Go Back",
+      "backToFeed": "Back to Feed",
+      "show": "Show",
+      "hide": "Hide"
+    },
+    "labels": {
+      "currentBid": "Current Bid",
+      "finalPrice": "Final Price",
+      "recommendedCap": "Recommended Cap",
+      "basedOnMarketAnalysis": "Based on market analysis",
+      "grade": "Grade:",
+      "complexity": "Complexity",
+      "demand": "Demand",
+      "sellerQuestions": "Seller Questions ({count})",
+      "liveAuction": "Live Auction",
+      "vin": "VIN",
+      "verified": "Verified",
+      "chassisIdentity": "Chassis Identity",
+      "vinOrChassis": "VIN / Chassis #",
+      "production": "Production",
+      "totalProduced": "Total produced",
+      "factoryConfiguration": "Factory Configuration",
+      "exterior": "Exterior",
+      "interior": "Interior",
+      "keyOptions": "Key Options",
+      "assetLifecycle": "Asset Lifecycle"
+    },
+    "modules": {
+      "strategyInsights": "Strategy Insights",
+      "financialProjection": "Financial Projection",
+      "dueDiligence": "Due Diligence",
+      "comparableSales": "Comparable Sales",
+      "registryIntelligence": "Registry Intelligence"
+    },
+    "specs": {
+      "mileage": "Mileage",
+      "engine": "Engine",
+      "transmission": "Trans",
+      "location": "Location"
+    },
+    "units": {
+      "miles": "mi"
+    },
+    "bids": {
+      "count": "{count, plural, one {# bid} other {# bids}}"
+    },
+    "time": {
+      "ended": "Ended",
+      "units": {
+        "day": "d",
+        "hour": "h",
+        "minute": "m"
+      }
+    },
+    "financial": {
+      "holdingCost": "Holding Cost ({years}yr)",
+      "maint": "Maint",
+      "ins": "Ins",
+      "perYear": "yr",
+      "appreciation": "Appreciation",
+      "projected": "Projected",
+      "netYield": "Net Yield ({years} Year)"
+    },
+    "registry": {
+      "dataSource": "Data sourced from Exclusive Car Registry • Last verified {date}"
+    },
+    "errors": {
+      "notFound": "Auction not found",
+      "failedToLoad": "Failed to load auction ({status})",
+      "networkError": "Network error while loading auction"
+    },
+    "whatsapp": {
+      "prefill": "Hi Nicolas, I'm viewing the {year} {make} {model} on Monza Lab. I'd like to receive the Investment Thesis and current valuation."
+    },
+    "mock": {
+      "strategy": {
+        "Lamborghini": {
+          "strategy": "Aggressive bidding justified given exceptional provenance and low mileage. The SV designation commands 30-40% premium over standard P400. Market liquidity remains strong for certified examples. Consider bidding early to establish position -- sniping rarely works at this price point.",
+          "complexity": "High",
+          "demand": "Very High"
+        },
+        "Porsche": {
+          "strategy": "Patient, calculated approach recommended. Air-cooled 911 market shows depth with consistent buyer demand. Focus on condition and documentation -- matching numbers and service history drive 20%+ premiums. Avoid emotional bidding; comparable sales support valuation.",
+          "complexity": "Moderate",
+          "demand": "High"
+        },
+        "Ferrari": {
+          "strategy": "Due diligence is critical before bidding. Classiche certification status significantly impacts value. Consider engaging a marque specialist for a pre-purchase inspection. The market favors complete, documented examples over restored cars.",
+          "complexity": "Very High",
+          "demand": "High"
+        },
+        "Nissan": {
+          "strategy": "The JDM market remains volatile with strong upward momentum. Verify import documentation and compliance. V-Spec and N\u00fcr variants command significant premiums. Stock, unmolested examples are increasingly rare -- condition trumps specification.",
+          "complexity": "Moderate",
+          "demand": "Extreme"
+        },
+        "default": {
+          "strategy": "Thorough pre-purchase inspection recommended. Research comparable sales within the last 12 months. Consider total cost of ownership including maintenance, storage, and insurance. Patient bidding typically yields better outcomes.",
+          "complexity": "Moderate",
+          "demand": "Moderate"
+        }
+      },
+      "redFlags": {
+        "Lamborghini": [
+          "Carburetors require specialized tuning; verify recent service",
+          "Clutch replacement is labor-intensive (~$8,000+ at specialist)",
+          "Cooling system can struggle in traffic; check fan operation",
+          "Frame can develop stress cracks at rear mounting points"
+        ],
+        "Porsche": [
+          "Chain tensioner failure risk on early models (pre-1984)",
+          "Heat exchanger condition is critical; rust inspection required",
+          "Galvanized vs non-galvanized body impacts long-term value",
+          "Verify matching-numbers engine and transmission"
+        ],
+        "Ferrari": [
+          "Cam belt service history is critical ($5,000+ if overdue)",
+          "Sticky interior switches are common; verify electronics",
+          "Exhaust manifold cracks require specialist repair",
+          "Classiche rejection significantly impacts resale"
+        ],
+        "Nissan": [
+          "ATTESA E-TS pump failure is common; verify operation",
+          "RB26 head gasket issues if previously tuned",
+          "Rust in rear quarters and trunk is common on JDM imports",
+          "Verify legal import status and EPA/DOT compliance"
+        ],
+        "default": [
+          "Request comprehensive service history documentation",
+          "Verify VIN matches title and body panels",
+          "Check for evidence of previous accident damage",
+          "Confirm mileage with service records"
+        ]
+      },
+      "sellerQuestions": {
+        "Lamborghini": [
+          "Has the battery tray been inspected for corrosion?",
+          "When were the carburetors last synchronized?",
+          "Is the air conditioning original and functional?",
+          "Any history of frame repairs or reinforcement?"
+        ],
+        "Porsche": [
+          "When was the last valve adjustment performed?",
+          "Has the vehicle been used in any form of motorsport?",
+          "Are the date codes correct on all glass?",
+          "Has the transmission been rebuilt? By whom?"
+        ],
+        "Ferrari": [
+          "Is Classiche certification in progress or obtainable?",
+          "When was the last cam belt service performed?",
+          "Are all tools and books present and original?",
+          "Has the car ever been repainted?"
+        ],
+        "Nissan": [
+          "Has the vehicle been modified from stock specification?",
+          "What is the boost level and tune history?",
+          "Is the odometer reading in kilometers or miles?",
+          "Are all import documents available for review?"
+        ],
+        "default": [
+          "Is a pre-purchase inspection permitted?",
+          "What is the service history since ownership?",
+          "Are there any known mechanical issues?",
+          "What is included in the sale (records, spare parts)?"
+        ]
+      },
+      "comparables": {
+        "Lamborghini": [
+          { "title": "1971 Miura P400 SV", "price": 2650000, "date": "Nov 2025", "platform": "RM Sotheby's" },
+          { "title": "1972 Miura P400 SV", "price": 2350000, "date": "Aug 2025", "platform": "Gooding" },
+          { "title": "1969 Miura P400 S", "price": 1980000, "date": "May 2025", "platform": "Bonhams" },
+          { "title": "1970 Miura P400 S", "price": 1850000, "date": "Mar 2025", "platform": "RM Sotheby's" },
+          { "title": "1971 Miura P400 SV", "price": 2480000, "date": "Jan 2025", "platform": "Gooding" }
+        ],
+        "Porsche": [
+          { "title": "1973 911 Carrera RS 2.7", "price": 1450000, "date": "Oct 2025", "platform": "RM Sotheby's" },
+          { "title": "1973 911 Carrera RS", "price": 1320000, "date": "Jul 2025", "platform": "Gooding" },
+          { "title": "1972 911 2.7 RS", "price": 1180000, "date": "Apr 2025", "platform": "BaT" },
+          { "title": "1973 911 RS Lightweight", "price": 1650000, "date": "Feb 2025", "platform": "Bonhams" },
+          { "title": "1973 911 Carrera RS", "price": 1280000, "date": "Dec 2024", "platform": "RM Sotheby's" }
+        ],
+        "Ferrari": [
+          { "title": "2008 Ferrari F430", "price": 210000, "date": "Sep 2025", "platform": "BaT" },
+          { "title": "2007 Ferrari F430", "price": 198000, "date": "Jun 2025", "platform": "C&B" },
+          { "title": "2009 Ferrari 430 Scuderia", "price": 345000, "date": "Feb 2025", "platform": "RM Sotheby's" }
+        ],
+        "Nissan": [
+          { "title": "2002 Nissan Skyline GT-R V-Spec II", "price": 185000, "date": "Nov 2025", "platform": "BaT" },
+          { "title": "1999 Nissan Skyline GT-R", "price": 152000, "date": "Jul 2025", "platform": "C&B" },
+          { "title": "2002 Nissan Skyline GT-R V-Spec II N\u00fcr", "price": 240000, "date": "Mar 2025", "platform": "BaT" }
+        ],
+        "default": [
+          { "title": "Similar Model (Recent)", "price": 125000, "date": "Nov 2025", "platform": "BaT" },
+          { "title": "Similar Model (Mid-Year)", "price": 118000, "date": "Jul 2025", "platform": "C&B" },
+          { "title": "Similar Model (Earlier)", "price": 112000, "date": "Mar 2025", "platform": "BaT" }
+        ]
+      },
+      "registry": {
+        "Lamborghini": {
+          "chassisPrefix": "4846",
+          "productionSequence": "#45 of 150",
+          "totalProduced": 150,
+          "config": {
+            "exteriorColor": "Verde Pino",
+            "exteriorCode": "20.517.A",
+            "interiorColor": "Senape",
+            "interiorMaterial": "Full leather w/ perforated inserts",
+            "keyOptions": ["Weissach Package", "Matching Numbers", "Tool Roll Complete", "Books & Records"]
+          },
+          "spottings": [
+            { "year": 2018, "event": "Concorso d'Eleganza", "location": "Villa d'Este, Italy", "source": "Registry" },
+            { "year": 2020, "event": "Private Sale", "location": "Monaco", "source": "RM Sotheby's" },
+            { "year": 2022, "event": "Documented Service", "location": "Modena, Italy", "source": "Factory Records" },
+            { "year": 2024, "event": "Current Listing", "location": "California, USA", "source": "BaT" }
+          ],
+          "verified": true
+        },
+        "Porsche": {
+          "chassisPrefix": "9113600",
+          "productionSequence": "#112 of 1,580",
+          "totalProduced": 1580,
+          "config": {
+            "exteriorColor": "Grand Prix White",
+            "exteriorCode": "L90E",
+            "interiorColor": "Black",
+            "interiorMaterial": "Leatherette w/ Pepita inserts",
+            "keyOptions": ["Lightweight", "Sport Seats", "Ducktail Spoiler", "Certificate of Authenticity"]
+          },
+          "spottings": [
+            { "year": 2015, "event": "Restoration Completed", "location": "Stuttgart, Germany", "source": "Porsche Classic" },
+            { "year": 2019, "event": "Auction Result", "location": "Monterey, CA", "source": "Gooding & Co" },
+            { "year": 2021, "event": "Private Collection", "location": "Zurich, Switzerland", "source": "Registry" },
+            { "year": 2024, "event": "Current Listing", "location": "New York, USA", "source": "BaT" }
+          ],
+          "verified": true
+        },
+        "Ferrari": {
+          "chassisPrefix": "ZFFCW56A",
+          "productionSequence": "#287 of 399",
+          "totalProduced": 399,
+          "config": {
+            "exteriorColor": "Rosso Corsa",
+            "exteriorCode": "300",
+            "interiorColor": "Nero",
+            "interiorMaterial": "Full leather Daytona seats",
+            "keyOptions": ["Classiche Certified", "Carbon Fiber Package", "Scuderia Shields", "Full Service History"]
+          },
+          "spottings": [
+            { "year": 2017, "event": "Classiche Certification", "location": "Maranello, Italy", "source": "Ferrari SpA" },
+            { "year": 2020, "event": "Major Service", "location": "Beverly Hills, CA", "source": "Authorized Dealer" },
+            { "year": 2023, "event": "Concours Entry", "location": "Pebble Beach, CA", "source": "Registry" },
+            { "year": 2024, "event": "Current Listing", "location": "Miami, FL", "source": "C&B" }
+          ],
+          "verified": true
+        },
+        "Nissan": {
+          "chassisPrefix": "BNR34-",
+          "productionSequence": "#956 of 1,003",
+          "totalProduced": 1003,
+          "config": {
+            "exteriorColor": "Bayside Blue",
+            "exteriorCode": "TV2",
+            "interiorColor": "Black",
+            "interiorMaterial": "Alcantara w/ leather bolsters",
+            "keyOptions": ["V-Spec II", "NISMO Exhaust", "Mine's ECU", "Complete Import Documents"]
+          },
+          "spottings": [
+            { "year": 2016, "event": "Japan Export", "location": "Tokyo, Japan", "source": "JEVIC Certificate" },
+            { "year": 2018, "event": "US Import/Compliance", "location": "Los Angeles, CA", "source": "Customs Docs" },
+            { "year": 2022, "event": "Professional Detail", "location": "Seattle, WA", "source": "Seller Records" },
+            { "year": 2024, "event": "Current Listing", "location": "Portland, OR", "source": "BaT" }
+          ],
+          "verified": true
+        },
+        "default": {
+          "chassisPrefix": "VIN-",
+          "productionSequence": "Standard Production",
+          "totalProduced": 0,
+          "config": {
+            "exteriorColor": "Factory Color",
+            "exteriorCode": "-",
+            "interiorColor": "Factory Interior",
+            "interiorMaterial": "Original Specification",
+            "keyOptions": ["Service Records Available", "Clean Title"]
+          },
+          "spottings": [
+            { "year": 2020, "event": "Previous Owner", "location": "United States", "source": "Title History" },
+            { "year": 2024, "event": "Current Listing", "location": "United States", "source": "Auction Platform" }
+          ],
+          "verified": false
+        }
+      }
+    }
   },
   "oracle": {
     "aiAnalysis": "AI Analysis",
@@ -90,7 +456,80 @@
     "viewSimilar": "View Similar",
     "viewAll": "View All",
     "viewCollection": "View Collection",
-    "relatedActions": "Related Actions"
+    "relatedActions": "Related Actions",
+    "comingSoon": {
+      "marketReport": "Market Report coming soon...",
+      "priceAlerts": "Price Alerts coming soon..."
+    },
+    "chips": {
+      "viewCarDetails": "View Car Details",
+      "viewFullDetails": "View Full Details",
+      "similarCars": "Similar Cars",
+      "browseBrand": "Browse Brand",
+      "viewLiveAuctions": "View Live Auctions",
+      "browseAll": "Browse All",
+      "browseByBrand": "Browse by Brand",
+      "viewAllUnderBudget": "View All Under Budget",
+      "bestRoiCars": "Best ROI Cars",
+      "setPriceAlert": "Set Price Alert",
+      "viewAllBrand": "View All {brand}",
+      "compareModels": "Compare Models",
+      "setAlerts": "Set Alerts"
+    },
+    "responses": {
+      "singleCar": "**{title}**\n\n{thesis}\n\n**Fair price:** {fairLow} — {fairHigh}\n\n**Investment:** Grade {grade} | {trend}",
+      "multipleFound": "Found {count} vehicles:",
+      "noMatch": "**Monza Lab Collection**\n\nWe have {totalCars} curated investment vehicles.\n\n**Average Appreciation:** +{avgAppreciation}% per year\n\nTry searching brands like \"Porsche\" or \"Ferrari\" — or a specific model.",
+      "currentCar": "**{title}**\n\n**Investment Analysis:**\n• Grade: **{grade}**\n• Trend: **{trend}**\n\n**Fair Value by Region:**\n• 🇺🇸 {usLow} — {usHigh}\n• 🇪🇺 {euLow} — {euHigh}\n• 🇬🇧 {ukLow} — {ukHigh}\n\n**Thesis:**\n{thesis}",
+      "currentCarFallback": "**{title}**\n\nCurrent price: {price}\n\nFor a complete analysis, explore the Investment and Due Diligence tabs above.",
+      "noMatchForQuery": "I couldn't find specific info for \"{query}\".\n\nWant me to analyze the **{title}** you're viewing? I can estimate value, investment outlook, or history."
+    }
+  },
+  "pages": {
+    "auctions": {
+      "loading": "Loading auctions...",
+      "meta": {
+        "title": "Live Auctions | Monza Lab",
+        "description": "Browse and analyze collector car auctions across Bring a Trailer, Cars & Bids, RM Sotheby's, and more. Get AI-powered insights before you bid.",
+        "ogTitle": "Live Auctions | Monza Lab",
+        "ogDescription": "Browse and analyze collector car auctions across all major platforms."
+      }
+    },
+    "search": {
+      "meta": {
+        "title": "Search Auctions | Monza Lab",
+        "description": "Search across thousands of live and completed auctions. Filter by make, model, year, platform, and price range."
+      }
+    },
+    "history": {
+      "meta": {
+        "title": "Market Trends | Monza Lab",
+        "description": "Explore historical auction results and market trends for classic and collectible vehicles."
+      }
+    }
+  },
+  "history": {
+    "kicker": "Market Intelligence",
+    "title1": "Market",
+    "title2": "Trends",
+    "subtitle": "Analyze historical auction results, track price movements, and identify trends across makes, models, and platforms.",
+    "stats": {
+      "auctionsTracked": "Auctions Tracked",
+      "makesCovered": "Makes Covered",
+      "platforms": "Platforms",
+      "dataPoints": "Data Points"
+    },
+    "topPerformers": "Top Performers",
+    "salesRecorded": "{count, plural, one {# sale recorded} other {# sales recorded}}",
+    "na": "N/A",
+    "empty": {
+      "title": "No market data available yet.",
+      "subtitle": "Check back soon for historical trends and analytics."
+    }
+  },
+  "home": {
+    "loadingAssets": "Loading assets...",
+    "noAuctionsFound": "No auctions found"
   },
   "language": {
     "select": "Language",
@@ -151,6 +590,267 @@
     "verified": "Verified",
     "critical": "Critical",
     "recommended": "Recommended"
+  },
+  "search": {
+    "header": {
+      "title": "Search",
+      "titleAccent": "Auctions",
+      "searchPlaceholder": "Search make, model, year...",
+      "results": "{count, plural, one {# result} other {# results}}"
+    },
+    "filters": {
+      "button": "Filters",
+      "allMakes": "All Makes",
+      "allPlatforms": "All Platforms",
+      "clearAll": "Clear all",
+      "yearRange": "Year Range",
+      "from": "From",
+      "to": "To",
+      "priceRange": "Price Range",
+      "min": "Min",
+      "max": "Max"
+    },
+    "statuses": {
+      "live": "Live",
+      "completed": "Completed"
+    },
+    "sort": {
+      "newestFirst": "Newest First",
+      "oldestFirst": "Oldest First",
+      "priceHighToLow": "Price: High to Low",
+      "priceLowToHigh": "Price: Low to High",
+      "endingSoon": "Ending Soon"
+    },
+    "empty": {
+      "title": "No results found",
+      "subtitle": "Try adjusting your search terms or filters.",
+      "clearSearch": "Clear Search"
+    },
+    "card": {
+      "currentBid": "Current Bid",
+      "soldFor": "Sold For",
+      "bids": "{count, plural, one {# bid} other {# bids}}",
+      "noBids": "No bids"
+    },
+    "time": {
+      "ended": "Ended",
+      "units": {
+        "day": "d",
+        "hour": "h",
+        "minute": "m"
+      }
+    },
+    "common": {
+      "none": "—"
+    }
+  },
+  "auctionsList": {
+    "header": {
+      "title": "Live Auctions",
+      "subtitle": "Track and analyze collector car auctions across platforms",
+      "searchPlaceholder": "Search by year, make, model, or keyword..."
+    },
+    "common": {
+      "loading": "Loading..."
+    },
+    "results": {
+      "auctionsLabel": "{count, plural, one {auction} other {auctions}}"
+    },
+    "sort": {
+      "endingSoon": "Ending Soon",
+      "newlyListed": "Newly Listed",
+      "priceLow": "Price: Low to High",
+      "priceHigh": "Price: High to Low",
+      "mostBids": "Most Bids"
+    },
+    "filters": {
+      "title": "Filters",
+      "mobileTitle": "Filter Auctions",
+      "clear": "Clear",
+      "clearAll": "Clear all",
+      "platform": "Platform",
+      "allPlatforms": "All Platforms",
+      "make": "Make",
+      "allMakes": "All Makes",
+      "model": "Model",
+      "modelPlaceholder": "e.g. 911, M3, Supra...",
+      "status": "Status",
+      "allStatuses": "All Statuses",
+      "resultsFound": "{count, plural, one {# auction found} other {# auctions found}}"
+    },
+    "statuses": {
+      "active": "Active",
+      "ended": "Ended",
+      "upcoming": "Upcoming"
+    },
+    "empty": {
+      "title": "No auctions found",
+      "subtitle": "Try adjusting your filters or search terms to discover more vehicles.",
+      "clearFilters": "Clear Filters"
+    },
+    "badges": {
+      "aiAnalyzed": "AI Analyzed"
+    },
+    "units": {
+      "milesLong": "miles",
+      "milesShort": "mi"
+    },
+    "time": {
+      "units": {
+        "day": "d",
+        "hour": "h",
+        "minute": "m"
+      },
+      "remainingSuffix": " remaining"
+    },
+    "reserve": {
+      "noReserve": "No Reserve",
+      "reserveMet": "Reserve Met",
+      "reserveNotMet": "Reserve Not Met"
+    }
+  },
+  "dashboard": {
+    "liveAuctions": {
+      "title": "Live Auctions",
+      "searchPlaceholder": "Search cars...",
+      "tabs": {
+        "allLive": "All Live",
+        "byPrice": "By Price",
+        "byBrand": "By Brand"
+      },
+      "selectBrand": "Select brand...",
+      "allBrands": "All Brands",
+      "resultSummary": "{count, plural, one {# auction} other {# auctions}} • Sorted by price",
+      "empty": {
+        "title": "No auctions found",
+        "subtitle": "Try adjusting your filters"
+      },
+      "quickAccess": "Quick Access"
+    },
+    "brandNav": {
+      "title": "Explore Brands",
+      "manufacturers": "{count, plural, one {# manufacturer} other {# manufacturers}}",
+      "totalCars": "Total Cars",
+      "aaaBrands": "AAA Brands",
+      "carsCount": "{count, plural, one {# car} other {# cars}}"
+    },
+    "brandCard": {
+      "carsCount": "{count, plural, one {# car} other {# cars}}",
+      "priceRange": "Price Range",
+      "trend": "Trend",
+      "collection": "Collection",
+      "vehiclesCount": "{count, plural, one {# vehicle} other {# vehicles}}",
+      "more": "+{count} more",
+      "exploreCollection": "Explore Collection"
+    },
+    "mobileBrand": {
+      "collectorVehicles": "{count, plural, one {# collector vehicle} other {# collector vehicles}}",
+      "explore": "Explore {brand}"
+    },
+    "context": {
+      "investmentThesis": "Investment Thesis",
+      "fiveYearAppreciation": "5-Year Appreciation",
+      "fairValueByRegion": "Fair Value by Region",
+      "annualOwnershipCost": "Annual Ownership Cost",
+      "insurance": "Insurance",
+      "storage": "Storage",
+      "service": "Service",
+      "totalAnnual": "Total Annual",
+      "perYear": "/yr",
+      "alsoConsider": "Also Consider",
+      "recentSales": "Recent Sales",
+      "askAboutThisCar": "Ask About This Car",
+      "askWhatsAppMessage": "Hi, I'm viewing the {make} {model} on Monza Lab. I'd like to understand this vehicle's current valuation and investment potential."
+    },
+    "asset": {
+      "noImage": "No Image",
+      "fullAnalysis": "Full Analysis",
+      "metrics": {
+        "grade": "Grade",
+        "trend": "Trend",
+        "fairValue": "Fair Value",
+        "category": "Category",
+        "collector": "Collector"
+      }
+    },
+    "brandContext": {
+      "overview": "Brand Overview",
+      "fiveYearTrend": "5-Year Trend",
+      "collectionStats": "Collection Stats",
+      "vehicles": "Vehicles",
+      "topGrade": "Top Grade",
+      "minPrice": "Min Price",
+      "maxPrice": "Max Price",
+      "categories": "Categories",
+      "similarBrands": "Similar Brands",
+      "explore": "Explore {brand}"
+    }
+  },
+  "makePage": {
+    "hero": {
+      "backToCollection": "Back to Collection",
+      "brandCollection": "Brand Collection",
+      "liveCount": "{count} LIVE",
+      "priceRange": "Price Range",
+      "listings": "Listings",
+      "sold": "Sold"
+    },
+    "filters": {
+      "filters": "Filters",
+      "price": "Price",
+      "sort": "Sort",
+      "clearWithCount": "Clear ({count})",
+      "searchModelsPlaceholder": "Search {make} models...",
+      "searchMakePlaceholder": "Search {make}...",
+      "model": "Model",
+      "allModels": "All Models",
+      "priceRange": "Price Range",
+      "status": "Status",
+      "statusAll": "All",
+      "sortBy": "Sort By"
+    },
+    "sort": {
+      "priceHighToLow": "Price: High to Low",
+      "priceLowToHigh": "Price: Low to High",
+      "yearNewestFirst": "Year: Newest First",
+      "yearOldestFirst": "Year: Oldest First",
+      "mostListed": "Most Listed"
+    },
+    "sidebar": {
+      "dataSource": "Prices from real auction results. {count} listings tracked.",
+      "about": "About {make}",
+      "editorial": "Editorial",
+      "estimatedAnnualCosts": "Est. Annual Costs",
+      "estimates": "Estimates",
+      "insurance": "Insurance",
+      "storage": "Storage",
+      "service": "Service",
+      "total": "Total",
+      "perYear": "/yr",
+      "costsNote": "Based on industry averages. Actual costs vary.",
+      "speakWithAdvisor": "Speak with Advisor"
+    },
+    "results": {
+      "modelsTitle": "{make} Models",
+      "summary": "{filtered} of {totalModels} models • {totalVehicles} total vehicles"
+    },
+    "empty": {
+      "title": "No models found",
+      "subtitle": "Try adjusting your filters to see more results.",
+      "clearAll": "Clear All Filters"
+    },
+    "model": {
+      "priceRange": "Price Range",
+      "viewCollection": "View Collection"
+    },
+    "mobileFilters": {
+      "title": "Filters",
+      "showResults": "Show {count} Results"
+    },
+    "card": {
+      "currentBid": "Current Bid",
+      "soldFor": "Sold For"
+    }
   },
   "metadata": {
     "title": "Monza Lab | Investment-Grade Automotive Assets",

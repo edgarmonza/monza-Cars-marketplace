@@ -31,7 +31,7 @@ const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 // ─── PLATFORM DETECTION ───
 type Platform = "bringatrailer" | "rmsothebys" | "carsandbids" | "collectingcars" | "unknown";
 
-function detectPlatform(url: string): Platform {
+export function detectPlatform(url: string): Platform {
   const urlLower = url.toLowerCase();
   if (urlLower.includes("bringatrailer.com")) return "bringatrailer";
   if (urlLower.includes("rmsothebys.com")) return "rmsothebys";
@@ -41,7 +41,7 @@ function detectPlatform(url: string): Platform {
 }
 
 // ─── PRICE PARSING UTILITIES ───
-function parsePrice(text: string | null | undefined): number | null {
+export function parsePrice(text: string | null | undefined): number | null {
   if (!text) return null;
   // Remove currency symbols, commas, spaces
   const cleaned = text.replace(/[^0-9.]/g, "");
@@ -49,7 +49,7 @@ function parsePrice(text: string | null | undefined): number | null {
   return isNaN(num) ? null : num;
 }
 
-function parseBidCount(text: string | null | undefined): number | null {
+export function parseBidCount(text: string | null | undefined): number | null {
   if (!text) return null;
   const match = text.match(/(\d+)/);
   return match ? parseInt(match[1], 10) : null;

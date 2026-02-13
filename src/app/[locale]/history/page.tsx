@@ -2,14 +2,30 @@ import type { Metadata } from "next";
 import { TrendingUp, BarChart3, Calendar } from "lucide-react";
 import { prisma } from "@/lib/db/prisma";
 import { MarketTrendsClient } from "./MarketTrendsClient";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Market Trends | Monza Lab",
-  description:
-    "Explore historical auction results and market trends for classic and collectible vehicles.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "pages" });
 
-export default async function HistoryPage() {
+  return {
+    title: t("history.meta.title"),
+    description: t("history.meta.description"),
+  };
+}
+
+export default async function HistoryPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "history" });
+
   let stats = { totalAuctions: 0, makesCovered: 0, platformsActive: 0, dataPoints: 0 };
   let trends: { make: string; model: string; avgPrice: number | null; totalSales: number; trend: string | null; }[] = [];
 
@@ -32,27 +48,27 @@ export default async function HistoryPage() {
         <div className="relative mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 text-[#F8B4D9]">
             <TrendingUp className="size-4" />
-            <span className="text-[11px] font-medium tracking-[0.2em] uppercase">Market Intelligence</span>
+            <span className="text-[11px] font-medium tracking-[0.2em] uppercase">{t("kicker")}</span>
           </div>
           <h1 className="mt-4 text-3xl font-light tracking-tight text-[#FFFCF7] sm:text-4xl">
-            Market <span className="font-semibold text-gradient">Trends</span>
+            {t("title1")} <span className="font-semibold text-gradient">{t("title2")}</span>
           </h1>
           <p className="mt-3 max-w-2xl text-sm text-[rgba(255,252,247,0.45)] font-light">
-            Analyze historical auction results, track price movements, and identify trends across makes, models, and platforms.
+            {t("subtitle")}
           </p>
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
             {[
-              { label: "Auctions Tracked", value: stats.totalAuctions.toLocaleString(), icon: BarChart3 },
-              { label: "Makes Covered", value: stats.makesCovered.toString(), icon: Calendar },
-              { label: "Platforms", value: stats.platformsActive.toString(), icon: TrendingUp },
-              { label: "Data Points", value: stats.dataPoints.toLocaleString(), icon: BarChart3 },
+              { id: "auctionsTracked", value: stats.totalAuctions.toLocaleString(), icon: BarChart3 },
+              { id: "makesCovered", value: stats.makesCovered.toString(), icon: Calendar },
+              { id: "platforms", value: stats.platformsActive.toString(), icon: TrendingUp },
+              { id: "dataPoints", value: stats.dataPoints.toLocaleString(), icon: BarChart3 },
             ].map((stat) => {
               const Icon = stat.icon;
               return (
-                <div key={stat.label} className="rounded-2xl border border-[rgba(248,180,217,0.08)] bg-[rgba(15,14,22,0.6)] px-4 py-3">
+                <div key={stat.id} className="rounded-2xl border border-[rgba(248,180,217,0.08)] bg-[rgba(15,14,22,0.6)] px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Icon className="size-3 text-[#F8B4D9]" />
-                    <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-[rgba(255,252,247,0.35)]">{stat.label}</span>
+                    <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-[rgba(255,252,247,0.35)]">{t(`stats.${stat.id}`)}</span>
                   </div>
                   <p className="mt-1.5 text-xl font-light text-[#FFFCF7]">{stat.value}</p>
                 </div>

@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect, useMemo } from "react"
 import Image from "next/image"
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
 import { motion } from "framer-motion"
+import { useLocale, useTranslations } from "next-intl"
 import {
   Clock,
   MapPin,
@@ -393,18 +394,23 @@ function formatRegionalPrice(n: number, currency: string) {
   return `${currency}${n.toLocaleString()}`
 }
 
-function timeLeft(endTime: string) {
+function timeLeft(
+  endTime: string,
+  labels: { ended: string; day: string; hour: string; minute: string }
+) {
   const diff = new Date(endTime).getTime() - Date.now()
-  if (diff <= 0) return "Ended"
+  if (diff <= 0) return labels.ended
   const days = Math.floor(diff / 86400000)
   const hrs = Math.floor((diff % 86400000) / 3600000)
-  if (days > 0) return `${days}d ${hrs}h`
+  if (days > 0) return `${days}${labels.day} ${hrs}${labels.hour}`
   const mins = Math.floor((diff % 3600000) / 60000)
-  return `${hrs}h ${mins}m`
+  return `${hrs}${labels.hour} ${mins}${labels.minute}`
 }
 
 // ─── COLUMN B: BRAND CARD (NEW - replaces AssetCard on landing) ───
 function BrandCard({ brand }: { brand: Brand }) {
+  const t = useTranslations("dashboard")
+
   return (
     <div className="h-[calc(100vh-120px)] w-full flex flex-col snap-start p-4">
       <Link
@@ -436,7 +442,7 @@ function BrandCard({ brand }: { brand: Brand }) {
           {/* Car count badge */}
           <div className="absolute top-4 right-4">
             <span className="rounded-full bg-[rgba(5,5,5,0.7)] backdrop-blur-md px-3 py-1.5 text-[10px] font-medium tracking-[0.1em] uppercase text-[#F2F0E9]">
-              {brand.carCount} {brand.carCount === 1 ? "car" : "cars"}
+              {t("brandCard.carsCount", { count: brand.carCount })}
             </span>
           </div>
 
@@ -472,7 +478,7 @@ function BrandCard({ brand }: { brand: Brand }) {
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-[#6B7280]">
                 <DollarSign className="size-3" />
-                <span className="text-[9px] font-medium tracking-[0.15em] uppercase">Price Range</span>
+                <span className="text-[9px] font-medium tracking-[0.15em] uppercase">{t("brandCard.priceRange")}</span>
               </div>
               <p className="text-[13px] font-mono text-[#F2F0E9]">
                 {formatPriceShort(brand.priceMin)}–{formatPriceShort(brand.priceMax)}
@@ -483,7 +489,7 @@ function BrandCard({ brand }: { brand: Brand }) {
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-[#6B7280]">
                 <TrendingUp className="size-3" />
-                <span className="text-[9px] font-medium tracking-[0.15em] uppercase">Trend</span>
+                <span className="text-[9px] font-medium tracking-[0.15em] uppercase">{t("brandCard.trend")}</span>
               </div>
               <p className="text-[13px] font-semibold text-positive">{brand.avgTrend}</p>
             </div>
@@ -492,9 +498,9 @@ function BrandCard({ brand }: { brand: Brand }) {
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-[#6B7280]">
                 <Car className="size-3" />
-                <span className="text-[9px] font-medium tracking-[0.15em] uppercase">Collection</span>
+                <span className="text-[9px] font-medium tracking-[0.15em] uppercase">{t("brandCard.collection")}</span>
               </div>
-              <p className="text-[13px] text-[#F2F0E9]">{brand.carCount} vehicles</p>
+              <p className="text-[13px] text-[#F2F0E9]">{t("brandCard.vehiclesCount", { count: brand.carCount })}</p>
             </div>
           </div>
 
@@ -511,7 +517,7 @@ function BrandCard({ brand }: { brand: Brand }) {
               ))}
               {brand.categories.length > 3 && (
                 <span className="px-3 py-1 rounded-full bg-white/5 text-[10px] text-[#6B7280]">
-                  +{brand.categories.length - 3} more
+                  {t("brandCard.more", { count: brand.categories.length - 3 })}
                 </span>
               )}
             </div>
@@ -520,7 +526,7 @@ function BrandCard({ brand }: { brand: Brand }) {
           {/* CTA */}
           <div className="mt-6 flex items-center justify-between">
             <span className="text-[12px] font-medium tracking-[0.1em] uppercase text-[#9CA3AF] group-hover:text-[#F8B4D9] transition-colors">
-              Explore Collection
+              {t("brandCard.exploreCollection")}
             </span>
             <ChevronRight className="size-5 text-[#9CA3AF] group-hover:text-[#F8B4D9] group-hover:translate-x-1 transition-all" />
           </div>
@@ -532,6 +538,8 @@ function BrandCard({ brand }: { brand: Brand }) {
 
 // ─── MOBILE BRAND VIEW ───
 function MobileBrandView({ brand }: { brand: Brand }) {
+  const t = useTranslations("dashboard")
+
   return (
     <div className="h-[100dvh] w-full flex flex-col bg-[#050505] pt-14">
       {/* IMAGE */}
@@ -573,7 +581,7 @@ function MobileBrandView({ brand }: { brand: Brand }) {
         {/* Car count */}
         <div className="absolute top-4 right-4">
           <span className="rounded-full bg-[rgba(5,5,5,0.7)] backdrop-blur-md px-3 py-1.5 text-[10px] font-medium text-[#F2F0E9]">
-            {brand.carCount} cars
+            {t("brandCard.carsCount", { count: brand.carCount })}
           </span>
         </div>
 
@@ -591,7 +599,7 @@ function MobileBrandView({ brand }: { brand: Brand }) {
           {brand.name}
         </h1>
         <p className="text-[14px] text-[#6B7280] mt-1">
-          {brand.carCount} collector vehicles
+          {t("mobileBrand.collectorVehicles", { count: brand.carCount })}
         </p>
 
         {/* Price range */}
@@ -621,7 +629,7 @@ function MobileBrandView({ brand }: { brand: Brand }) {
           href={`/cars/${brand.slug}`}
           className="flex items-center justify-between w-full rounded-full bg-[#F8B4D9] px-6 py-4"
         >
-          <span className="text-[14px] font-semibold text-[#050505]">Explore {brand.name}</span>
+          <span className="text-[14px] font-semibold text-[#050505]">{t("mobileBrand.explore", { brand: brand.name })}</span>
           <ChevronRight className="size-5 text-[#050505]" />
         </Link>
       </div>
@@ -639,15 +647,17 @@ function BrandNavigationPanel({
   currentIndex: number
   onSelect: (index: number) => void
 }) {
+  const t = useTranslations("dashboard")
+
   return (
     <div className="h-full flex flex-col border-r border-white/5 overflow-hidden">
       {/* Header */}
       <div className="shrink-0 px-4 py-4 border-b border-white/5">
         <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-[#9CA3AF]">
-          Explore Brands
+          {t("brandNav.title")}
         </span>
         <p className="mt-1 text-[12px] text-[#6B7280]">
-          {brands.length} manufacturers
+          {t("brandNav.manufacturers", { count: brands.length })}
         </p>
       </div>
 
@@ -656,7 +666,7 @@ function BrandNavigationPanel({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <span className="text-[9px] font-medium tracking-[0.15em] uppercase text-[#6B7280]">
-              Total Cars
+              {t("brandNav.totalCars")}
             </span>
             <p className="text-[14px] font-bold text-[#F2F0E9] mt-0.5">
               {brands.reduce((sum, b) => sum + b.carCount, 0).toLocaleString()}
@@ -664,7 +674,7 @@ function BrandNavigationPanel({
           </div>
           <div>
             <span className="text-[9px] font-medium tracking-[0.15em] uppercase text-[#6B7280]">
-              AAA Brands
+              {t("brandNav.aaaBrands")}
             </span>
             <p className="text-[14px] font-bold text-positive mt-0.5">
               {brands.filter(b => b.topGrade === "AAA").length}
@@ -707,7 +717,7 @@ function BrandNavigationPanel({
                     <span className={`text-[11px] font-mono ${
                       isActive ? "text-[#F8B4D9]" : "text-[rgba(248,180,217,0.6)]"
                     }`}>
-                      {brand.carCount} cars
+                      {t("brandNav.carsCount", { count: brand.carCount })}
                     </span>
                     <span className="text-[9px] text-[#6B7280]">
                       {formatPriceShort(brand.priceMin)}–{formatPriceShort(brand.priceMax)}
@@ -742,6 +752,9 @@ function LiveAuctionsSidebar({
   brands: Brand[]
   onSelectBrand: (brandSlug: string) => void
 }) {
+  const t = useTranslations("dashboard")
+  const tAuction = useTranslations("auctionDetail")
+
   const [filterMode, setFilterMode] = useState<"live" | "price" | "brand">("live")
   const [selectedPriceRange, setSelectedPriceRange] = useState(0)
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null)
@@ -790,9 +803,9 @@ function LiveAuctionsSidebar({
       <div className="shrink-0 px-4 py-3 border-b border-white/5">
         <div className="flex items-center gap-2 mb-3">
           <Flame className="size-4 text-[#F8B4D9]" />
-          <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-[#9CA3AF]">
-            Live Auctions
-          </span>
+            <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-[#9CA3AF]">
+            {t("liveAuctions.title")}
+            </span>
           <span className="ml-auto text-[11px] font-mono text-[#F8B4D9]">
             {liveCount}
           </span>
@@ -801,13 +814,13 @@ function LiveAuctionsSidebar({
         {/* Search bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-[#6B7280]" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search cars..."
-            className="w-full bg-white/[0.03] border border-white/5 rounded-lg pl-9 pr-3 py-2 text-[12px] text-[#F2F0E9] placeholder:text-[#6B7280] focus:outline-none focus:border-[rgba(248,180,217,0.3)] transition-colors"
-          />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t("liveAuctions.searchPlaceholder")}
+              className="w-full bg-white/[0.03] border border-white/5 rounded-lg pl-9 pr-3 py-2 text-[12px] text-[#F2F0E9] placeholder:text-[#6B7280] focus:outline-none focus:border-[rgba(248,180,217,0.3)] transition-colors"
+            />
         </div>
       </div>
 
@@ -821,7 +834,7 @@ function LiveAuctionsSidebar({
               : "text-[#6B7280] hover:text-[#9CA3AF] hover:bg-white/[0.02]"
           }`}
         >
-          All Live
+          {t("liveAuctions.tabs.allLive")}
         </button>
         <button
           onClick={() => setFilterMode("price")}
@@ -831,7 +844,7 @@ function LiveAuctionsSidebar({
               : "text-[#6B7280] hover:text-[#9CA3AF] hover:bg-white/[0.02]"
           }`}
         >
-          By Price
+          {t("liveAuctions.tabs.byPrice")}
         </button>
         <button
           onClick={() => setFilterMode("brand")}
@@ -841,7 +854,7 @@ function LiveAuctionsSidebar({
               : "text-[#6B7280] hover:text-[#9CA3AF] hover:bg-white/[0.02]"
           }`}
         >
-          By Brand
+          {t("liveAuctions.tabs.byBrand")}
         </button>
       </div>
 
@@ -875,7 +888,7 @@ function LiveAuctionsSidebar({
               className="w-full flex items-center justify-between bg-white/[0.03] border border-white/5 rounded-lg px-3 py-2 text-[12px] text-[#F2F0E9] hover:border-[rgba(248,180,217,0.2)] transition-colors"
             >
               <span className={selectedBrand ? "text-[#F2F0E9]" : "text-[#6B7280]"}>
-                {selectedBrand || "Select brand..."}
+                {selectedBrand || t("liveAuctions.selectBrand")}
               </span>
               <ChevronDown className={`size-4 text-[#6B7280] transition-transform ${showBrandDropdown ? "rotate-180" : ""}`} />
             </button>
@@ -886,7 +899,7 @@ function LiveAuctionsSidebar({
                   onClick={() => { setSelectedBrand(null); setShowBrandDropdown(false) }}
                   className="w-full text-left px-3 py-2 text-[11px] text-[#9CA3AF] hover:bg-white/[0.05] transition-colors"
                 >
-                  All Brands
+                  {t("liveAuctions.allBrands")}
                 </button>
                 {brands.map(b => (
                   <button
@@ -909,7 +922,7 @@ function LiveAuctionsSidebar({
       {/* Results count */}
       <div className="shrink-0 px-4 py-2 bg-[rgba(5,5,5,0.5)]">
         <span className="text-[10px] text-[#6B7280]">
-          {filteredAuctions.length} {filteredAuctions.length === 1 ? "auction" : "auctions"} • Sorted by price
+          {t("liveAuctions.resultSummary", { count: filteredAuctions.length })}
         </span>
       </div>
 
@@ -918,8 +931,8 @@ function LiveAuctionsSidebar({
         {filteredAuctions.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-32 text-center px-4">
             <Search className="size-6 text-[#6B7280] mb-2" />
-            <p className="text-[12px] text-[#6B7280]">No auctions found</p>
-            <p className="text-[10px] text-[#4B5563] mt-1">Try adjusting your filters</p>
+            <p className="text-[12px] text-[#6B7280]">{t("liveAuctions.empty.title")}</p>
+            <p className="text-[10px] text-[#4B5563] mt-1">{t("liveAuctions.empty.subtitle")}</p>
           </div>
         ) : (
           filteredAuctions.map((auction) => {
@@ -967,14 +980,19 @@ function LiveAuctionsSidebar({
                       </span>
                       {auction.bidCount > 0 && (
                         <span className="text-[9px] text-[#6B7280]">
-                          {auction.bidCount} bids
+                          {tAuction("bids.count", { count: auction.bidCount })}
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-1.5 mt-1">
                       <Clock className="size-3 text-[#6B7280]" />
                       <span className={`text-[10px] ${isEndingSoon ? "text-[#FB923C]" : "text-[#6B7280]"}`}>
-                        {timeLeft(auction.endTime)}
+                        {timeLeft(auction.endTime, {
+                          ended: tAuction("time.ended"),
+                          day: tAuction("time.units.day"),
+                          hour: tAuction("time.units.hour"),
+                          minute: tAuction("time.units.minute"),
+                        })}
                       </span>
                     </div>
                   </div>
@@ -988,7 +1006,7 @@ function LiveAuctionsSidebar({
       {/* Quick brand access */}
       <div className="shrink-0 px-4 py-3 border-t border-white/5 bg-[rgba(15,14,22,0.5)]">
         <span className="text-[9px] font-medium tracking-[0.15em] uppercase text-[#6B7280] mb-2 block">
-          Quick Access
+          {t("liveAuctions.quickAccess")}
         </span>
         <div className="flex flex-wrap gap-1.5">
           {brands.slice(0, 5).map((brand) => (
@@ -1008,6 +1026,10 @@ function LiveAuctionsSidebar({
 
 // ─── COLUMN B: THE BTW-STYLE ASSET CARD (DESKTOP) ───
 function AssetCard({ auction }: { auction: Auction }) {
+  const t = useTranslations("dashboard")
+  const tAuction = useTranslations("auctionDetail")
+  const tStatus = useTranslations("status")
+
   const isLive = auction.status === "ACTIVE" || auction.status === "ENDING_SOON"
   const isEndingSoon = auction.status === "ENDING_SOON"
 
@@ -1029,7 +1051,7 @@ function AssetCard({ auction }: { auction: Auction }) {
             />
           ) : (
             <div className="absolute inset-0 bg-[#0F1012] flex items-center justify-center">
-              <span className="text-[#6B7280] text-lg">No Image</span>
+              <span className="text-[#6B7280] text-lg">{t("asset.noImage")}</span>
             </div>
           )}
 
@@ -1047,7 +1069,7 @@ function AssetCard({ auction }: { auction: Auction }) {
                 <span className={`size-2 rounded-full ${
                   isEndingSoon ? "bg-red-400" : "bg-emerald-400"
                 } animate-pulse`} />
-                {isEndingSoon ? "Ending Soon" : "Live"}
+                {isEndingSoon ? tStatus("endingSoon") : tStatus("live")}
               </span>
             )}
           </div>
@@ -1077,11 +1099,16 @@ function AssetCard({ auction }: { auction: Auction }) {
                 {formatPrice(auction.currentBid)}
               </p>
               <div className="flex items-center justify-end gap-3 mt-1 text-[#9CA3AF]">
-                <span className="text-[11px]">{auction.bidCount} bids</span>
+                <span className="text-[11px]">{tAuction("bids.count", { count: auction.bidCount })}</span>
                 {isLive && (
                   <span className="flex items-center gap-1 text-[11px] font-mono">
                     <Clock className="size-3" />
-                    {timeLeft(auction.endTime)}
+                    {timeLeft(auction.endTime, {
+                      ended: tAuction("time.ended"),
+                      day: tAuction("time.units.day"),
+                      hour: tAuction("time.units.hour"),
+                      minute: tAuction("time.units.minute"),
+                    })}
                   </span>
                 )}
               </div>
@@ -1106,7 +1133,7 @@ function AssetCard({ auction }: { auction: Auction }) {
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5 text-[#6B7280]">
                     <Award className="size-3" />
-                    <span className="text-[9px] font-medium tracking-[0.15em] uppercase">Grade</span>
+                    <span className="text-[9px] font-medium tracking-[0.15em] uppercase">{t("asset.metrics.grade")}</span>
                   </div>
                   <p className={`text-[15px] font-bold ${
                     grade === "AAA" || grade === "EXCELLENT" ? "text-positive" :
@@ -1119,7 +1146,7 @@ function AssetCard({ auction }: { auction: Auction }) {
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5 text-[#6B7280]">
                     <TrendingUp className="size-3" />
-                    <span className="text-[9px] font-medium tracking-[0.15em] uppercase">Trend</span>
+                    <span className="text-[9px] font-medium tracking-[0.15em] uppercase">{t("asset.metrics.trend")}</span>
                   </div>
                   <p className="text-[13px] font-semibold text-positive">{trend}</p>
                 </div>
@@ -1128,7 +1155,7 @@ function AssetCard({ auction }: { auction: Auction }) {
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5 text-[#6B7280]">
                     <DollarSign className="size-3" />
-                    <span className="text-[9px] font-medium tracking-[0.15em] uppercase">Fair Value</span>
+                    <span className="text-[9px] font-medium tracking-[0.15em] uppercase">{t("asset.metrics.fairValue")}</span>
                   </div>
                   <p className="text-[13px] text-[#F2F0E9] font-mono">
                     {formatPriceShort(lowRange)}–{formatPriceShort(highRange)}
@@ -1139,9 +1166,9 @@ function AssetCard({ auction }: { auction: Auction }) {
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5 text-[#6B7280]">
                     <Car className="size-3" />
-                    <span className="text-[9px] font-medium tracking-[0.15em] uppercase">Category</span>
+                    <span className="text-[9px] font-medium tracking-[0.15em] uppercase">{t("asset.metrics.category")}</span>
                   </div>
-                  <p className="text-[13px] text-[#F2F0E9] truncate">{auction.category || "Collector"}</p>
+                  <p className="text-[13px] text-[#F2F0E9] truncate">{auction.category || t("asset.metrics.collector")}</p>
                 </div>
               </div>
             )
@@ -1151,14 +1178,14 @@ function AssetCard({ auction }: { auction: Auction }) {
           <div className="flex items-center gap-3 mt-4">
             {isLive && (
               <button className="flex-1 rounded-full bg-[#F8B4D9] py-3 text-[12px] font-semibold tracking-[0.1em] uppercase text-[#050505] hover:bg-[#fce4ec] transition-colors">
-                Place Bid
+                {tAuction("actions.placeBid")}
               </button>
             )}
             <Link
               href={`/cars/${auction.make.toLowerCase().replace(/\s+/g, "-")}/${auction.id}`}
               className="flex-1 rounded-full border border-white/10 py-3 text-center text-[12px] font-medium tracking-[0.1em] uppercase text-[#9CA3AF] hover:text-[#F2F0E9] hover:border-[rgba(248,180,217,0.5)] transition-all"
             >
-              Full Analysis
+              {t("asset.fullAnalysis")}
             </Link>
           </div>
         </div>
@@ -1169,6 +1196,11 @@ function AssetCard({ auction }: { auction: Auction }) {
 
 // ─── MOBILE ASSET VIEW (BTW-STYLE) ───
 function MobileAssetView({ auction }: { auction: Auction }) {
+  const locale = useLocale()
+  const t = useTranslations("dashboard")
+  const tAuction = useTranslations("auctionDetail")
+  const tStatus = useTranslations("status")
+
   const isLive = auction.status === "ACTIVE" || auction.status === "ENDING_SOON"
   const isEndingSoon = auction.status === "ENDING_SOON"
   const whyBuy = mockWhyBuy[auction.make] || mockWhyBuy["default"]
@@ -1190,7 +1222,7 @@ function MobileAssetView({ auction }: { auction: Auction }) {
           />
         ) : (
           <div className="absolute inset-0 bg-[#0F1012] flex items-center justify-center">
-            <span className="text-[#6B7280] text-lg">No Image</span>
+            <span className="text-[#6B7280] text-lg">{t("asset.noImage")}</span>
           </div>
         )}
 
@@ -1208,7 +1240,7 @@ function MobileAssetView({ auction }: { auction: Auction }) {
               <span className={`size-2 rounded-full ${
                 isEndingSoon ? "bg-red-400" : "bg-emerald-400"
               } animate-pulse`} />
-              {isEndingSoon ? "Ending Soon" : "Live"}
+              {isEndingSoon ? tStatus("endingSoon") : tStatus("live")}
             </span>
           )}
         </div>
@@ -1246,11 +1278,16 @@ function MobileAssetView({ auction }: { auction: Auction }) {
           <span className="text-2xl font-bold font-mono text-[#F8B4D9]">
             {formatPrice(auction.currentBid)}
           </span>
-          <span className="text-[12px] text-[#6B7280]">{auction.bidCount} bids</span>
+          <span className="text-[12px] text-[#6B7280]">{tAuction("bids.count", { count: auction.bidCount })}</span>
           {isLive && (
             <span className="flex items-center gap-1 text-[12px] text-[#9CA3AF] font-mono">
               <Clock className="size-3" />
-              {timeLeft(auction.endTime)}
+              {timeLeft(auction.endTime, {
+                ended: tAuction("time.ended"),
+                day: tAuction("time.units.day"),
+                hour: tAuction("time.units.hour"),
+                minute: tAuction("time.units.minute"),
+              })}
             </span>
           )}
         </div>
@@ -1271,7 +1308,7 @@ function MobileAssetView({ auction }: { auction: Auction }) {
           {auction.mileage && (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-[11px] text-[#9CA3AF]">
               <Gauge className="size-3" />
-              {auction.mileage.toLocaleString()} {auction.mileageUnit || "mi"}
+              {auction.mileage.toLocaleString(locale)} {auction.mileageUnit || tAuction("units.miles")}
             </span>
           )}
           {auction.location && (
@@ -1287,7 +1324,7 @@ function MobileAssetView({ auction }: { auction: Auction }) {
       <div className="fixed bottom-0 left-0 right-0 px-4 pb-6 pt-3 bg-gradient-to-t from-[#050505] via-[#050505] to-transparent">
         <a
           href={`https://wa.me/491726690998?text=${encodeURIComponent(
-            `Hola, estoy viendo el ${auction.make} ${auction.model} en Monza Lab. Me gustaría conocer el potencial de inversión y valoración actual de este vehículo.`
+            t("context.askWhatsAppMessage", { make: auction.make, model: auction.model })
           )}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -1339,6 +1376,9 @@ function MiniSparkline({ data, color = "#F8B4D9" }: { data: number[]; color?: st
 // ─── COLUMN C: THE CONTEXT PANEL ───
 // Enhanced with price chart, ownership cost, and similar cars
 function ContextPanel({ auction, allAuctions }: { auction: Auction; allAuctions: Auction[] }) {
+  const t = useTranslations("dashboard")
+  const tCommon = useTranslations("common")
+
   const whyBuy = mockWhyBuy[auction.make] || mockWhyBuy["default"]
   const marketPulse = mockMarketPulse[auction.make] || mockMarketPulse["default"]
   const ownershipCost = mockOwnershipCost[auction.make] || mockOwnershipCost["default"]
@@ -1363,7 +1403,7 @@ function ContextPanel({ auction, allAuctions }: { auction: Auction; allAuctions:
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="size-4 text-[#F8B4D9]" />
           <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-            Investment Thesis
+            {t("context.investmentThesis")}
           </span>
         </div>
         <p className="text-[11px] leading-snug text-[#9CA3AF] line-clamp-4">
@@ -1377,7 +1417,7 @@ function ContextPanel({ auction, allAuctions }: { auction: Auction; allAuctions:
           <div className="flex items-center gap-2">
             <BarChart3 className="size-4 text-[#F8B4D9]" />
             <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-              5-Year Appreciation
+              {t("context.fiveYearAppreciation")}
             </span>
           </div>
           <span className="text-[11px] font-mono font-semibold text-positive">
@@ -1400,7 +1440,7 @@ function ContextPanel({ auction, allAuctions }: { auction: Auction; allAuctions:
         <div className="flex items-center gap-2 mb-2">
           <Globe className="size-4 text-[#F8B4D9]" />
           <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-            Fair Value by Region
+            {t("context.fairValueByRegion")}
           </span>
         </div>
 
@@ -1441,7 +1481,7 @@ function ContextPanel({ auction, allAuctions }: { auction: Auction; allAuctions:
               <div className="flex items-center gap-2">
                 <span className="text-sm">🇯🇵</span>
                 <span className="text-[10px] font-medium text-[#9CA3AF]">JP</span>
-                <span className="text-[8px] font-medium tracking-[0.1em] uppercase text-positive">Best</span>
+                <span className="text-[8px] font-medium tracking-[0.1em] uppercase text-positive">{tCommon("best")}</span>
               </div>
               <span className="text-[12px] font-bold font-mono text-positive">
                 {formatRegionalPrice(auction.fairValueByRegion.JP.low, auction.fairValueByRegion.JP.currency)} — {formatRegionalPrice(auction.fairValueByRegion.JP.high, auction.fairValueByRegion.JP.currency)}
@@ -1462,29 +1502,29 @@ function ContextPanel({ auction, allAuctions }: { auction: Auction; allAuctions:
         <div className="flex items-center gap-2 mb-2">
           <Wrench className="size-4 text-[#F8B4D9]" />
           <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-            Annual Ownership Cost
+            {t("context.annualOwnershipCost")}
           </span>
         </div>
         <div className="grid grid-cols-3 gap-2">
           <div className="text-center">
             <Shield className="size-3 text-[#6B7280] mx-auto mb-1" />
-            <p className="text-[10px] text-[#6B7280]">Insurance</p>
+            <p className="text-[10px] text-[#6B7280]">{t("context.insurance")}</p>
             <p className="text-[11px] font-mono font-semibold text-[#F2F0E9]">${(ownershipCost.insurance / 1000).toFixed(0)}K</p>
           </div>
           <div className="text-center">
             <MapPin className="size-3 text-[#6B7280] mx-auto mb-1" />
-            <p className="text-[10px] text-[#6B7280]">Storage</p>
+            <p className="text-[10px] text-[#6B7280]">{t("context.storage")}</p>
             <p className="text-[11px] font-mono font-semibold text-[#F2F0E9]">${(ownershipCost.storage / 1000).toFixed(1)}K</p>
           </div>
           <div className="text-center">
             <Wrench className="size-3 text-[#6B7280] mx-auto mb-1" />
-            <p className="text-[10px] text-[#6B7280]">Service</p>
+            <p className="text-[10px] text-[#6B7280]">{t("context.service")}</p>
             <p className="text-[11px] font-mono font-semibold text-[#F2F0E9]">${(ownershipCost.maintenance / 1000).toFixed(0)}K</p>
           </div>
         </div>
         <div className="mt-2 pt-2 border-t border-white/5 flex justify-between">
-          <span className="text-[10px] text-[#6B7280]">Total Annual</span>
-          <span className="text-[12px] font-mono font-bold text-[#F8B4D9]">${(totalAnnualCost / 1000).toFixed(0)}K/yr</span>
+          <span className="text-[10px] text-[#6B7280]">{t("context.totalAnnual")}</span>
+          <span className="text-[12px] font-mono font-bold text-[#F8B4D9]">${(totalAnnualCost / 1000).toFixed(0)}K{t("context.perYear")}</span>
         </div>
       </div>
 
@@ -1495,7 +1535,7 @@ function ContextPanel({ auction, allAuctions }: { auction: Auction; allAuctions:
             <div className="flex items-center gap-2 mb-2">
               <Car className="size-4 text-[#F8B4D9]" />
               <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-                Also Consider
+                {t("context.alsoConsider")}
               </span>
             </div>
             <div className="space-y-2">
@@ -1525,7 +1565,7 @@ function ContextPanel({ auction, allAuctions }: { auction: Auction; allAuctions:
           <div className="flex items-center gap-2 mb-2">
             <Calendar className="size-4 text-[#F8B4D9]" />
             <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-              Recent Sales
+              {t("context.recentSales")}
             </span>
           </div>
           <div className="space-y-1">
@@ -1555,7 +1595,7 @@ function ContextPanel({ auction, allAuctions }: { auction: Auction; allAuctions:
           className="w-full flex items-center justify-center gap-2 rounded-xl bg-[rgba(248,180,217,0.08)] border border-[rgba(248,180,217,0.15)] py-2.5 text-[10px] font-medium tracking-[0.1em] uppercase text-[#F8B4D9] hover:bg-[rgba(248,180,217,0.15)] hover:border-[rgba(248,180,217,0.3)] transition-all"
         >
           <Sparkles className="size-3" />
-          Ask About This Car
+          {t("context.askAboutThisCar")}
           <ChevronRight className="size-3" />
         </a>
       </div>
@@ -1565,6 +1605,8 @@ function ContextPanel({ auction, allAuctions }: { auction: Auction; allAuctions:
 
 // ─── BRAND CONTEXT PANEL ───
 function BrandContextPanel({ brand, allBrands }: { brand: Brand; allBrands: Brand[] }) {
+  const t = useTranslations("dashboard")
+
   const whyBuy = mockWhyBuy[brand.name] || mockWhyBuy["default"]
   const priceHistory = mockPriceHistory[brand.name] || mockPriceHistory["default"]
 
@@ -1580,7 +1622,7 @@ function BrandContextPanel({ brand, allBrands }: { brand: Brand; allBrands: Bran
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="size-4 text-[#F8B4D9]" />
           <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-            Brand Overview
+            {t("brandContext.overview")}
           </span>
         </div>
         <p className="text-[12px] leading-relaxed text-[#9CA3AF]">
@@ -1594,7 +1636,7 @@ function BrandContextPanel({ brand, allBrands }: { brand: Brand; allBrands: Bran
           <div className="flex items-center gap-2">
             <BarChart3 className="size-4 text-[#F8B4D9]" />
             <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-              5-Year Trend
+              {t("brandContext.fiveYearTrend")}
             </span>
           </div>
           <span className="text-[11px] font-mono font-semibold text-positive">
@@ -1609,26 +1651,26 @@ function BrandContextPanel({ brand, allBrands }: { brand: Brand; allBrands: Bran
         <div className="flex items-center gap-2 mb-3">
           <Car className="size-4 text-[#F8B4D9]" />
           <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-            Collection Stats
+            {t("brandContext.collectionStats")}
           </span>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <span className="text-[9px] text-[#6B7280] uppercase tracking-wide">Vehicles</span>
+            <span className="text-[9px] text-[#6B7280] uppercase tracking-wide">{t("brandContext.vehicles")}</span>
             <p className="text-[18px] font-bold text-[#F2F0E9]">{brand.carCount}</p>
           </div>
           <div>
-            <span className="text-[9px] text-[#6B7280] uppercase tracking-wide">Top Grade</span>
+            <span className="text-[9px] text-[#6B7280] uppercase tracking-wide">{t("brandContext.topGrade")}</span>
             <p className={`text-[18px] font-bold ${
               brand.topGrade === "AAA" ? "text-positive" : "text-[#F8B4D9]"
             }`}>{brand.topGrade}</p>
           </div>
           <div>
-            <span className="text-[9px] text-[#6B7280] uppercase tracking-wide">Min Price</span>
+            <span className="text-[9px] text-[#6B7280] uppercase tracking-wide">{t("brandContext.minPrice")}</span>
             <p className="text-[14px] font-mono text-[#F2F0E9]">{formatPriceShort(brand.priceMin)}</p>
           </div>
           <div>
-            <span className="text-[9px] text-[#6B7280] uppercase tracking-wide">Max Price</span>
+            <span className="text-[9px] text-[#6B7280] uppercase tracking-wide">{t("brandContext.maxPrice")}</span>
             <p className="text-[14px] font-mono text-[#F2F0E9]">{formatPriceShort(brand.priceMax)}</p>
           </div>
         </div>
@@ -1640,7 +1682,7 @@ function BrandContextPanel({ brand, allBrands }: { brand: Brand; allBrands: Bran
           <div className="flex items-center gap-2 mb-2">
             <Award className="size-4 text-[#F8B4D9]" />
             <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-              Categories
+              {t("brandContext.categories")}
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -1662,7 +1704,7 @@ function BrandContextPanel({ brand, allBrands }: { brand: Brand; allBrands: Bran
           <div className="flex items-center gap-2 mb-2">
             <Globe className="size-4 text-[#F8B4D9]" />
             <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9CA3AF]">
-              Similar Brands
+              {t("brandContext.similarBrands")}
             </span>
           </div>
           <div className="space-y-2">
@@ -1676,7 +1718,7 @@ function BrandContextPanel({ brand, allBrands }: { brand: Brand; allBrands: Bran
                   <p className="text-[11px] font-medium text-[#F2F0E9] truncate group-hover:text-[#F8B4D9] transition-colors">
                     {b.name}
                   </p>
-                  <p className="text-[10px] text-[#6B7280]">{b.carCount} vehicles</p>
+                  <p className="text-[10px] text-[#6B7280]">{t("brandCard.vehiclesCount", { count: b.carCount })}</p>
                 </div>
                 <span className="text-[11px] font-mono font-semibold text-[#F8B4D9] ml-2">
                   {b.topGrade}
@@ -1694,7 +1736,7 @@ function BrandContextPanel({ brand, allBrands }: { brand: Brand; allBrands: Bran
           className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#F8B4D9] py-3 text-[11px] font-semibold tracking-[0.1em] uppercase text-[#050505] hover:bg-[#fce4ec] transition-all"
         >
           <Car className="size-4" />
-          Explore {brand.name}
+          {t("brandContext.explore", { brand: brand.name })}
           <ChevronRight className="size-4" />
         </Link>
       </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter } from "@/i18n/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Sparkles,
@@ -38,7 +38,10 @@ function MobileCarOracleOverlay({
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [displayedText, setDisplayedText] = useState("")
-  const [chips, setChips] = useState<string[]>([])
+
+  type ChipId = "view_details" | "view_similar" | "view_collection"
+  type Chip = { id: ChipId; label: string }
+  const [chips, setChips] = useState<Chip[]>([])
 
   // Get response based on query and car context
   const matchingCars = searchCars(query)
@@ -58,7 +61,7 @@ function MobileCarOracleOverlay({
 
   let response = {
     answer: "",
-    chips: [] as string[],
+    chips: [] as Chip[],
     carContext: null as { id: string; make: string } | null,
   }
 
@@ -68,22 +71,51 @@ function MobileCarOracleOverlay({
     if (currentCar) {
       const fv = currentCar.fairValueByRegion
       response = {
-        answer: `**${carContext.title}**\n\n**Análisis de Inversión:**\n• Grado: **${currentCar.investmentGrade}**\n• Tendencia: **${currentCar.trend}**\n\n**Valor Justo por Región:**\n• 🇺🇸 ${formatPrice(fv.US.low)} — ${formatPrice(fv.US.high)}\n• 🇪🇺 €${(fv.EU.low/1000).toFixed(0)}K — €${(fv.EU.high/1000).toFixed(0)}K\n• 🇬🇧 £${(fv.UK.low/1000).toFixed(0)}K — £${(fv.UK.high/1000).toFixed(0)}K\n\n**Tesis:**\n${currentCar.thesis}`,
-        chips: ["Ver Similares", "Historial de Precios", "Due Diligence"],
+        answer: t("oracle.responses.currentCar", {
+          title: carContext.title,
+          grade: currentCar.investmentGrade,
+          trend: currentCar.trend,
+          usLow: formatPrice(fv.US.low),
+          usHigh: formatPrice(fv.US.high),
+          euLow: formatPrice(fv.EU.low),
+          euHigh: formatPrice(fv.EU.high),
+          ukLow: formatPrice(fv.UK.low),
+          ukHigh: formatPrice(fv.UK.high),
+          thesis: currentCar.thesis,
+        }),
+        chips: [
+          { id: "view_similar", label: t("oracle.viewSimilar") },
+          { id: "view_collection", label: t("oracle.viewCollection") },
+        ],
         carContext: { id: currentCar.id, make: currentCar.make },
       }
     } else {
       response = {
-        answer: `**${carContext.title}**\n\nPrecio actual: ${carContext.price}\n\nPara un análisis completo de este vehículo, explora las pestañas de Investment y Due Diligence arriba.`,
-        chips: ["Ver Investment", "Ver Due Diligence"],
+        answer: t("oracle.responses.currentCarFallback", {
+          title: carContext.title,
+          price: carContext.price,
+        }),
+        chips: [
+          { id: "view_collection", label: t("oracle.viewCollection") },
+        ],
         carContext: null,
       }
     }
   } else if (matchingCars.length === 1) {
     const car = matchingCars[0]
     response = {
-      answer: `**${car.title}**\n\n${car.thesis}\n\n**Precio Justo:** ${formatPrice(car.fairValueByRegion.US.low)} — ${formatPrice(car.fairValueByRegion.US.high)}\n**Inversión:** Grado ${car.investmentGrade} | ${car.trend}`,
-      chips: ["Ver Detalles", "Comparar"],
+      answer: t("oracle.responses.singleCar", {
+        title: car.title,
+        thesis: car.thesis,
+        fairLow: formatPrice(car.fairValueByRegion.US.low),
+        fairHigh: formatPrice(car.fairValueByRegion.US.high),
+        grade: car.investmentGrade,
+        trend: car.trend,
+      }),
+      chips: [
+        { id: "view_details", label: t("oracle.viewDetails") },
+        { id: "view_similar", label: t("oracle.viewSimilar") },
+      ],
       carContext: { id: car.id, make: car.make },
     }
   } else if (matchingCars.length > 1) {
@@ -91,14 +123,21 @@ function MobileCarOracleOverlay({
       `• **${car.year} ${car.make} ${car.model}** — ${formatPrice(car.currentBid)}`
     ).join("\n")
     response = {
-      answer: `Encontré ${matchingCars.length} vehículos:\n\n${carList}`,
-      chips: ["Ver Todos", "Comparar"],
+      answer: `${t("oracle.responses.multipleFound", { count: matchingCars.length })}\n\n${carList}`,
+      chips: [
+        { id: "view_collection", label: t("oracle.viewCollection") },
+      ],
       carContext: null,
     }
   } else {
     response = {
-      answer: `No encontré información específica sobre "${query}".\n\n¿Quieres saber más sobre el **${carContext.title}** que estás viendo? Puedo analizar su valor, inversión o historial.`,
-      chips: ["Analizar Este Carro", "Ver Colección"],
+      answer: t("oracle.responses.noMatchForQuery", {
+        query,
+        title: carContext.title,
+      }),
+      chips: [
+        { id: "view_collection", label: t("oracle.viewCollection") },
+      ],
       carContext: null,
     }
   }
@@ -135,15 +174,15 @@ function MobileCarOracleOverlay({
     return () => clearInterval(typeInterval)
   }, [isLoading, isOpen, response.answer, response.chips])
 
-  const handleChipClick = (chip: string) => {
-    if (response.carContext && (chip === "Ver Detalles" || chip === "Ver Similares")) {
+  const handleChipClick = (chip: Chip) => {
+    if (response.carContext && (chip.id === "view_details" || chip.id === "view_similar")) {
       const makePath = response.carContext.make.toLowerCase().replace(/\s+/g, "-")
-      if (chip === "Ver Detalles") {
+      if (chip.id === "view_details") {
         router.push(`/cars/${makePath}/${response.carContext.id}`)
       } else {
         router.push(`/cars/${makePath}`)
       }
-    } else if (chip === "Ver Colección") {
+    } else if (chip.id === "view_collection") {
       router.push("/")
     }
     onClose()
@@ -233,14 +272,14 @@ function MobileCarOracleOverlay({
                 <div className="flex flex-wrap gap-2">
                   {chips.map((chip, i) => (
                     <button
-                      key={i}
+                      key={chip.id}
                       onClick={() => handleChipClick(chip)}
                       className="flex items-center gap-2 rounded-full bg-[rgba(248,180,217,0.1)] border border-[rgba(248,180,217,0.2)] px-5 py-3 text-[13px] font-medium text-[#F8B4D9] active:scale-95 transition-transform"
                     >
                       {i === 0 && <Car className="size-4" />}
                       {i === 1 && <BarChart3 className="size-4" />}
                       {i === 2 && <TrendingUp className="size-4" />}
-                      {chip}
+                      {chip.label}
                     </button>
                   ))}
                 </div>

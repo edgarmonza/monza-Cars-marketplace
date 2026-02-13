@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { Link, usePathname } from "@/i18n/navigation"
+import { Link, usePathname, useRouter } from "@/i18n/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Sparkles,
@@ -136,7 +135,11 @@ function MobileOracleOverlay({
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [displayedText, setDisplayedText] = useState("")
-  const [chips, setChips] = useState<string[]>([])
+
+  type ChipId = "view_details" | "view_similar" | "view_collection"
+  type Chip = { id: ChipId; label: string }
+
+  const [chips, setChips] = useState<Chip[]>([])
 
   // Get intelligent response
   const matchingCars = searchCars(query)
@@ -144,15 +147,25 @@ function MobileOracleOverlay({
   // Generate response
   let response = {
     answer: "",
-    chips: [] as string[],
+    chips: [] as Chip[],
     carContext: null as { id: string; make: string } | null,
   }
 
   if (matchingCars.length === 1) {
     const car = matchingCars[0]
     response = {
-      answer: `**${car.title}**\n\n${car.thesis}\n\n**Precio Justo:** ${formatPrice(car.fairValueByRegion.US.low)} — ${formatPrice(car.fairValueByRegion.US.high)}\n\n**Inversión:** Grado ${car.investmentGrade} | ${car.trend}`,
-      chips: ["Ver Detalles", "Carros Similares"],
+      answer: t("oracle.responses.singleCar", {
+        title: car.title,
+        thesis: car.thesis,
+        fairLow: formatPrice(car.fairValueByRegion.US.low),
+        fairHigh: formatPrice(car.fairValueByRegion.US.high),
+        grade: car.investmentGrade,
+        trend: car.trend,
+      }),
+      chips: [
+        { id: "view_details", label: t("oracle.chips.viewCarDetails") },
+        { id: "view_similar", label: t("oracle.chips.similarCars") },
+      ],
       carContext: { id: car.id, make: car.make },
     }
   } else if (matchingCars.length > 1) {
@@ -160,16 +173,23 @@ function MobileOracleOverlay({
       `• **${car.title}** — ${formatPrice(car.currentBid)}`
     ).join("\n")
     response = {
-      answer: `Encontré ${matchingCars.length} vehículos:\n\n${carList}`,
-      chips: ["Ver Todos", "Filtrar por Precio"],
+      answer: `${t("oracle.responses.multipleFound", { count: matchingCars.length })}\n\n${carList}`,
+      chips: [
+        { id: "view_collection", label: t("oracle.viewCollection") },
+      ],
       carContext: null,
     }
   } else {
     const totalCars = CURATED_CARS.length
     const avgAppreciation = CURATED_CARS.reduce((sum, c) => sum + c.trendValue, 0) / totalCars
     response = {
-      answer: `**Monza Lab Collection**\n\nTenemos ${totalCars} vehículos de inversión curados.\n\n**Apreciación Promedio:** +${avgAppreciation.toFixed(0)}% anual\n\nPrueba buscar marcas como "Porsche", "Ferrari" o modelos específicos.`,
-      chips: ["Ver Colección", "Top Picks"],
+      answer: t("oracle.responses.noMatch", {
+        totalCars,
+        avgAppreciation: avgAppreciation.toFixed(0),
+      }),
+      chips: [
+        { id: "view_collection", label: t("oracle.viewCollection") },
+      ],
       carContext: null,
     }
   }
@@ -206,11 +226,11 @@ function MobileOracleOverlay({
     return () => clearInterval(typeInterval)
   }, [isLoading, isOpen, response.answer, response.chips])
 
-  const handleChipClick = (chip: string) => {
-    if (response.carContext && chip === "Ver Detalles") {
+  const handleChipClick = (chip: Chip) => {
+    if (response.carContext && chip.id === "view_details") {
       const makePath = response.carContext.make.toLowerCase().replace(/\s+/g, "-")
       router.push(`/cars/${makePath}/${response.carContext.id}`)
-    } else if (response.carContext && chip === "Carros Similares") {
+    } else if (response.carContext && chip.id === "view_similar") {
       const makePath = response.carContext.make.toLowerCase().replace(/\s+/g, "-")
       router.push(`/cars/${makePath}`)
     } else {
@@ -295,13 +315,13 @@ function MobileOracleOverlay({
                 <div className="flex flex-wrap gap-2">
                   {chips.map((chip, i) => (
                     <button
-                      key={i}
+                      key={chip.id}
                       onClick={() => handleChipClick(chip)}
                       className="flex items-center gap-2 rounded-full bg-[rgba(248,180,217,0.1)] border border-[rgba(248,180,217,0.2)] px-5 py-3 text-[13px] font-medium text-[#F8B4D9] active:scale-95 transition-transform"
                     >
                       {i === 0 && <Car className="size-4" />}
                       {i === 1 && <BarChart3 className="size-4" />}
-                      {chip}
+                      {chip.label}
                     </button>
                   ))}
                 </div>

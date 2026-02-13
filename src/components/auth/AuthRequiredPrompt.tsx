@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { AuthModal } from './AuthModal'
 import { Lock } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface AuthRequiredPromptProps {
   message?: string
@@ -11,10 +12,12 @@ interface AuthRequiredPromptProps {
 }
 
 export function AuthRequiredPrompt({
-  message = 'Sign in to analyze this vehicle',
+  message,
   className = '',
 }: AuthRequiredPromptProps) {
+  const t = useTranslations('auth')
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const displayMessage = message ?? t('analysisRequiresSignInDesc')
 
   return (
     <>
@@ -23,28 +26,28 @@ export function AuthRequiredPrompt({
           <Lock className="w-6 h-6 text-[#F8B4D9]" />
         </div>
         <h3 className="text-lg font-semibold text-[#F2F0E9] mb-2">
-          Analysis Requires Sign In
+          {t('analysisRequiresSignInTitle')}
         </h3>
         <p className="text-[#9CA3AF] text-center mb-6 max-w-sm">
-          {message}
+          {displayMessage}
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
           <Button
             onClick={() => setShowAuthModal(true)}
             className="bg-[#F8B4D9] text-[#050505] hover:bg-[#F8B4D9]/90 font-semibold"
           >
-            Sign In
+            {t('signIn')}
           </Button>
           <Button
             variant="outline"
             onClick={() => setShowAuthModal(true)}
             className="border-white/10 text-[#F2F0E9] hover:bg-white/5"
           >
-            Create Account
+            {t('createAccountTitle')}
           </Button>
         </div>
         <p className="text-xs text-[#4B5563] mt-4">
-          New accounts receive 3 free analysis credits
+          {t('newAccountsCredits')}
         </p>
       </div>
 

@@ -94,7 +94,7 @@ async function fetchPage(url: string): Promise<string> {
   }
 }
 
-function parsePrice(text: string | undefined): number | null {
+export function parsePrice(text: string | undefined): number | null {
   if (!text) return null;
   // Collecting Cars uses GBP, EUR, and USD. Normalize to numeric value.
   const cleaned = text.replace(/[^0-9.]/g, '');
@@ -102,7 +102,7 @@ function parsePrice(text: string | undefined): number | null {
   return isNaN(num) ? null : num;
 }
 
-function parseMileage(text: string | undefined): number | null {
+export function parseMileage(text: string | undefined): number | null {
   if (!text) return null;
   const cleaned = text.replace(/[^0-9]/g, '');
   const num = parseInt(cleaned, 10);
@@ -113,7 +113,7 @@ function parseMileage(text: string | undefined): number | null {
  * Parse Collecting Cars title for year, make, model.
  * CC titles vary: "1992 Porsche 964 Carrera RS" or "Porsche 911 (993) Turbo - 1996"
  */
-function parseTitleComponents(title: string): {
+export function parseTitleComponents(title: string): {
   year: number;
   make: string;
   model: string;
@@ -168,7 +168,7 @@ function parseTitleComponents(title: string): {
   return { year, make, model };
 }
 
-function extractExternalId(url: string): string {
+export function extractExternalId(url: string): string {
   // CC URLs: /cars/1992-porsche-964-carrera-rs or /lots/...
   const match = url.match(/\/(cars|lots)\/([^/?#]+)/);
   if (match) return `cc-${match[2]}`;
@@ -257,7 +257,7 @@ export async function scrapeListings(
   return { auctions, errors };
 }
 
-function parseAuctionCard(
+export function parseAuctionCard(
   $: cheerio.CheerioAPI,
   el: cheerio.Element,
 ): CCarsAuction | null {
