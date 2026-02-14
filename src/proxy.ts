@@ -26,9 +26,14 @@ export async function proxy(request: NextRequest) {
     supabaseResponse.cookies.set(cookie.name, cookie.value, cookie)
   })
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+
+  // Build safety: if env vars are missing during build, provide placeholders 
+  // to avoid @supabase/ssr validation errors.
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl || 'https://placeholder-url.supabase.co',
+    supabaseAnonKey || 'placeholder-key',
     {
       cookies: {
         getAll() {
