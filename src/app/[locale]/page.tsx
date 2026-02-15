@@ -37,6 +37,7 @@ type Auction = {
   mileage: number | null;
   mileageUnit: string | null;
   location: string | null;
+  region?: string | null;
   description: string | null;
   images: string[];
   analysis: {
@@ -55,7 +56,7 @@ type Auction = {
 
 function LoadingSpinner({ label }: { label: string }) {
   return (
-    <div className="h-screen w-full flex items-center justify-center bg-[#050505]">
+    <div className="h-screen w-full flex items-center justify-center bg-[#0b0b10]">
       <div className="flex flex-col items-center gap-4">
         <div className="w-8 h-8 border-2 border-[#F8B4D9] border-t-transparent rounded-full animate-spin" />
         <span className="text-[#9CA3AF] text-sm tracking-wide">{label}</span>
@@ -98,6 +99,7 @@ function HomeContent({
           priceHistory: [],
           fairValueByRegion: a.fairValueByRegion,
           category: a.category,
+          region: a.region,
         }));
         setAuctions(transformed);
       } catch (error) {
@@ -115,7 +117,7 @@ function HomeContent({
 
   if (auctions.length === 0) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-[#050505]">
+      <div className="h-screen w-full flex items-center justify-center bg-[#0b0b10]">
         <span className="text-[#9CA3AF] text-sm">{emptyLabel}</span>
       </div>
     );
