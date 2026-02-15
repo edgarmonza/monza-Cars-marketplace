@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "node scripts/verify_prisma_schema.mjs && prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
@@ -14,7 +14,7 @@
     "test:schema": "vitest run tests/schema",
     "test:quality": "vitest run tests/quality",
     "test:integration": "vitest run tests/integration",
-    "postinstall": "prisma generate"
+    "postinstall": "node scripts/verify_prisma_schema.mjs && prisma generate"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.72.1",
