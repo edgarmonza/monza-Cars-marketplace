@@ -29,6 +29,7 @@ import {
   Gauge,
 } from "lucide-react"
 import type { CollectorCar, Region, FairValueByRegion } from "@/lib/curatedCars"
+import type { DbMarketDataRow, DbComparableRow, DbSoldRecord, DbAnalysisRow } from "@/lib/db/queries"
 import { useRegion } from "@/lib/RegionContext"
 import { formatPriceForRegion, formatRegionalPrice as fmtRegional, toUsd, formatUsd, resolveRegion, convertFromUsd } from "@/lib/regionPricing"
 import { AdvisorChat } from "@/components/advisor/AdvisorChat"
@@ -547,12 +548,14 @@ function MobileModelContext({
   cars,
   allCars,
   allModels,
+  dbOwnershipCosts,
 }: {
   model: Model
   make: string
   cars: CollectorCar[]
   allCars: CollectorCar[]
   allModels: Model[]
+  dbOwnershipCosts?: { insurance?: number; storage?: number; maintenance?: number } | null
 }) {
   const t = useTranslations("makePage")
   const { selectedRegion, effectiveRegion } = useRegion()
@@ -564,7 +567,12 @@ function MobileModelContext({
   const model5yReturn = Math.round(((priceHistory[priceHistory.length - 1] - priceHistory[0]) / priceHistory[0]) * 100)
   const depth = deriveModelDepth(allModelCars)
 
-  const baseCosts = ownershipCosts[make] || ownershipCosts.default
+  const fallbackCosts = ownershipCosts[make] || ownershipCosts.default
+  const baseCosts = {
+    insurance: dbOwnershipCosts?.insurance ?? fallbackCosts.insurance,
+    storage: dbOwnershipCosts?.storage ?? fallbackCosts.storage,
+    maintenance: dbOwnershipCosts?.maintenance ?? fallbackCosts.maintenance,
+  }
   const brandAvgPrice = allCars.length > 0 ? allCars.reduce((s, c) => s + c.currentBid, 0) / allCars.length : 1
   const scaleFactor = brandAvgPrice > 0 ? model.avgPrice / brandAvgPrice : 1
   const costs = {
@@ -727,6 +735,7 @@ function MobileModelContextSheet({
   allCars,
   allModels,
   onClose,
+  dbOwnershipCosts,
 }: {
   model: Model | null
   make: string
@@ -734,6 +743,7 @@ function MobileModelContextSheet({
   allCars: CollectorCar[]
   allModels: Model[]
   onClose: () => void
+  dbOwnershipCosts?: { insurance?: number; storage?: number; maintenance?: number } | null
 }) {
   if (!model) return null
 
@@ -777,6 +787,7 @@ function MobileModelContextSheet({
                 cars={cars}
                 allCars={allCars}
                 allModels={allModels}
+                dbOwnershipCosts={dbOwnershipCosts}
               />
             </div>
           </motion.div>
@@ -1647,6 +1658,7 @@ function ModelContextPanel({
   allCars,
   allModels,
   onOpenAdvisor,
+  dbOwnershipCosts,
 }: {
   model: Model
   make: string
@@ -1654,6 +1666,7 @@ function ModelContextPanel({
   allCars: CollectorCar[]
   allModels: Model[]
   onOpenAdvisor: () => void
+  dbOwnershipCosts?: { insurance?: number; storage?: number; maintenance?: number } | null
 }) {
   const t = useTranslations("makePage")
   const tAuction = useTranslations("auctionDetail")
@@ -1667,8 +1680,13 @@ function ModelContextPanel({
   // Model-specific thesis (from the representative car's real data)
   const modelThesis = model.representativeCar.thesis
 
-  // Model-specific ownership costs (scaled by model price vs brand average)
-  const baseCosts = ownershipCosts[make] || ownershipCosts.default
+  // Model-specific ownership costs — prefer DB data, fallback to hardcoded
+  const fallbackCosts = ownershipCosts[make] || ownershipCosts.default
+  const baseCosts = {
+    insurance: dbOwnershipCosts?.insurance ?? fallbackCosts.insurance,
+    storage: dbOwnershipCosts?.storage ?? fallbackCosts.storage,
+    maintenance: dbOwnershipCosts?.maintenance ?? fallbackCosts.maintenance,
+  }
   const brandAvgPrice = allCars.length > 0 ? allCars.reduce((s, c) => s + c.currentBid, 0) / allCars.length : 1
   const scaleFactor = brandAvgPrice > 0 ? model.avgPrice / brandAvgPrice : 1
   const costs = {
@@ -2021,10 +2039,70 @@ function ModelContextPanel({
 }
 
 // ─── MAIN COMPONENT ───
-export function MakePageClient({ make, cars }: { make: string; cars: CollectorCar[] }) {
+export function MakePageClient({ make, cars, dbMarketData = [], dbComparables = [], dbSoldHistory = [], dbAnalyses = [] }: {
+  make: string
+  cars: CollectorCar[]
+  dbMarketData?: DbMarketDataRow[]
+  dbComparables?: DbComparableRow[]
+  dbSoldHistory?: DbSoldRecord[]
+  dbAnalyses?: DbAnalysisRow[]
+}) {
   const locale = useLocale()
   const t = useTranslations("makePage")
   const tStatus = useTranslations("status")
+
+  // ─── USE REAL DB DATA (with fallback to hardcoded) ───
+
+  // Market depth: derive from real DB data if available
+  const realMarketDepth = useMemo(() => {
+    if (dbMarketData.length === 0 && dbSoldHistory.length === 0) return null
+    const totalSales = dbMarketData.reduce((s, m) => s + m.totalSales, 0) || dbSoldHistory.length
+    const trendingUp = dbMarketData.filter(m => m.trend === "APPRECIATING").length
+    const demandScore = dbMarketData.length > 0
+      ? Math.min(10, Math.round((trendingUp / dbMarketData.length) * 10) + 5)
+      : 7
+    return {
+      auctionsPerYear: totalSales,
+      avgDaysToSell: 14,
+      sellThroughRate: Math.min(98, 70 + demandScore * 3),
+      demandScore,
+    }
+  }, [dbMarketData, dbSoldHistory])
+
+  // 5-year price history: derive from real sold auctions if available
+  const realPriceHistory = useMemo(() => {
+    if (dbSoldHistory.length < 3) return null
+    const now = new Date()
+    const years = [0, 1, 2, 3, 4].map(i => now.getFullYear() - 4 + i)
+    const buckets = years.map(yr => {
+      const yearSales = dbSoldHistory.filter(s => {
+        const d = new Date(s.date)
+        return d.getFullYear() === yr
+      })
+      if (yearSales.length === 0) return null
+      return Math.round(yearSales.reduce((sum, s) => sum + s.price, 0) / yearSales.length)
+    })
+    // Fill gaps with interpolation
+    const filled = [...buckets]
+    for (let i = 0; i < filled.length; i++) {
+      if (filled[i] == null) {
+        const prev = filled.slice(0, i).reverse().find(v => v != null)
+        const next = filled.slice(i + 1).find(v => v != null)
+        filled[i] = prev ?? next ?? 0
+      }
+    }
+    if (filled.every(v => v === 0)) return null
+    return filled as number[]
+  }, [dbSoldHistory])
+
+  // Ownership costs from DB analysis (average across analyses)
+  const realOwnershipCosts = useMemo(() => {
+    const withCosts = dbAnalyses.filter(a => a.insuranceEstimate || a.yearlyMaintenance)
+    if (withCosts.length === 0) return null
+    const avgIns = Math.round(withCosts.reduce((s, a) => s + (a.insuranceEstimate ?? 0), 0) / withCosts.length)
+    const avgMaint = Math.round(withCosts.reduce((s, a) => s + (a.yearlyMaintenance ?? 0), 0) / withCosts.length)
+    return { insurance: avgIns || undefined, storage: undefined, maintenance: avgMaint || undefined }
+  }, [dbAnalyses])
 
   const [currentModelIndex, setCurrentModelIndex] = useState(0)
   const [searchQuery, setSearchQuery] = useState("")
@@ -2219,6 +2297,7 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
                     cars={regionFilteredCars}
                     allCars={cars}
                     allModels={filteredModels}
+                    dbOwnershipCosts={realOwnershipCosts}
                   />
                 </>
               )}
@@ -2259,6 +2338,7 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
           allCars={cars}
           allModels={filteredModels}
           onClose={() => setExpandedModel(null)}
+          dbOwnershipCosts={realOwnershipCosts}
         />
 
         <MobileFilterSheet
@@ -2328,6 +2408,7 @@ export function MakePageClient({ make, cars }: { make: string; cars: CollectorCa
                 allCars={cars}
                 allModels={filteredModels}
                 onOpenAdvisor={() => setShowAdvisorChat(true)}
+                dbOwnershipCosts={realOwnershipCosts}
               />
             )}
           </div>
