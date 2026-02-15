@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { User, Session } from '@supabase/supabase-js'
 
@@ -37,16 +37,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   const supabase = createClient()
+  const creatingUserRef = useRef(false)
 
-  const fetchProfile = useCallback(async (supabaseUser: User) => {
+  const fetchProfile = useCallback(async (supabaseUser: User): Promise<boolean> => {
     try {
       const response = await fetch('/api/user/profile')
       if (response.ok) {
         const data = await response.json()
         setProfile(data.profile)
+        return true
       }
+      return false
     } catch (error) {
       console.error('Error fetching profile:', error)
+      return false
     }
   }, [])
 
@@ -64,7 +68,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null)
 
         if (session?.user) {
-          await fetchProfile(session.user)
+          const ok = await fetchProfile(session.user)
+          if (!ok) {
+            // Stale session — user was deleted server-side, clear local state
+            await supabase.auth.signOut()
+            setSession(null)
+            setUser(null)
+            setProfile(null)
+          }
         }
       } catch (error) {
         console.error('Error initializing auth:', error)
@@ -81,16 +92,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null)
 
         if (event === 'SIGNED_IN' && session?.user) {
-          // Create user in database if new
-          await fetch('/api/user/create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: session.user.email,
-              name: session.user.user_metadata?.full_name,
-            }),
-          })
-          await fetchProfile(session.user)
+          if (!creatingUserRef.current) {
+            creatingUserRef.current = true
+            try {
+              const res = await fetch('/api/user/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  email: session.user.email,
+                  name: session.user.user_metadata?.full_name,
+                }),
+              })
+              if (res.ok) {
+                await fetchProfile(session.user)
+              }
+            } finally {
+              creatingUserRef.current = false
+            }
+          }
         } else if (event === 'SIGNED_OUT') {
           setProfile(null)
         }
@@ -115,6 +134,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       email,
       password,
       options: {
+        emailRedirectTo: `${window.location.origin}/auth/confirm`,
         data: {
           full_name: name,
         },
