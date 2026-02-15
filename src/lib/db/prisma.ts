@@ -2,9 +2,21 @@ import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { Pool } from 'pg'
 
+function createPgPool(connectionString: string, sslDisabled: boolean) {
+  return new Pool({
+    connectionString,
+    max: 1,
+    idleTimeoutMillis: 10_000,
+    connectionTimeoutMillis: 10_000,
+    // Supabase poolers on serverless environments may present a cert chain
+    // that Node cannot validate with default trust settings.
+    ssl: sslDisabled ? undefined : { rejectUnauthorized: false },
+  })
+}
+
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
-  prismaPool: unknown | undefined
+  prismaPool: ReturnType<typeof createPgPool> | undefined
 }
 
 function createPrismaClient() {
@@ -13,13 +25,10 @@ function createPrismaClient() {
     throw new Error('DATABASE_URL is required for Prisma runtime')
   }
 
+  const sslDisabled = /sslmode=disable/i.test(connectionString)
+
   // Keep pool small for serverless and reduce pgbouncer churn.
-  const pool = (globalForPrisma.prismaPool as any) ?? new Pool({
-    connectionString,
-    max: 1,
-    idleTimeoutMillis: 10_000,
-    connectionTimeoutMillis: 10_000,
-  })
+  const pool = globalForPrisma.prismaPool ?? createPgPool(connectionString, sslDisabled)
   globalForPrisma.prismaPool = pool
 
   const adapter = new PrismaPg(pool)
