@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useEffect } from "react"
 import Image from "next/image"
 import { Link } from "@/i18n/navigation"
+import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   ArrowLeft,
@@ -393,6 +394,7 @@ function MobileHeroModel({ model, make }: { model: Model; make: string }) {
   const makeSlug = make.toLowerCase().replace(/\s+/g, "-")
   const t = useTranslations("makePage")
   const { selectedRegion } = useRegion()
+  const router = useRouter()
 
   return (
     <Link href={`/cars/${makeSlug}/${model.representativeCar.id}`} className="block relative">
@@ -409,10 +411,10 @@ function MobileHeroModel({ model, make }: { model: Model; make: string }) {
 
         {/* Back link */}
         <div className="absolute top-4 left-4">
-          <Link href="/" className="flex items-center gap-1.5 text-[11px] text-[rgba(255,252,247,0.5)]">
+          <button onClick={() => router.push("/")} className="flex items-center gap-1.5 text-[11px] text-[rgba(255,252,247,0.5)] hover:text-[rgba(255,252,247,0.8)] transition-colors cursor-pointer">
             <ArrowLeft className="size-3.5" />
             {t("hero.backToCollection")}
-          </Link>
+          </button>
         </div>
 
         {/* Grade badge */}
